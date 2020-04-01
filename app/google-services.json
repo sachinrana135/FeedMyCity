@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "597379854840",
+    "firebase_url": "https://feedindia-95f49.firebaseio.com",
+    "project_id": "feedindia-95f49",
+    "storage_bucket": "feedindia-95f49.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:597379854840:android:eceafbcbd1bd09a370660d",
+        "android_client_info": {
+          "package_name": "com.alfanse.feedindia"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "597379854840-vm47k6pl3g15oe9pcmd2sutl5n95hm35.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.alfanse.feedindia",
+            "certificate_hash": "d42151f2cbf354d3e9b6d727c94b9596e4998561"
+          }
+        },
+        {
+          "client_id": "597379854840-51bqcvmh3ikevkf3dhfe8v26475h7s45.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDeNbB6W2R996EGIYMOaVsSPGSjfX29Oag"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "597379854840-51bqcvmh3ikevkf3dhfe8v26475h7s45.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

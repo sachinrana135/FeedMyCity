@@ -72,7 +72,11 @@ buildscript {
                 "com.google.dagger:dagger-android-support:$dagger_version",
 
                 "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutine",
-                "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutine"
+                "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutine",
+
+                //Firebase
+                "com.google.firebase:firebase-config:16.1.0",
+                "com.google.firebase:firebase-auth:16.0.5"
 
         ]
         librariesKapt = [
@@ -109,6 +113,7 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:3.5.3'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath 'com.google.gms:google-services:4.2.0'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
