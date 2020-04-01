@@ -5,7 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import com.alfanse.feedindia.R
-import com.alfanse.feedindia.ui.JoineeTypesActivity
+import com.alfanse.feedindia.ui.usertypes.UserTypesActivity
 
 class SplashActivity : AppCompatActivity() {
     private val mContext = this
@@ -17,9 +17,9 @@ class SplashActivity : AppCompatActivity() {
     }
 
     private fun launchNextScreen(){
-        val hanler = Handler()
-        hanler.postDelayed(Runnable {
-            startActivity(Intent(mContext, JoineeTypesActivity::class.java))
+        val handler = Handler()
+        handler.postDelayed(Runnable {
+            startActivity(Intent(mContext, UserTypesActivity::class.java))
         }, 3000)
     }
 }

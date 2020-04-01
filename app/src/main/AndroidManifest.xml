@@ -13,7 +13,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.JoineeTypesActivity"></activity>
+        <activity android:name=".ui.donordetails.DonorDetailsActivity"></activity>
+        <activity android:name=".ui.mobileauth.CodeVerificationActivity" />
+        <activity android:name=".ui.mobileauth.MobileVerificationActivity" />
+        <activity android:name=".ui.usertypes.UserTypesActivity" />
         <activity
             android:name=".ui.splash.SplashActivity"
             android:theme="@style/FullScreen">

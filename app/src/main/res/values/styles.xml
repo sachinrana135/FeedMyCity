@@ -9,4 +9,12 @@
     </style>
 
     <style name="FullScreen" parent="Theme.AppCompat.NoActionBar"/>
+
+    <style name="BlackText" parent="Widget.AppCompat.TextView">
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+
+    <style name="WhiteText" parent="Widget.AppCompat.TextView">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
 </resources>
