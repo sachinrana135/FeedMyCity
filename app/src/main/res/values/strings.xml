@@ -5,4 +5,8 @@
     <string name="txt_something_wrong">Something went wrong</string>
     <string name="txt_another_try">Give it another try</string>
     <string name="txt_reload">Reload</string>
+    <string name="splash_screen_title">Feed India</string>
+    <string name="donor_type_label">Donor</string>
+    <string name="ngo_or_group_label">NGO/Group</string>
+    <string name="tv_volunteer_label">Volunteer</string>
 </resources>
