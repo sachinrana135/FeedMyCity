@@ -24,7 +24,7 @@ buildscript {
         android_test_version = "1.0.2"
         android_expresso_version = "3.0.2"
         kotlin_version = '1.3.61'
-        appcompatVersion = '1.0.2'
+        appcompatVersion = '1.1.0'
         ktxVersion = '1.0.2'
         junitVersion = '4.12'
         junitxVersion = '1.1.0'

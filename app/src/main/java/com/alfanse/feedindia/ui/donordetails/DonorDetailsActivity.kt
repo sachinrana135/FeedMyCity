@@ -1,25 +1,18 @@
 package com.alfanse.feedindia.ui.donordetails
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.CompoundButton
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
 import com.alfanse.feedindia.FeedIndiaApplication
 import com.alfanse.feedindia.R
 import com.alfanse.feedindia.data.Resource
 import com.alfanse.feedindia.data.Status
-import com.alfanse.feedindia.data.models.SaveDonorResponse
-import com.alfanse.feedindia.data.models.TodoEntity
 import com.alfanse.feedindia.factory.ViewModelFactory
-import com.alfanse.feedindia.ui.main.MainViewModel
 import com.alfanse.feedindia.ui.mobileauth.CodeVerificationActivity
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_donor_details.*
-import kotlinx.android.synthetic.main.main_fragment.*
 import javax.inject.Inject
 
 class DonorDetailsActivity : AppCompatActivity() {
@@ -66,7 +59,7 @@ class DonorDetailsActivity : AppCompatActivity() {
         }
     }
 
-    private var observer = Observer<Resource<SaveDonorResponse>> {
+    private var observer = Observer<Resource<String>> {
         when (it.status) {
             Status.LOADING -> {
                 progressBar.visibility = View.VISIBLE

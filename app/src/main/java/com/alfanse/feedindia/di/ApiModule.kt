@@ -2,22 +2,22 @@ package com.alfanse.feedindia.di
 
 
 import android.app.Application
-import android.content.Context
-import com.alfanse.feedindia.data.ApiHeadersInterceptor
+import com.alfanse.feedindia.data.ApiService
+import com.alfanse.feedindia.data.interceptor.HeadersInterceptor
+import com.alfanse.feedindia.data.storage.ApplicationStorage
+import com.alfanse.feedindia.factory.CustomConverterFactory
+import com.alfanse.feedindia.utils.BASE_URL
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.alfanse.feedindia.data.ApiService
-import com.alfanse.feedindia.data.HeaderEntity
-import com.alfanse.feedindia.utils.BASE_URL
 import dagger.Module
 import dagger.Provides
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import java.io.File
 import java.util.concurrent.TimeUnit
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module(includes = [AppModule::class])
@@ -41,23 +41,15 @@ class ApiModule {
 
     @Provides
     @Singleton
-    internal fun provideOkhttpClient(cache: Cache, utils: Utils): OkHttpClient {
+    internal fun provideOkhttpClient(cache: Cache, utils: Utils, @Named("memory") memoryApplicationStorage: ApplicationStorage): OkHttpClient {
         val logging = HttpLoggingInterceptor()
+        val headers = HeadersInterceptor(utils, memoryApplicationStorage)
         logging.level = HttpLoggingInterceptor.Level.BODY
 
         val httpClient = OkHttpClient.Builder()
         httpClient.cache(cache)
         httpClient.addInterceptor(logging)
-        httpClient.addInterceptor {
-            val headerEntity = HeaderEntity(
-                "be7a16fae793838c7ef167714ba36d2e",
-                utils.getAppVersionName(),
-                utils.getAppVersionCode().toString(),
-                utils.getRandomString(),
-                utils.getDeviceId())
-            val apiHeaders = ApiHeadersInterceptor(it)
-            apiHeaders.buildHeader(headerEntity)
-        }
+        httpClient.addInterceptor(headers)
         httpClient.connectTimeout(30, TimeUnit.SECONDS)
         httpClient.readTimeout(30, TimeUnit.SECONDS)
         return httpClient.build()
@@ -69,7 +61,7 @@ class ApiModule {
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
             .client(okHttpClient)
-            .addConverterFactory(GsonConverterFactory.create(gson))
+            .addConverterFactory(CustomConverterFactory(gson))
             .build()
     }
 
