@@ -15,11 +15,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "597379854840-vm47k6pl3g15oe9pcmd2sutl5n95hm35.apps.googleusercontent.com",
+          "client_id": "597379854840-f1ept3sr7np21rqjg7qmeg05tv0n7q4a.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.alfanse.feedindia",
-            "certificate_hash": "d42151f2cbf354d3e9b6d727c94b9596e4998561"
+            "certificate_hash": "3b41c0dd69514f800fe38d9098579129d0e10c64"
           }
         },
         {

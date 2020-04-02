@@ -5,7 +5,7 @@ import com.alfanse.feedindia.di.AppComponent
 import com.alfanse.feedindia.di.AppModule
 import com.alfanse.feedindia.di.DaggerAppComponent
 
-class TodoApplication : Application() {
+class FeedIndiaApplication : Application() {
 
     lateinit var appComponent: AppComponent
 
@@ -14,7 +14,7 @@ class TodoApplication : Application() {
         appComponent = initDagger(this)
     }
 
-    private fun initDagger(app: TodoApplication): AppComponent =
+    private fun initDagger(app: FeedIndiaApplication): AppComponent =
         DaggerAppComponent.builder()
             .appModule(AppModule(app))
             .build()

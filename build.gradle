@@ -35,6 +35,7 @@ buildscript {
         shimmer_recyclerview_version = "0.4.0"
         circular_image_version = "3.1.0"
         cardview_version = "1.0.0"
+        androidx_material = "1.0.0"
 
         libraries = [
                 "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version",
@@ -45,6 +46,7 @@ buildscript {
                 "com.android.support:recyclerview-v7:$material_version",
                 "androidx.swiperefreshlayout:swiperefreshlayout:$cardview_version",
                 "com.android.support:appcompat-v7:$material_version",
+                "com.google.android.material:material:$androidx_material",
 
                 //Network
                 "com.squareup.retrofit2:retrofit:$retrofit_version",
