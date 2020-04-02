@@ -1,6 +1,7 @@
 package com.alfanse.feedindia
 
 import android.app.Application
+import com.alfanse.feedindia.di.ApiModule
 import com.alfanse.feedindia.di.AppComponent
 import com.alfanse.feedindia.di.AppModule
 import com.alfanse.feedindia.di.DaggerAppComponent
