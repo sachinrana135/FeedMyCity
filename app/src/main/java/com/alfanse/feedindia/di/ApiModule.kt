@@ -2,9 +2,12 @@ package com.alfanse.feedindia.di
 
 
 import android.app.Application
+import android.content.Context
+import com.alfanse.feedindia.data.ApiHeadersInterceptor
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.alfanse.feedindia.data.ApiService
+import com.alfanse.feedindia.data.HeaderEntity
 import com.alfanse.feedindia.utils.BASE_URL
 import dagger.Module
 import dagger.Provides
@@ -17,7 +20,7 @@ import java.io.File
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
-@Module
+@Module(includes = [AppModule::class])
 class ApiModule {
 
     @Provides
@@ -38,13 +41,23 @@ class ApiModule {
 
     @Provides
     @Singleton
-    internal fun provideOkhttpClient(cache: Cache): OkHttpClient {
+    internal fun provideOkhttpClient(cache: Cache, utils: Utils): OkHttpClient {
         val logging = HttpLoggingInterceptor()
         logging.level = HttpLoggingInterceptor.Level.BODY
 
         val httpClient = OkHttpClient.Builder()
         httpClient.cache(cache)
         httpClient.addInterceptor(logging)
+        httpClient.addInterceptor {
+            val headerEntity = HeaderEntity(
+                "be7a16fae793838c7ef167714ba36d2e",
+                utils.getAppVersionName(),
+                utils.getAppVersionCode().toString(),
+                utils.getRandomString(),
+                utils.getDeviceId())
+            val apiHeaders = ApiHeadersInterceptor(it)
+            apiHeaders.buildHeader(headerEntity)
+        }
         httpClient.connectTimeout(30, TimeUnit.SECONDS)
         httpClient.readTimeout(30, TimeUnit.SECONDS)
         return httpClient.build()

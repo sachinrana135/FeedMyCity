@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import com.alfanse.feedindia.R
+import com.alfanse.feedindia.ui.donordetails.DonorDetailsActivity
 import com.alfanse.feedindia.ui.usertypes.UserTypesActivity
 
 class SplashActivity : AppCompatActivity() {

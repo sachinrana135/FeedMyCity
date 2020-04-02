@@ -1,6 +1,7 @@
 package com.alfanse.feedindia.utils
 
-const val BASE_URL = "https://jsonplaceholder.typicode.com/"
+const val BASE_URL = "http://www.alfanse.com/feed_india_prod/public/api/"
+const val FIREBASE_USER_ID_PREFS_KEY = "firebaseUserIdPrefsKey"
 
 val userNameMap = hashMapOf(
     "1" to "James",
