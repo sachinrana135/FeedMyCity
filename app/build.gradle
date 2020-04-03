@@ -21,6 +21,7 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
+        buildConfigField "String", "API_TOKEN", '"be7a16fae793838c7ef167714ba36d2e"'
     }
     buildTypes {
         debug {

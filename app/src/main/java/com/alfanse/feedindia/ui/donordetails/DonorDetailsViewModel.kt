@@ -23,9 +23,7 @@ class DonorDetailsViewModel
     val saveDonorLiveData = MutableLiveData<Resource<String>>()
 
     private val handler = CoroutineExceptionHandler { _, throwable ->
-        val msg =
-            if (throwable.message != null) throwable.message as String else "Something went wrong"
-        saveDonorLiveData.value = Resource.error(msg, null)
+        saveDonorLiveData.value = Resource.error(throwable.message, null)
     }
 
     fun saveDonorDetails(
@@ -37,14 +35,16 @@ class DonorDetailsViewModel
         mobile: String
     ) {
         saveDonorLiveData.value = Resource.loading(null)
+
         viewModelScope.launch(handler) {
             var firebaseId = memoryStorage.getString(FIREBASE_USER_ID_PREFS_KEY, "")!!
             val saveDonorRequest =
                 SaveDonorRequest(donateItems, firebaseId, lat, lng, mobile, name, status)
-            repository.saveDonor(saveDonorRequest).let { userId ->
-                if (userId != null && userId != "") {
-                    storage.putString(APP_USER_ID_PREFS_KEY, userId)
-                    saveDonorLiveData.value = Resource.success(userId)
+
+            repository.saveDonor(saveDonorRequest)?.let { response ->
+                if (response.userId != null) {
+                    storage.putString(APP_USER_ID_PREFS_KEY, response.userId)
+                    saveDonorLiveData.value = Resource.success(response.userId)
                 }
             }
         }
