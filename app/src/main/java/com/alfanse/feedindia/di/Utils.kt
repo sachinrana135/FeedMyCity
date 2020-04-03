@@ -4,12 +4,13 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.provider.Settings
 import com.alfanse.feedindia.BuildConfig
+import com.alfanse.feedindia.data.storage.ApplicationStorage
 import java.util.*
 import javax.inject.Inject
 
 
 class Utils
-@Inject constructor(context: Context) {
+@Inject constructor(context: Context, val storage: ApplicationStorage) {
     private val mContext = context
 
     public fun getDeviceId(): String {
