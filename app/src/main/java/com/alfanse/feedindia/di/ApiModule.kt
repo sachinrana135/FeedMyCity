@@ -7,6 +7,7 @@ import com.alfanse.feedindia.data.interceptor.HeadersInterceptor
 import com.alfanse.feedindia.data.storage.ApplicationStorage
 import com.alfanse.feedindia.factory.CustomConverterFactory
 import com.alfanse.feedindia.utils.BASE_URL
+import com.alfanse.feedindia.utils.Utils
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -43,7 +44,7 @@ class ApiModule {
     @Singleton
     internal fun provideOkhttpClient(cache: Cache, utils: Utils, @Named("memory") memoryApplicationStorage: ApplicationStorage): OkHttpClient {
         val logging = HttpLoggingInterceptor()
-        val headers = HeadersInterceptor(utils, memoryApplicationStorage)
+        val headers = HeadersInterceptor(utils)
         logging.level = HttpLoggingInterceptor.Level.BODY
 
         val httpClient = OkHttpClient.Builder()

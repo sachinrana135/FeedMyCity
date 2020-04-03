@@ -49,7 +49,7 @@ class ResponseBodyConverter<T>(private val converter: Converter<ResponseBody, Ap
     @Throws(IOException::class)
     override fun convert(responseBody: ResponseBody): T? {
         val response = converter.convert(responseBody)
-        if (response?.error?.message != "") {
+        if (response?.error?.message.equals("") ) {
             return response?.response
         } else {
             throw Exception(response?.error?.message)

@@ -1,18 +1,15 @@
 package com.alfanse.feedindia.ui.mobileauth
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
-import androidx.lifecycle.observe
 import com.alfanse.feedindia.FeedIndiaApplication
 import com.alfanse.feedindia.R
 import com.alfanse.feedindia.factory.ViewModelFactory
 import com.alfanse.feedindia.ui.donordetails.DonorDetailsActivity
-import com.alfanse.feedindia.ui.donordetails.DonorDetailsViewModel
 import com.alfanse.feedindia.utils.FirebaseAuthHandler
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
@@ -54,7 +51,7 @@ class CodeVerificationActivity : AppCompatActivity() {
                         override fun onSuccess(user: FirebaseUser?) {
                             progressBar.visibility = View.GONE
                             if (user != null){
-                                phoneNumber = user.phoneNumber
+                                phoneNumber = user.phoneNumber?.replace("+91","")
                                 codeVerificationViewModel.saveFirebaseUserId(user.uid)
                             }
                         }
