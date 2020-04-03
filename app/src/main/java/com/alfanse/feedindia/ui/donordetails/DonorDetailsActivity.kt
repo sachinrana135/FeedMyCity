@@ -55,8 +55,7 @@ class DonorDetailsActivity : AppCompatActivity() {
                 etDonationInfo.text.toString(), status.toString(),
                 "-123.456789",
                 "-123.456789",
-                "8010788258")
-                //readPhoneNum()!!)
+                readPhoneNum()!!)
         }
     }
 
