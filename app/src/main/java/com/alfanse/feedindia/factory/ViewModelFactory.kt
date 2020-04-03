@@ -6,6 +6,8 @@ import com.alfanse.feedindia.data.repository.FeedAppRepository
 import com.alfanse.feedindia.data.storage.ApplicationStorage
 import com.alfanse.feedindia.ui.donordetails.DonorDetailsViewModel
 import com.alfanse.feedindia.ui.mobileauth.CodeVerificationViewModel
+import com.alfanse.feedindia.ui.mobileauth.MobileVerificationActivity
+import com.alfanse.feedindia.ui.mobileauth.MobileVerificationViewModel
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -22,6 +24,8 @@ class ViewModelFactory @Inject constructor(
                     CodeVerificationViewModel(memoryStorage)
                 isAssignableFrom(DonorDetailsViewModel::class.java) ->
                     DonorDetailsViewModel(feedAppRepository, sharedPreferences, memoryStorage)
+                isAssignableFrom(MobileVerificationViewModel::class.java) ->
+                    MobileVerificationViewModel(memoryStorage)
                 else ->
                     error("Invalid View Model class")
             }

@@ -11,7 +11,6 @@ import com.alfanse.feedindia.FeedIndiaApplication
 import com.alfanse.feedindia.R
 import com.alfanse.feedindia.data.Resource
 import com.alfanse.feedindia.data.Status
-import com.alfanse.feedindia.data.models.SaveDonorResponse
 import com.alfanse.feedindia.factory.ViewModelFactory
 import com.alfanse.feedindia.ui.mobileauth.CodeVerificationActivity
 import com.schibstedspain.leku.*
@@ -24,6 +23,7 @@ class DonorDetailsActivity : AppCompatActivity() {
     private lateinit var donorDetailViewModel: DonorDetailsViewModel
     private var donorLat = 0.0
     private var donorLng = 0.0
+    private var phone = ""
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,10 +35,13 @@ class DonorDetailsActivity : AppCompatActivity() {
             get(DonorDetailsViewModel::class.java)
         initListener()
         donorDetailViewModel.saveDonorLiveData.observe(this, observer)
+        readPhoneNum()
     }
 
-    private fun readPhoneNum(): String? {
-        return intent.getStringExtra(CodeVerificationActivity.MOBILE_NUM_KEY)
+    private fun readPhoneNum() {
+        if (intent != null){
+            phone = intent.getStringExtra(CodeVerificationActivity.MOBILE_NUM_KEY)!!
+        }
     }
 
     private fun initListener(){
@@ -55,6 +58,11 @@ class DonorDetailsActivity : AppCompatActivity() {
             }
         }
 
+        if (!cbAllowLocation.isChecked){
+            donorLat = 0.0
+            donorLng = 0.0
+        }
+
         btnSave.setOnClickListener {
             if (etName.text.toString().trim().isEmpty()){
                 etName.error = "Enter name"
@@ -66,18 +74,19 @@ class DonorDetailsActivity : AppCompatActivity() {
                 etDonationInfo.text.toString(), status.toString(),
                 donorLat.toString(),
                 donorLng.toString(),
-                readPhoneNum()!!)
+                phone)
         }
     }
 
-    private var observer = Observer<Resource<SaveDonorResponse>> {
+    private var observer = Observer<Resource<String>> {
         when (it.status) {
             Status.LOADING -> {
                 progressBar.visibility = View.VISIBLE
-                //Log.d(TAG, it.data?.response?.userId)
             }
             Status.SUCCESS -> {
                 progressBar.visibility = View.GONE
+                //Log.d(TAG, it.data!!)
+                // Navigate donor to dashboard
             }
             Status.EMPTY, Status.ERROR -> {
                 progressBar.visibility = View.GONE
