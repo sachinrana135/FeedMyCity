@@ -2,11 +2,9 @@ package com.alfanse.feedindia.ui.donordetails
 
 import android.app.Activity
 import android.content.Intent
-import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
-import android.widget.CompoundButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -160,5 +158,9 @@ class DonorDetailsActivity : AppCompatActivity() {
 
     companion object {
         private const val TAG = "DonorDetailsActivity"
+        private const val MAP_BUTTON_REQUEST_CODE = 1
+        private const val DEFAULT_LAT = 28.6429
+        private const val DEFAULT_LNG = 77.2191
+        private const val INDIA_LOCALE_ZONE = "en_in"
     }
 }

@@ -7,10 +7,9 @@ import com.alfanse.feedindia.data.storage.ApplicationStorage
 import com.alfanse.feedindia.ui.donordetails.DonorDetailsViewModel
 import com.alfanse.feedindia.ui.donordetails.DonorHomeViewModel
 import com.alfanse.feedindia.ui.mobileauth.CodeVerificationViewModel
+import com.alfanse.feedindia.ui.mobileauth.MobileVerificationViewModel
 import com.alfanse.feedindia.ui.splash.SplashViewModel
 import com.alfanse.feedindia.utils.Utils
-import com.alfanse.feedindia.ui.mobileauth.MobileVerificationActivity
-import com.alfanse.feedindia.ui.mobileauth.MobileVerificationViewModel
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -27,7 +26,12 @@ class ViewModelFactory @Inject constructor(
                 isAssignableFrom(CodeVerificationViewModel::class.java) ->
                     CodeVerificationViewModel(memoryStorage)
                 isAssignableFrom(DonorDetailsViewModel::class.java) ->
-                    DonorDetailsViewModel(feedAppRepository, sharedPreferences, memoryStorage, utils)
+                    DonorDetailsViewModel(
+                        feedAppRepository,
+                        sharedPreferences,
+                        memoryStorage,
+                        utils
+                    )
                 isAssignableFrom(SplashViewModel::class.java) ->
                     SplashViewModel(
                         feedAppRepository,
@@ -37,7 +41,13 @@ class ViewModelFactory @Inject constructor(
                     )
                 isAssignableFrom(DonorHomeViewModel::class.java) ->
                     DonorHomeViewModel(utils)
-                    DonorDetailsViewModel(feedAppRepository, sharedPreferences, memoryStorage)
+                isAssignableFrom(DonorDetailsViewModel::class.java) ->
+                    DonorDetailsViewModel(
+                        feedAppRepository,
+                        sharedPreferences,
+                        memoryStorage,
+                        utils
+                    )
                 isAssignableFrom(MobileVerificationViewModel::class.java) ->
                     MobileVerificationViewModel(memoryStorage)
                 else ->
