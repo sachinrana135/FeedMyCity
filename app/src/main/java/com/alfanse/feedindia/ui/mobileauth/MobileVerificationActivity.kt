@@ -1,11 +1,12 @@
 package com.alfanse.feedindia.ui.mobileauth
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
+import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.alfanse.feedindia.FeedIndiaApplication
@@ -38,6 +39,10 @@ class MobileVerificationActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_mobile_verification)
         title = getString(R.string.phone_verification_screen_label)
+        supportActionBar?.setHomeButtonEnabled(true);
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        initListener()
+
         (application as FeedIndiaApplication).appComponent.inject(this)
         phoneVerificationViewModel = ViewModelProviders.of(this, viewModelFactory).
             get(MobileVerificationViewModel::class.java)
@@ -189,6 +194,17 @@ class MobileVerificationActivity : AppCompatActivity() {
             CODE + SPACE + array[1]
         } else{
             "$CODE$SPACE$phoneInput"
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Handle item selection
+        return when (item.itemId) {
+            android.R.id.home -> {
+                onBackPressed()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
     }
 

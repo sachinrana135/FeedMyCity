@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.donordetails.DonorHomeActivity"
+    android:padding="@dimen/spacing_large">
+
+    <TextView
+        android:id="@+id/txt_welcome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/txt_welcome"
+        android:textColor="@color/colorPrimary"
+        android:textSize="@dimen/font_xxlarge"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/txt_user_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="Sachin Rana"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="@dimen/font_normal"
+        android:layout_marginTop="@dimen/spacing_small"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_welcome"/>
+
+    <TextView
+        style="@style/BlackText"
+        android:id="@+id/txt_greeting"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/txt_donor_greeting"
+        android:textSize="@dimen/font_normal"
+        android:layout_marginTop="@dimen/spacing_small"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_user_name"/>
+
+    <TextView
+        style="@style/BlackText"
+        android:id="@+id/txt_donating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/txt_your_donation"
+        android:textSize="@dimen/font_xlarge"
+        android:layout_marginTop="@dimen/spacing_large"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_greeting"/>
+
+    <TextView
+        style="@style/BlackText"
+        android:id="@+id/txt_donation_items"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="@string/txt_your_donation"
+        android:textSize="@dimen/font_normal"
+        android:layout_marginTop="@dimen/spacing_small"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_donating"/>
+
+    <TextView
+        style="@style/BlackText"
+        android:id="@+id/txt_your_visibility"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/txt_your_visibility"
+        android:textSize="@dimen/font_xlarge"
+        android:layout_marginTop="@dimen/spacing_large"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_donation_items"/>
+
+    <TextView
+        style="@style/BlackText"
+        android:id="@+id/txt_visibility"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="@string/txt_your_donation"
+        android:textSize="@dimen/font_normal"
+        android:layout_marginTop="@dimen/spacing_small"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_your_visibility"/>
+
+    <Button
+        android:id="@+id/btnUpdate"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/spacing_huge"
+        android:background="@drawable/volunteer_bg"
+        android:text="@string/update_button_label"
+        android:textAllCaps="false"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/font_normal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/txt_your_visibility" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

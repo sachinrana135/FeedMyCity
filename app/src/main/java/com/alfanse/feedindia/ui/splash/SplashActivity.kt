@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -13,7 +14,8 @@ import com.alfanse.feedindia.data.Resource
 import com.alfanse.feedindia.data.Status
 import com.alfanse.feedindia.data.models.UserEntity
 import com.alfanse.feedindia.factory.ViewModelFactory
-import com.alfanse.feedindia.ui.UserViewModel
+import com.alfanse.feedindia.ui.donordetails.DonorDetailsActivity
+import com.alfanse.feedindia.ui.donordetails.DonorHomeActivity
 import com.alfanse.feedindia.ui.usertypes.UserTypesActivity
 import com.alfanse.feedindia.utils.UserType
 import kotlinx.android.synthetic.main.activity_splash.*
@@ -25,39 +27,53 @@ class SplashActivity : AppCompatActivity() {
 
     @Inject
     internal lateinit var viewModelFactory: ViewModelFactory
-    private lateinit var userViewModel: UserViewModel
+    private lateinit var splashViewModel: SplashViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
         (application as FeedIndiaApplication).appComponent.inject(this)
-        userViewModel = ViewModelProviders.of(this, viewModelFactory).get(UserViewModel::class.java)
+        splashViewModel = ViewModelProviders.of(this, viewModelFactory).get(SplashViewModel::class.java)
 
-        userViewModel.getLoggedUser().let {loggedUserId ->
-            if (loggedUserId != null){
-                userViewModel.getUserById(loggedUserId)
-            } else {
+        splashViewModel.getLoggedUser().let { loggedUserId ->
+            if (loggedUserId != null) {
+                splashViewModel.getUserById(loggedUserId)
+            }else {
                 launchUserTypeScreen(UserTypesActivity::class.java)
             }
         }
 
-        userViewModel.userLiveData.observe(this, observer)
+        splashViewModel.userLiveData.observe(this, observer)
     }
 
-    private var observer = Observer<Resource<UserEntity>> {
-        when (it.status) {
+    private var observer = Observer<Resource<UserEntity>> { resource->
+        when (resource.status) {
             Status.LOADING -> {
                 progressBar.visibility = View.VISIBLE
             }
             Status.SUCCESS -> {
+
                 progressBar.visibility = View.GONE
-                val phone = it.data?.mobile
-                if (phone != "" && it.data?.userType == UserType.DONOR){
-                    // Navigate to donor dashboard screen
+                when (resource.data?.userType) {
+                    UserType.DONOR -> {
+                        val intent = Intent(mContext, DonorHomeActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                    }
+                    UserType.MEMBER -> {
+                        //navigate to member screen
+                    }
+                    else -> {
+                        launchUserTypeScreen(UserTypesActivity::class.java)
+                    }
                 }
             }
-            Status.EMPTY, Status.ERROR -> {
+            Status.ERROR -> {
                 progressBar.visibility = View.GONE
+                Toast.makeText(applicationContext, resource.message, Toast.LENGTH_LONG).show()
+            }
+            Status.EMPTY -> {
+
             }
         }
     }

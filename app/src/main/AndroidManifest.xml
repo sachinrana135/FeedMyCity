@@ -20,6 +20,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <activity android:name=".ui.donordetails.DonorHomeActivity"></activity>
+        <activity android:name=".ui.donordetails.DonorDetailsActivity" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
