@@ -9,4 +9,11 @@ class FeedAppRepository
 
     suspend fun saveDonor(saveDonorRequest: SaveDonorRequest) =
         remote.saveDonor(saveDonorRequest)
+
+    suspend fun getUserByMobile(mobile: String) =
+        remote.getUserByMobile(mobile)
+
+    suspend fun getUserById(userId: String) =
+        remote.getUserById(userId)
+
 }

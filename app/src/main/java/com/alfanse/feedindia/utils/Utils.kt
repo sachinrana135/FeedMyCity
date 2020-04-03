@@ -1,4 +1,4 @@
-package com.alfanse.feedindia.di
+package com.alfanse.feedindia.utils
 
 import android.content.Context
 import android.content.pm.PackageManager
@@ -27,6 +27,16 @@ class Utils
         var versionName = ""
         try {
             versionName = BuildConfig.VERSION_NAME
+        } catch (e: PackageManager.NameNotFoundException) {
+            e.printStackTrace()
+        }
+        return versionName
+    }
+
+    public fun getApiToken(): String {
+        var versionName = ""
+        try {
+            versionName = BuildConfig.API_TOKEN
         } catch (e: PackageManager.NameNotFoundException) {
             e.printStackTrace()
         }
