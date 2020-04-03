@@ -1,9 +1,10 @@
-package com.alfanse.feedindia.data
+package com.alfanse.feedindia.data.storage
 
 import android.content.SharedPreferences
 import android.util.Log
 
-class PreferencesApplicationStorage(private val sharedPreferences: SharedPreferences) : ApplicationStorage {
+class PreferencesApplicationStorage(private val sharedPreferences: SharedPreferences) :
+    ApplicationStorage {
 
     override fun putBoolean(key: String, value: Boolean) {
         val editor = sharedPreferences.edit()

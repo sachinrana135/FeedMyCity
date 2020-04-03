@@ -1,4 +1,4 @@
-package com.alfanse.feedindia.data
+package com.alfanse.feedindia.data.storage
 
 interface ApplicationStorage {
     fun putBoolean(key: String, value: Boolean)
