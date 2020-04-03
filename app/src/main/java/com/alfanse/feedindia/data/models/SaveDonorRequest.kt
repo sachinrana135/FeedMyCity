@@ -7,5 +7,6 @@ data class SaveDonorRequest(
     val lng: String,
     val mobile: String,
     val name: String,
-    val status: String
+    val status: String,
+    val location_address: String
 )

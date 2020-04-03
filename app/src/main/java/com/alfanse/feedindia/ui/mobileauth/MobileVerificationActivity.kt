@@ -60,8 +60,8 @@ class MobileVerificationActivity : AppCompatActivity() {
                     override fun onSuccess(user: FirebaseUser?) {
                         // If success then navigate user to Donor details screen
                         if (user != null) {
-                            phoneVerificationViewModel.saveFirebaseUserId(user.uid)
                             phoneNumber = user.phoneNumber
+                            phoneVerificationViewModel.saveFirebaseUserId(user.uid)
                         }
                     }
 

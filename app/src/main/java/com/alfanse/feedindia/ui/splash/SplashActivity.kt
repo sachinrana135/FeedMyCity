@@ -14,8 +14,6 @@ import com.alfanse.feedindia.data.Status
 import com.alfanse.feedindia.data.models.UserEntity
 import com.alfanse.feedindia.factory.ViewModelFactory
 import com.alfanse.feedindia.ui.UserViewModel
-import com.alfanse.feedindia.ui.donordetails.DonorDetailsActivity
-import com.alfanse.feedindia.ui.mobileauth.CodeVerificationActivity
 import com.alfanse.feedindia.ui.usertypes.UserTypesActivity
 import com.alfanse.feedindia.utils.UserType
 import kotlinx.android.synthetic.main.activity_splash.*
@@ -54,9 +52,8 @@ class SplashActivity : AppCompatActivity() {
             Status.SUCCESS -> {
                 progressBar.visibility = View.GONE
                 val phone = it.data?.mobile
-                if (phone != null && it.data.userType == UserType.DONOR){
-                    val donorDetailIntent = Intent(mContext, DonorDetailsActivity::class.java)
-                    donorDetailIntent.putExtra(CodeVerificationActivity.MOBILE_NUM_KEY, donorDetailIntent)
+                if (phone != "" && it.data?.userType == UserType.DONOR){
+                    // Navigate to donor dashboard screen
                 }
             }
             Status.EMPTY, Status.ERROR -> {

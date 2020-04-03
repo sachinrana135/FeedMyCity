@@ -25,4 +25,5 @@
     <string name="radio_button_inactive">Inactive</string>
     <string name="allow_access_label">Allow location access</string>
     <string name="save_button_label">Save</string>
+    <string name="donor_address_hint">Address</string>
 </resources>

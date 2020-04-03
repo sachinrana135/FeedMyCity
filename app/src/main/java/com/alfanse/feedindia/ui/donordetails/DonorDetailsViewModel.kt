@@ -32,14 +32,15 @@ class DonorDetailsViewModel
         status: String,
         lat: String,
         lng: String,
-        mobile: String
+        mobile: String,
+        address: String
     ) {
         saveDonorLiveData.value = Resource.loading(null)
 
         viewModelScope.launch(handler) {
             var firebaseId = memoryStorage.getString(FIREBASE_USER_ID_PREFS_KEY, "")!!
             val saveDonorRequest =
-                SaveDonorRequest(donateItems, firebaseId, lat, lng, mobile, name, status)
+                SaveDonorRequest(donateItems, firebaseId, lat, lng, mobile, name, status, address)
 
             repository.saveDonor(saveDonorRequest)?.let { response ->
                 if (response.userId != null) {

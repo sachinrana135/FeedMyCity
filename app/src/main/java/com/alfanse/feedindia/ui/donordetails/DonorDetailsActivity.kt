@@ -13,7 +13,11 @@ import com.alfanse.feedindia.data.Resource
 import com.alfanse.feedindia.data.Status
 import com.alfanse.feedindia.factory.ViewModelFactory
 import com.alfanse.feedindia.ui.mobileauth.CodeVerificationActivity
-import com.schibstedspain.leku.*
+import com.google.android.material.snackbar.Snackbar
+import com.schibstedspain.leku.LATITUDE
+import com.schibstedspain.leku.LOCATION_ADDRESS
+import com.schibstedspain.leku.LONGITUDE
+import com.schibstedspain.leku.LocationPickerActivity
 import kotlinx.android.synthetic.main.activity_donor_details.*
 import javax.inject.Inject
 
@@ -45,36 +49,42 @@ class DonorDetailsActivity : AppCompatActivity() {
     }
 
     private fun initListener(){
-        var status = 0
+        var status = 1
         rbActive.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked){
-                status = 1
-            }
+            if (isChecked) status = 1
         }
-
-        cbAllowLocation.setOnCheckedChangeListener{ _, isChecked ->
-            if (isChecked){
-                startLocationPicker()
-            }
+        rbInActive.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) status = 0
         }
-
-        if (!cbAllowLocation.isChecked){
-            donorLat = 0.0
-            donorLng = 0.0
+        etDonorAddress.setOnClickListener {
+            startLocationPicker()
         }
 
         btnSave.setOnClickListener {
-            if (etName.text.toString().trim().isEmpty()){
-                etName.error = "Enter name"
-            } else if (etDonationInfo.text.toString().trim().isEmpty()){
-                etDonationInfo.error = "Enter your donation"
+            when {
+                etName.text.toString().trim().isEmpty() -> {
+                    etName.error = "Enter name"
+                    return@setOnClickListener
+                }
+
+                etDonationInfo.text.toString().trim().isEmpty() -> {
+                    etDonationInfo.error = "Enter your donation"
+                    return@setOnClickListener
+                }
+
+                etDonorAddress.text.toString().trim().isEmpty() -> {
+                    Snackbar.make(findViewById(android.R.id.content), "Please give you location",
+                        Snackbar.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
             }
 
             donorDetailViewModel.saveDonorDetails(etName.text.toString(),
                 etDonationInfo.text.toString(), status.toString(),
                 donorLat.toString(),
                 donorLng.toString(),
-                phone)
+                phone,
+                etDonorAddress.text.toString())
         }
     }
 
@@ -114,11 +124,18 @@ class DonorDetailsActivity : AppCompatActivity() {
                     donorLat = data.getDoubleExtra(LATITUDE, 0.0)
                     donorLng = data.getDoubleExtra(LONGITUDE, 0.0)
                     val address = data.getStringExtra(LOCATION_ADDRESS)
-                    val postalcode = data.getStringExtra(ZIPCODE)
+                    if (address != null){
+                        setAddressToView(address)
+                    }
                 }
             }
         }
     }
+
+    private fun setAddressToView(address: String){
+        etDonorAddress.setText(address)
+    }
+
     companion object {
         private const val TAG = "DonorDetailsActivity"
         private const val MAP_BUTTON_REQUEST_CODE = 1
