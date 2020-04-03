@@ -6,15 +6,23 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
 import android.view.View
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
+import com.alfanse.feedindia.FeedIndiaApplication
 import com.alfanse.feedindia.R
+import com.alfanse.feedindia.factory.ViewModelFactory
+import com.alfanse.feedindia.ui.donordetails.DonorDetailsActivity
 import com.alfanse.feedindia.utils.FirebaseAuthHandler
 import com.google.firebase.FirebaseException
 import com.google.firebase.FirebaseTooManyRequestsException
 import com.google.firebase.auth.*
 import kotlinx.android.synthetic.main.activity_mobile_verification.*
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 class MobileVerificationActivity : AppCompatActivity() {
+    @Inject
+    internal lateinit var viewModelFactory: ViewModelFactory
     private val mContext = this
     private lateinit var auth: FirebaseAuth
 
@@ -23,16 +31,20 @@ class MobileVerificationActivity : AppCompatActivity() {
     private lateinit var resendToken: PhoneAuthProvider.ForceResendingToken
     private lateinit var callbacks: PhoneAuthProvider.OnVerificationStateChangedCallbacks
     private lateinit var firebaseAuthHandler: FirebaseAuthHandler
+    private lateinit var phoneVerificationViewModel: MobileVerificationViewModel
+    private var phoneNumber: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_mobile_verification)
         title = getString(R.string.phone_verification_screen_label)
-        initListener()
-
+        (application as FeedIndiaApplication).appComponent.inject(this)
+        phoneVerificationViewModel = ViewModelProviders.of(this, viewModelFactory).
+            get(MobileVerificationViewModel::class.java)
         auth = FirebaseAuth.getInstance()
-        //btnResend.isEnabled = false
 
+        initListener()
+        observeLiveData()
         callbacks = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
             override fun onVerificationCompleted(credential: PhoneAuthCredential) {
                 progressBar.visibility = View.GONE
@@ -47,6 +59,10 @@ class MobileVerificationActivity : AppCompatActivity() {
                 firebaseAuthHandler = FirebaseAuthHandler(mContext, auth, object : FirebaseAuthHandler.FirebaseAuthListener {
                     override fun onSuccess(user: FirebaseUser?) {
                         // If success then navigate user to Donor details screen
+                        if (user != null) {
+                            phoneNumber = user.phoneNumber
+                            phoneVerificationViewModel.saveFirebaseUserId(user.uid)
+                        }
                     }
 
                     override fun onError(msg: String?) {
@@ -93,6 +109,22 @@ class MobileVerificationActivity : AppCompatActivity() {
                 navigateToCodeVerificationScreen(storedVerificationId)
             }
         }
+    }
+
+    private fun observeLiveData(){
+        phoneVerificationViewModel.firebaseUserIdLiveData.observe(this, Observer<Boolean>{
+            if(phoneNumber == null){
+                phoneNumber = ""
+            }
+            if(it) navigateToDonorDetailsScreen(phoneNumber!!)
+        })
+    }
+
+    private fun navigateToDonorDetailsScreen(phone: String?){
+        val intent = Intent(mContext, DonorDetailsActivity::class.java).also {
+            it.putExtra(CodeVerificationActivity.MOBILE_NUM_KEY, phone)
+        }
+        startActivity(intent)
     }
 
     private fun navigateToCodeVerificationScreen(verificationId: String?){

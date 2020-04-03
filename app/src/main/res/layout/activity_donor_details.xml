@@ -15,7 +15,8 @@
         android:text="@string/name_label"
         android:textSize="@dimen/font_normal"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:focusedByDefault="true"/>
 
     <EditText
         android:id="@+id/etName"
@@ -54,7 +55,8 @@
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="@dimen/spacing_huge"
         android:orientation="horizontal"
-        android:weightSum="1">
+        android:weightSum="1"
+        android:checkedButton="@id/rbActive">
 
         <RadioButton
             android:id="@+id/rbActive"
@@ -72,16 +74,19 @@
             android:layout_weight="0.5"/>
     </RadioGroup>
 
-    <CheckBox
-        android:id="@+id/cbAllowLocation"
-        android:layout_width="wrap_content"
+    <EditText
+        android:id="@+id/etDonorAddress"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_huge"
-        android:text="@string/allow_access_label"
+        android:ems="10"
+        android:hint="@string/donor_address_hint"
+        android:inputType="textMultiLine"
+        android:maxLength="100"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/rgStatus"
-        android:textSize="@dimen/font_large"
-        android:paddingStart="@dimen/spacing_small"/>
+        android:focusableInTouchMode="false"
+        android:focusable="false"/>
 
     <Button
         android:id="@+id/btnSave"
@@ -95,7 +100,7 @@
         android:textSize="@dimen/font_normal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cbAllowLocation" />
+        app:layout_constraintTop_toBottomOf="@id/etDonorAddress" />
 
     <ProgressBar
         android:id="@+id/progressBar"

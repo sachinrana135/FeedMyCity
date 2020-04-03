@@ -78,8 +78,12 @@ buildscript {
 
                 //Firebase
                 "com.google.firebase:firebase-config:16.1.0",
-                "com.google.firebase:firebase-auth:16.0.5"
+                "com.google.firebase:firebase-auth:16.0.5",
 
+                //Leku library
+                "com.schibstedspain.android:leku:6.4.0",
+
+                 "com.android.support:multidex:1.0.3"
         ]
         librariesKapt = [
                 "com.google.dagger:dagger-android-processor:$dagger_version",

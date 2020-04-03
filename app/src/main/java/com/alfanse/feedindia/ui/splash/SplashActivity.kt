@@ -14,7 +14,8 @@ import com.alfanse.feedindia.data.Status
 import com.alfanse.feedindia.data.models.UserEntity
 import com.alfanse.feedindia.factory.ViewModelFactory
 import com.alfanse.feedindia.ui.UserViewModel
-import com.alfanse.feedindia.ui.donordetails.DonorDetailsActivity
+import com.alfanse.feedindia.ui.usertypes.UserTypesActivity
+import com.alfanse.feedindia.utils.UserType
 import kotlinx.android.synthetic.main.activity_splash.*
 import javax.inject.Inject
 
@@ -32,10 +33,12 @@ class SplashActivity : AppCompatActivity() {
         (application as FeedIndiaApplication).appComponent.inject(this)
         userViewModel = ViewModelProviders.of(this, viewModelFactory).get(UserViewModel::class.java)
 
-        userViewModel.getLoggedUser()?.let { loggedUserId ->
-            userViewModel.getUserById(loggedUserId)
-        } ?: run {
-            launchUserTypeScreen()
+        userViewModel.getLoggedUser().let {loggedUserId ->
+            if (loggedUserId != null){
+                userViewModel.getUserById(loggedUserId)
+            } else {
+                launchUserTypeScreen(UserTypesActivity::class.java)
+            }
         }
 
         userViewModel.userLiveData.observe(this, observer)
@@ -45,10 +48,13 @@ class SplashActivity : AppCompatActivity() {
         when (it.status) {
             Status.LOADING -> {
                 progressBar.visibility = View.VISIBLE
-                //Log.d(TAG, it.data?.response?.userId)
             }
             Status.SUCCESS -> {
                 progressBar.visibility = View.GONE
+                val phone = it.data?.mobile
+                if (phone != "" && it.data?.userType == UserType.DONOR){
+                    // Navigate to donor dashboard screen
+                }
             }
             Status.EMPTY, Status.ERROR -> {
                 progressBar.visibility = View.GONE
@@ -57,10 +63,10 @@ class SplashActivity : AppCompatActivity() {
     }
 
 
-    private fun launchUserTypeScreen() {
+    private fun launchUserTypeScreen(clazz: Class<out AppCompatActivity>) {
         val handler = Handler()
         handler.postDelayed(Runnable {
-            startActivity(Intent(mContext, DonorDetailsActivity::class.java))
+            startActivity(Intent(mContext, clazz))
             finish()
         }, 3000)
     }
