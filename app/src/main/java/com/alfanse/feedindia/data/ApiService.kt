@@ -17,5 +17,5 @@ interface ApiService {
     suspend fun getUserById(@Query("userId")  userId:String): UserEntity
 
     @PUT("updateDonor")
-    fun updateDonor(updateDonorRequest: UpdateDonorRequest): Any
+    suspend fun updateDonor(@Body updateDonorRequest: UpdateDonorRequest): Any
 }

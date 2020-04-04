@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".ui.donordetails.UpdateDonorActivity"
-    android:padding="@dimen/spacing_large">
+    android:padding="@dimen/spacing_normal">
 
     <TextView
         android:id="@+id/tvHelpLabel"

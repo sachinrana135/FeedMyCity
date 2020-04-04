@@ -7,6 +7,8 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
+import com.alfanse.feedindia.FeedIndiaApplication
 import com.alfanse.feedindia.R
 import com.alfanse.feedindia.data.Resource
 import com.alfanse.feedindia.data.Status
@@ -28,6 +30,9 @@ class UpdateDonorActivity : AppCompatActivity() {
         title = getString(R.string.update_donor_screen_label)
         supportActionBar?.setHomeButtonEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        (application as FeedIndiaApplication).appComponent.inject(this)
+        viewModel = ViewModelProviders.of(this, viewModelFactory).
+            get(UpdateDonorViewModel::class.java)
         etDonationInfo.setText(User.donateItems)
         if (User.donorVisibility!!) rbActive1.isChecked = true else rbInActive.isChecked = true
         initListener()
