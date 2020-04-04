@@ -2,6 +2,7 @@ package com.alfanse.feedindia.data.repository
 
 import com.alfanse.feedindia.data.ApiService
 import com.alfanse.feedindia.data.models.SaveDonorRequest
+import com.alfanse.feedindia.data.models.UpdateDonorRequest
 import javax.inject.Inject
 
 class FeedAppRepository
@@ -15,5 +16,8 @@ class FeedAppRepository
 
     suspend fun getUserById(userId: String) =
         remote.getUserById(userId)
+
+    suspend fun updateDonor(updateDonorRequest: UpdateDonorRequest) =
+        remote.updateDonor(updateDonorRequest)
 
 }

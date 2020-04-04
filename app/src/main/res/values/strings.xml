@@ -3,8 +3,10 @@
     <string name="join_as_screen_label">Join as</string>
     <string name="phone_verification_screen_label">Phone Verification</string>
     <string name="donor_details_screen_label">Donor Details</string>
+    <string name="update_donor_screen_label">Update Details</string>
 
     <string name="txt_something_wrong">Something went wrong</string>
+    <string name="txt_save_success">Data Saved Successfully</string>
     <string name="txt_home">Home</string>
     <string name="txt_another_try">Give it another try</string>
     <string name="txt_reload">Reload</string>
@@ -24,7 +26,7 @@
     <string name="resend_button_label">Resend</string>
     <string name="phone_verfication_info_label">By tapping \"Send\", an SMS may be sent. Message and data rates may apply.</string>
     <string name="code_verfication_label">Code Verification</string>
-    <string name="verification_info_label">Enter four digit OTP send on your registered mobile</string>
+    <string name="verification_info_label">Enter six digit OTP send on your registered mobile</string>
     <string name="verify_button_label">Verify</string>
     <string name="name_label">Name</string>
     <string name="help_info_label">How you can help?</string>

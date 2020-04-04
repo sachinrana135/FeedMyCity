@@ -111,8 +111,8 @@ class DonorDetailsActivity : AppCompatActivity() {
             Status.SUCCESS -> {
                 progressBar.visibility = View.GONE
                 val intent = Intent(this, DonorHomeActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intent)
-                finish()
             }
             Status.ERROR -> {
                 progressBar.visibility = View.GONE

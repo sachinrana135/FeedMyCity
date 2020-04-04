@@ -28,15 +28,15 @@ class DonorHomeActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         (application as FeedIndiaApplication).appComponent.inject(this)
-        viewModel = ViewModelProviders.of(this, viewModelFactory).
-            get(DonorHomeViewModel::class.java)
+        viewModel =
+            ViewModelProviders.of(this, viewModelFactory).get(DonorHomeViewModel::class.java)
         title = getString(R.string.txt_home)
         txt_user_name.text = User.name
         txt_donation_items.text = User.donateItems
         txt_visibility.text =
             if (User.donorVisibility!!) getString(R.string.txt_visible) else getString(R.string.txt_invisible)
         btnUpdate.setOnClickListener {
-            //navigate to donor update screen
+            startActivity(Intent(this, UpdateDonorActivity::class.java))
         }
     }
 
@@ -63,7 +63,7 @@ class DonorHomeActivity : AppCompatActivity() {
             else -> super.onOptionsItemSelected(item)
         }
     }
-    
+
     companion object {
         private const val TAG = "DonorHomeActivity"
     }
