@@ -8,6 +8,7 @@ import com.alfanse.feedindia.data.storage.ApplicationStorage
 import com.alfanse.feedindia.data.storage.MemoryApplicationStorage
 import com.alfanse.feedindia.data.storage.PreferencesApplicationStorage
 import com.alfanse.feedindia.factory.ViewModelFactory
+import com.alfanse.feedindia.utils.Utils
 import dagger.Module
 import dagger.Provides
 import javax.inject.Named
@@ -27,9 +28,10 @@ class AppModule(private val app: Application) {
     internal fun provideViewModelFactory(
         feedAppRepository: FeedAppRepository,
         sharedPreferences: ApplicationStorage,
-        @Named("memory") memoryStorage: ApplicationStorage
+        @Named("memory") memoryStorage: ApplicationStorage,
+        utils: Utils
     ): ViewModelFactory {
-        return ViewModelFactory(feedAppRepository, sharedPreferences,memoryStorage )
+        return ViewModelFactory(feedAppRepository, sharedPreferences,memoryStorage, utils  )
     }
 
     @Provides
@@ -54,5 +56,10 @@ class AppModule(private val app: Application) {
     @Named("memory")
     fun provideMemoryApplicationStorage(): ApplicationStorage {
         return MemoryApplicationStorage()
+    }
+
+    @Provides
+    fun provideUtils(app: Context, storage:ApplicationStorage): Utils {
+        return Utils(app, storage )
     }
 }

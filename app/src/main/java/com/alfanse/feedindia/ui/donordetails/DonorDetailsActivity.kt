@@ -3,7 +3,9 @@ package com.alfanse.feedindia.ui.donordetails
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -34,6 +36,8 @@ class DonorDetailsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_donor_details)
         title = getString(R.string.donor_details_screen_label)
+        supportActionBar?.setHomeButtonEnabled(true);
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
         (application as FeedIndiaApplication).appComponent.inject(this)
         donorDetailViewModel = ViewModelProviders.of(this, viewModelFactory).
             get(DonorDetailsViewModel::class.java)
@@ -95,12 +99,28 @@ class DonorDetailsActivity : AppCompatActivity() {
             }
             Status.SUCCESS -> {
                 progressBar.visibility = View.GONE
-                //Log.d(TAG, it.data!!)
-                // Navigate donor to dashboard
+                val intent = Intent(this, DonorHomeActivity::class.java)
+                startActivity(intent)
+                finish()
             }
-            Status.EMPTY, Status.ERROR -> {
+            Status.ERROR -> {
                 progressBar.visibility = View.GONE
+                Toast.makeText(applicationContext, it.message, Toast.LENGTH_LONG).show()
             }
+            Status.EMPTY -> {
+
+            }
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Handle item selection
+        return when (item.itemId) {
+            android.R.id.home -> {
+                onBackPressed()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
     }
 

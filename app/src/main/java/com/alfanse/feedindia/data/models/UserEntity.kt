@@ -14,6 +14,11 @@ data class UserEntity(
     @SerializedName("userType")
     val userType: String?,
     @SerializedName("isAdmin")
-    val isAdmin: Boolean
-
+    val isAdmin: Boolean,
+    @SerializedName("needItems")
+    val needItems: String?,
+    @SerializedName("donateItems")
+    val donateItems: String?,
+    @SerializedName("donorVisibility")
+    val donorVisibility: Boolean?
 )

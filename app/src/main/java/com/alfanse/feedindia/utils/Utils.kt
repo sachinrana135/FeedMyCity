@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.provider.Settings
 import com.alfanse.feedindia.BuildConfig
+import com.alfanse.feedindia.data.models.UserEntity
 import com.alfanse.feedindia.data.storage.ApplicationStorage
 import java.util.*
 import javax.inject.Inject
@@ -63,5 +64,35 @@ class Utils
             salt.append(SALTCHARS[index])
         }
         return salt.toString()
+    }
+
+    fun setLoggedUser(user: UserEntity) {
+        // setting logged user in singleton to access anywhere in app
+        User.apply {
+            userId = user.userId
+            firebaseId = user.firebaseId
+            name = user.name
+            mobile = user.mobile
+            userType = user.userType
+            isAdmin = user.isAdmin
+            donateItems = user.donateItems
+            needItems = user.needItems
+            donorVisibility = user.donorVisibility
+        }
+    }
+
+    fun logoutUser(){
+        storage.clearValue(APP_USER_ID_PREFS_KEY)
+        User.apply {
+            userId = null
+            firebaseId = null
+            name = null
+            mobile = null
+            userType = null
+            isAdmin = null
+            donateItems = null
+            needItems = null
+            donorVisibility = null
+        }
     }
 }

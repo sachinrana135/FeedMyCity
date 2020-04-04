@@ -5,8 +5,15 @@
     <string name="donor_details_screen_label">Donor Details</string>
 
     <string name="txt_something_wrong">Something went wrong</string>
+    <string name="txt_home">Home</string>
     <string name="txt_another_try">Give it another try</string>
     <string name="txt_reload">Reload</string>
+    <string name="txt_welcome">Welcome</string>
+    <string name="txt_donor_greeting">Thanks for you contribution helping poor people.</string>
+    <string name="txt_your_donation">Your donation</string>
+    <string name="txt_your_visibility">Your Visibility</string>
+    <string name="txt_visible">Visible</string>
+    <string name="txt_invisible">Invisible</string>
     <string name="splash_screen_title">Feed India</string>
     <string name="donor_type_label">Donor</string>
     <string name="ngo_or_group_label">NGO/Group</string>
@@ -24,6 +31,12 @@
     <string name="radio_button_active">Active</string>
     <string name="radio_button_inactive">Inactive</string>
     <string name="allow_access_label">Allow location access</string>
+    <string name="my_location">My Location</string>
     <string name="save_button_label">Save</string>
     <string name="donor_address_hint">Address</string>
+    <string name="update_button_label">Update</string>
+    <string name="enter_name">Enter name</string>
+    <string name="donation_items">Donation items</string>
+
+    <string name="menu_logout">Logout</string>
 </resources>
