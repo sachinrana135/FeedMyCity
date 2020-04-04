@@ -2,11 +2,9 @@ package com.alfanse.feedindia.data
 
 import com.alfanse.feedindia.data.models.SaveDonorRequest
 import com.alfanse.feedindia.data.models.SaveDonorResponse
+import com.alfanse.feedindia.data.models.UpdateDonorRequest
 import com.alfanse.feedindia.data.models.UserEntity
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Query
+import retrofit2.http.*
 
 interface ApiService {
     @POST("saveDonor")
@@ -17,4 +15,7 @@ interface ApiService {
 
     @GET("getUserById")
     suspend fun getUserById(@Query("userId")  userId:String): UserEntity
+
+    @PUT("updateDonor")
+    suspend fun updateDonor(@Body updateDonorRequest: UpdateDonorRequest): Any
 }
