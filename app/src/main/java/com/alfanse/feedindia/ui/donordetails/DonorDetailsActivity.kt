@@ -2,7 +2,9 @@ package com.alfanse.feedindia.ui.donordetails
 
 import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.os.Looper
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
@@ -15,6 +17,12 @@ import com.alfanse.feedindia.data.Resource
 import com.alfanse.feedindia.data.Status
 import com.alfanse.feedindia.factory.ViewModelFactory
 import com.alfanse.feedindia.ui.mobileauth.CodeVerificationActivity
+import com.alfanse.feedindia.utils.PermissionUtils
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.snackbar.Snackbar
 import com.schibstedspain.leku.LATITUDE
 import com.schibstedspain.leku.LOCATION_ADDRESS
@@ -30,6 +38,9 @@ class DonorDetailsActivity : AppCompatActivity() {
     private var donorLat = 0.0
     private var donorLng = 0.0
     private var phone = ""
+    private var fusedLocationProviderClient: FusedLocationProviderClient? = null
+    private lateinit var locationCallback: LocationCallback
+    private var currentLatLng: LatLng? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,7 +72,7 @@ class DonorDetailsActivity : AppCompatActivity() {
             if (isChecked) status = 0
         }
         etDonorAddress.setOnClickListener {
-            startLocationPicker()
+            requestPermission()
         }
 
         btnSave.setOnClickListener {
@@ -124,9 +135,83 @@ class DonorDetailsActivity : AppCompatActivity() {
         }
     }
 
-    private fun startLocationPicker(){
+    private fun requestPermission(){
+        when {
+            PermissionUtils.isAccessFineLocationGranted(this) -> {
+                when {
+                    PermissionUtils.isLocationEnabled(this) -> {
+                        setUpLocationListener()
+                    }
+                    else -> {
+                        PermissionUtils.showGPSNotEnabledDialog(this)
+                    }
+                }
+            }
+            else -> {
+                PermissionUtils.requestAccessFineLocationPermission(
+                    this,
+                    LOCATION_PERMISSION_REQUEST_CODE
+                )
+            }
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {
+            LOCATION_PERMISSION_REQUEST_CODE -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    when {
+                        PermissionUtils.isLocationEnabled(this) -> {
+                            setUpLocationListener()
+                        }
+                        else -> {
+                            PermissionUtils.showGPSNotEnabledDialog(this)
+                        }
+                    }
+                } else {
+                    Snackbar.make(
+                        findViewById(android.R.id.content),
+                        getString(R.string.location_permission_not_granted),
+                        Snackbar.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        }
+    }
+
+    private fun setUpLocationListener() {
+        fusedLocationProviderClient = FusedLocationProviderClient(this)
+        val locationRequest = LocationRequest().setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+        locationCallback = object : LocationCallback() {
+            override fun onLocationResult(locationResult: LocationResult) {
+                super.onLocationResult(locationResult)
+                if (currentLatLng == null) {
+                    for (location in locationResult.locations) {
+                        if (currentLatLng == null) {
+                            currentLatLng = LatLng(location.latitude, location.longitude)
+
+                            // start map search screen to find address
+                            startLocationPicker(currentLatLng!!)
+                        }
+                    }
+                }
+            }
+        }
+        fusedLocationProviderClient?.requestLocationUpdates(
+            locationRequest,
+            locationCallback,
+            Looper.myLooper()
+        )
+    }
+
+    private fun startLocationPicker(latLng: LatLng){
         val locationPickerIntent = LocationPickerActivity.Builder()
-            .withLocation(DEFAULT_LAT, DEFAULT_LNG)
+            .withLocation(latLng.latitude, latLng.longitude)
             .withSearchZone(INDIA_LOCALE_ZONE)
             .withDefaultLocaleSearchZone()
             .withVoiceSearchHidden()
@@ -156,11 +241,17 @@ class DonorDetailsActivity : AppCompatActivity() {
         etDonorAddress.setText(address)
     }
 
+    override fun onDestroy() {
+        fusedLocationProviderClient?.removeLocationUpdates(locationCallback)
+        super.onDestroy()
+    }
+
     companion object {
         private const val TAG = "DonorDetailsActivity"
         private const val MAP_BUTTON_REQUEST_CODE = 1
         private const val DEFAULT_LAT = 28.6429
         private const val DEFAULT_LNG = 77.2191
         private const val INDIA_LOCALE_ZONE = "en_in"
+        private const val LOCATION_PERMISSION_REQUEST_CODE = 999
     }
 }
