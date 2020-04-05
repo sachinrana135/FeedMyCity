@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.mobileauth.MobileVerificationActivity"
-    android:padding="@dimen/spacing_large">
+    android:padding="@dimen/spacing_large"
+    tools:context=".ui.mobileauth.MobileVerificationActivity">
 
     <TextView
         android:id="@+id/tvPhoneNumber"
@@ -21,17 +21,17 @@
         android:id="@+id/etPhone"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginTop="@dimen/spacing_normal"
         android:ems="10"
         android:inputType="phone"
-        app:layout_constraintTop_toBottomOf="@+id/tvPhoneNumber"
-        android:layout_marginTop="@dimen/spacing_normal" />
+        app:layout_constraintTop_toBottomOf="@+id/tvPhoneNumber" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/btnLayouts"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/etPhone"
-        android:layout_marginTop="@dimen/spacing_normal">
+        android:layout_marginTop="@dimen/spacing_normal"
+        app:layout_constraintTop_toBottomOf="@+id/etPhone">
 
         <Button
             android:id="@+id/btnVerifyNumber"
@@ -39,9 +39,9 @@
             android:layout_height="wrap_content"
             android:background="@drawable/volunteer_bg"
             android:text="@string/verify_number_label"
+            android:textAllCaps="false"
             android:textColor="@android:color/white"
             android:textSize="@dimen/font_normal"
-            android:textAllCaps="false"
             app:layout_constraintHorizontal_weight="0.5"
             app:layout_constraintRight_toLeftOf="@id/btnResend"
             app:layout_constraintStart_toStartOf="@id/btnLayouts"
@@ -51,12 +51,12 @@
             android:id="@+id/btnResend"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/spacing_small"
             android:background="@drawable/volunteer_bg"
             android:text="@string/resend_button_label"
+            android:textAllCaps="false"
             android:textColor="@android:color/white"
             android:textSize="@dimen/font_normal"
-            android:layout_marginLeft="@dimen/spacing_small"
-            android:textAllCaps="false"
             app:layout_constraintEnd_toEndOf="@id/btnLayouts"
             app:layout_constraintHorizontal_weight="0.5"
             app:layout_constraintLeft_toRightOf="@id/btnVerifyNumber"
@@ -65,24 +65,30 @@
 
     <TextView
         android:id="@+id/tvInfo"
+        style="@style/BlackText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_normal"
         android:text="@string/phone_verfication_info_label"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnLayouts"
         android:textSize="@dimen/font_normal"
-        style="@style/BlackText"/>
-
-    <ProgressBar
-        android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:visibility="gone"/>
+        app:layout_constraintTop_toBottomOf="@+id/btnLayouts" />
 
+    <FrameLayout
+        android:id="@+id/progressBar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:visibility="gone">
+
+        <ProgressBar
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </FrameLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

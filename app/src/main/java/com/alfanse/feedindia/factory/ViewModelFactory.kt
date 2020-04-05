@@ -50,7 +50,7 @@ class ViewModelFactory @Inject constructor(
                         utils
                     )
                 isAssignableFrom(MobileVerificationViewModel::class.java) ->
-                    MobileVerificationViewModel(memoryStorage)
+                    MobileVerificationViewModel(memoryStorage, feedAppRepository, utils)
                 isAssignableFrom(UpdateDonorViewModel::class.java) ->
                     UpdateDonorViewModel(feedAppRepository)
                 else ->
