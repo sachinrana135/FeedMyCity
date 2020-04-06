@@ -1,4 +1,4 @@
-package com.alfanse.feedindia.ui.donordetails
+package com.alfanse.feedindia.ui.donor
 
 import androidx.lifecycle.ViewModel
 import com.alfanse.feedindia.utils.Utils
