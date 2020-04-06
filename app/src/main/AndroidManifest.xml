@@ -24,7 +24,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.donordetails.UpdateDonorActivity"></activity>
+        <activity android:name=".ui.groupdetails.GroupHomeActivity"></activity>
+        <activity android:name=".ui.groupdetails.GroupDetailsActivity" />
+        <activity android:name=".ui.donordetails.UpdateDonorActivity" />
         <activity android:name=".ui.donordetails.DonorHomeActivity" />
         <activity android:name=".ui.donordetails.DonorDetailsActivity" />
 

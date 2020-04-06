@@ -7,6 +7,8 @@ import com.alfanse.feedindia.data.storage.ApplicationStorage
 import com.alfanse.feedindia.ui.donordetails.DonorDetailsViewModel
 import com.alfanse.feedindia.ui.donordetails.DonorHomeViewModel
 import com.alfanse.feedindia.ui.donordetails.UpdateDonorViewModel
+import com.alfanse.feedindia.ui.groupdetails.GroupDetailsViewModel
+import com.alfanse.feedindia.ui.groupdetails.GroupHomeViewModel
 import com.alfanse.feedindia.ui.mobileauth.CodeVerificationViewModel
 import com.alfanse.feedindia.ui.mobileauth.MobileVerificationViewModel
 import com.alfanse.feedindia.ui.splash.SplashViewModel
@@ -53,6 +55,14 @@ class ViewModelFactory @Inject constructor(
                     MobileVerificationViewModel(memoryStorage)
                 isAssignableFrom(UpdateDonorViewModel::class.java) ->
                     UpdateDonorViewModel(feedAppRepository)
+                isAssignableFrom(GroupDetailsViewModel::class.java) ->
+                    GroupDetailsViewModel(
+                        feedAppRepository,
+                        sharedPreferences,
+                        memoryStorage,
+                        utils)
+                isAssignableFrom(GroupHomeViewModel::class.java) ->
+                    GroupHomeViewModel(feedAppRepository)
                 else ->
                     error("Invalid View Model class")
             }

@@ -2,6 +2,7 @@ package com.alfanse.feedindia.data.repository
 
 import com.alfanse.feedindia.data.ApiService
 import com.alfanse.feedindia.data.models.SaveDonorRequest
+import com.alfanse.feedindia.data.models.SaveGroupRequest
 import com.alfanse.feedindia.data.models.UpdateDonorRequest
 import javax.inject.Inject
 
@@ -20,4 +21,9 @@ class FeedAppRepository
     suspend fun updateDonor(updateDonorRequest: UpdateDonorRequest) =
         remote.updateDonor(updateDonorRequest)
 
+    suspend fun saveGroup(saveGroupRequest: SaveGroupRequest) =
+        remote.saveGroup(saveGroupRequest)
+
+    suspend fun getNearByUsers(lat: Double, lng: Double, distance: Int, userType: String) =
+        remote.getNearByUsers(lat, lng, distance, userType)
 }

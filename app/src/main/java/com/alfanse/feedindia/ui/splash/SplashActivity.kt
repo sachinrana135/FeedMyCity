@@ -14,10 +14,11 @@ import com.alfanse.feedindia.data.Resource
 import com.alfanse.feedindia.data.Status
 import com.alfanse.feedindia.data.models.UserEntity
 import com.alfanse.feedindia.factory.ViewModelFactory
-import com.alfanse.feedindia.ui.donordetails.DonorDetailsActivity
 import com.alfanse.feedindia.ui.donordetails.DonorHomeActivity
+import com.alfanse.feedindia.ui.groupdetails.GroupHomeActivity
 import com.alfanse.feedindia.ui.usertypes.UserTypesActivity
 import com.alfanse.feedindia.utils.UserType
+import com.google.android.gms.maps.model.LatLng
 import kotlinx.android.synthetic.main.activity_splash.*
 import javax.inject.Inject
 
@@ -62,6 +63,16 @@ class SplashActivity : AppCompatActivity() {
                     }
                     UserType.MEMBER -> {
                         //navigate to member screen
+                        val intent = Intent(mContext, GroupHomeActivity::class.java)
+                        intent.putExtra(GroupHomeActivity.GROUP_NAME_INTENT_EXTRA_KEY, resource.data.groupName)
+                        intent.putExtra(GroupHomeActivity.USER_LAT_INTENT_EXTRA_KEY,
+                            resource.data.lat?.toDouble()
+                        )
+                        intent.putExtra(GroupHomeActivity.USER_LNG_INTENT_EXTRA_KEY,
+                            resource.data.lng?.toDouble()
+                        )
+                        startActivity(intent)
+                        finish()
                     }
                     else -> {
                         launchUserTypeScreen(UserTypesActivity::class.java)

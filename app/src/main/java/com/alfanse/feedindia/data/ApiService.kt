@@ -1,9 +1,6 @@
 package com.alfanse.feedindia.data
 
-import com.alfanse.feedindia.data.models.SaveDonorRequest
-import com.alfanse.feedindia.data.models.SaveDonorResponse
-import com.alfanse.feedindia.data.models.UpdateDonorRequest
-import com.alfanse.feedindia.data.models.UserEntity
+import com.alfanse.feedindia.data.models.*
 import retrofit2.http.*
 
 interface ApiService {
@@ -18,4 +15,13 @@ interface ApiService {
 
     @PUT("updateDonor")
     suspend fun updateDonor(@Body updateDonorRequest: UpdateDonorRequest): Any
+
+    @POST("saveGroup")
+    suspend fun saveGroup(@Body saveGroupRequest: SaveGroupRequest): SaveDonorResponse
+
+    @GET("getNearByUsers")
+    suspend fun getNearByUsers(@Query("lat") lat: Double,
+                               @Query("lng") lng: Double,
+                               @Query("distance") distance: Int,
+                               @Query("user_type") userType: String): List<NearByUsersEntity>
 }

@@ -13,7 +13,9 @@ import com.alfanse.feedindia.FeedIndiaApplication
 import com.alfanse.feedindia.R
 import com.alfanse.feedindia.factory.ViewModelFactory
 import com.alfanse.feedindia.ui.donordetails.DonorDetailsActivity
+import com.alfanse.feedindia.ui.groupdetails.GroupDetailsActivity
 import com.alfanse.feedindia.utils.FirebaseAuthHandler
+import com.alfanse.feedindia.utils.UserType
 import com.google.firebase.FirebaseException
 import com.google.firebase.FirebaseTooManyRequestsException
 import com.google.firebase.auth.*
@@ -34,6 +36,7 @@ class MobileVerificationActivity : AppCompatActivity() {
     private lateinit var firebaseAuthHandler: FirebaseAuthHandler
     private lateinit var phoneVerificationViewModel: MobileVerificationViewModel
     private var phoneNumber: String? = null
+    private var userType: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,11 +44,10 @@ class MobileVerificationActivity : AppCompatActivity() {
         title = getString(R.string.phone_verification_screen_label)
         supportActionBar?.setHomeButtonEnabled(true);
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        initListener()
 
         (application as FeedIndiaApplication).appComponent.inject(this)
-        phoneVerificationViewModel = ViewModelProviders.of(this, viewModelFactory).
-            get(MobileVerificationViewModel::class.java)
+        phoneVerificationViewModel = ViewModelProviders.of(this, viewModelFactory)
+            .get(MobileVerificationViewModel::class.java)
         auth = FirebaseAuth.getInstance()
 
         initListener()
@@ -61,23 +63,26 @@ class MobileVerificationActivity : AppCompatActivity() {
                 //     user action.
                 Log.d(TAG, "onVerificationCompleted:$credential")
                 verificationInProgress = false
-                firebaseAuthHandler = FirebaseAuthHandler(mContext, auth, object : FirebaseAuthHandler.FirebaseAuthListener {
-                    override fun onSuccess(user: FirebaseUser?) {
-                        // If success then navigate user to Donor details screen
-                        if (user != null) {
-                            phoneNumber = user.phoneNumber
-                            phoneVerificationViewModel.saveFirebaseUserId(user.uid)
+                firebaseAuthHandler = FirebaseAuthHandler(
+                    mContext,
+                    auth,
+                    object : FirebaseAuthHandler.FirebaseAuthListener {
+                        override fun onSuccess(user: FirebaseUser?) {
+                            // If success then navigate user to Donor details screen
+                            if (user != null) {
+                                phoneNumber = user.phoneNumber
+                                phoneVerificationViewModel.saveFirebaseUserId(user.uid)
+                            }
                         }
-                    }
 
-                    override fun onError(msg: String?) {
-                        //Show error msg
-                    }
+                        override fun onError(msg: String?) {
+                            //Show error msg
+                        }
 
-                    override fun invalidCode(error: String) {
-                        //No usage in this case
-                    }
-                })
+                        override fun invalidCode(error: String) {
+                            //No usage in this case
+                        }
+                    })
                 firebaseAuthHandler.signInWithPhoneAuthCredential(credential)
             }
 
@@ -114,34 +119,55 @@ class MobileVerificationActivity : AppCompatActivity() {
                 navigateToCodeVerificationScreen(storedVerificationId)
             }
         }
+
+        readUserType()
     }
 
-    private fun observeLiveData(){
-        phoneVerificationViewModel.firebaseUserIdLiveData.observe(this, Observer<Boolean>{
-            if(phoneNumber == null){
+    private fun readUserType() {
+        userType = intent.getStringExtra(USER_TYPE_KEY)
+    }
+
+
+    private fun observeLiveData() {
+        phoneVerificationViewModel.firebaseUserIdLiveData.observe(this, Observer<Boolean> {
+            if (phoneNumber == null) {
                 phoneNumber = ""
             }
-            if(it) navigateToDonorDetailsScreen(phoneNumber!!)
+            if (it) navigateToUserTypeDetailsScreen(phoneNumber!!)
         })
     }
 
-    private fun navigateToDonorDetailsScreen(phone: String?){
-        val intent = Intent(mContext, DonorDetailsActivity::class.java).also {
-            it.putExtra(CodeVerificationActivity.MOBILE_NUM_KEY, phone)
+    private fun navigateToUserTypeDetailsScreen(phone: String?) {
+        var intent: Intent? = null
+        when (userType) {
+            UserType.DONOR -> {
+                intent = Intent(mContext, DonorDetailsActivity::class.java).also {
+                    it.putExtra(CodeVerificationActivity.MOBILE_NUM_KEY, phone)
+                    it.putExtra(USER_TYPE_KEY, userType)
+                }
+            }
+            UserType.MEMBER -> {
+                intent = Intent(mContext, GroupDetailsActivity::class.java).also {
+                    it.putExtra(CodeVerificationActivity.MOBILE_NUM_KEY, phone)
+                    it.putExtra(USER_TYPE_KEY, userType)
+                }
+            }
         }
+
         startActivity(intent)
     }
 
-    private fun navigateToCodeVerificationScreen(verificationId: String?){
+    private fun navigateToCodeVerificationScreen(verificationId: String?) {
         val intent = Intent(mContext, CodeVerificationActivity::class.java).also {
             it.putExtra(CodeVerificationActivity.VERIFICATION_ID_KEY, verificationId)
+            it.putExtra(USER_TYPE_KEY, userType)
         }
         startActivity(intent)
     }
 
-    private fun initListener(){
+    private fun initListener() {
         btnVerifyNumber.setOnClickListener {
-            if (!validatePhoneNumber()){
+            if (!validatePhoneNumber()) {
                 return@setOnClickListener
             }
 
@@ -153,7 +179,7 @@ class MobileVerificationActivity : AppCompatActivity() {
         }
     }
 
-    private fun startPhoneNumberVerification(phoneNumber: String){
+    private fun startPhoneNumberVerification(phoneNumber: String) {
         PhoneAuthProvider.getInstance().verifyPhoneNumber(
             phoneNumber,
             60,
@@ -175,7 +201,8 @@ class MobileVerificationActivity : AppCompatActivity() {
             TimeUnit.SECONDS, // Unit of timeout
             this, // Activity (for callback binding)
             callbacks, // OnVerificationStateChangedCallbacks
-            token) // ForceResendingToken from callbacks
+            token
+        ) // ForceResendingToken from callbacks
     }
 
     private fun validatePhoneNumber(): Boolean {
@@ -189,10 +216,10 @@ class MobileVerificationActivity : AppCompatActivity() {
     }
 
     private fun addCodeToPhoneNumber(phoneInput: String): String {
-        return if (phoneInput.contains(CODE)){
+        return if (phoneInput.contains(CODE)) {
             val array = phoneInput.split("+91");
             CODE + SPACE + array[1]
-        } else{
+        } else {
             "$CODE$SPACE$phoneInput"
         }
     }
@@ -212,5 +239,6 @@ class MobileVerificationActivity : AppCompatActivity() {
         private const val TAG = "MobileVerification"
         private const val SPACE = " "
         private const val CODE = "+91"
+        const val USER_TYPE_KEY = "UserTypeKey"
     }
 }

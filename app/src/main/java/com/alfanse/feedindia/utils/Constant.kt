@@ -10,4 +10,5 @@ object UserType{
     const val MEMBER = "MBR"
     const val DONOR = "DNR"
     const val NEEDIER = "NDR"
+    const val ALL = "ALL"
 }

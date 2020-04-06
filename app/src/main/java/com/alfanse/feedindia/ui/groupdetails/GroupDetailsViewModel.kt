@@ -1,10 +1,11 @@
-package com.alfanse.feedindia.ui.donordetails
+package com.alfanse.feedindia.ui.groupdetails
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alfanse.feedindia.data.Resource
 import com.alfanse.feedindia.data.models.SaveDonorRequest
+import com.alfanse.feedindia.data.models.SaveGroupRequest
 import com.alfanse.feedindia.data.models.UserEntity
 import com.alfanse.feedindia.data.repository.FeedAppRepository
 import com.alfanse.feedindia.data.storage.ApplicationStorage
@@ -12,62 +13,60 @@ import com.alfanse.feedindia.utils.APP_USER_ID_PREFS_KEY
 import com.alfanse.feedindia.utils.FIREBASE_USER_ID_PREFS_KEY
 import com.alfanse.feedindia.utils.UserType
 import com.alfanse.feedindia.utils.Utils
-import com.schibstedspain.leku.geocoder.GeocoderPresenter
-import com.schibstedspain.leku.geocoder.GeocoderRepository
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Named
 
-class DonorDetailsViewModel
+class GroupDetailsViewModel
 @Inject constructor(
     private val repository: FeedAppRepository,
     private val storage: ApplicationStorage,
     @Named("memory") private val memoryStorage: ApplicationStorage,
     private val utils: Utils
 ) : ViewModel() {
-    val saveDonorLiveData = MutableLiveData<Resource<String>>()
+    val saveGroupLiveData = MutableLiveData<Resource<String>>()
 
     private val handler = CoroutineExceptionHandler { _, throwable ->
-        saveDonorLiveData.value = Resource.error(throwable.message, null)
+        saveGroupLiveData.value = Resource.error(throwable.message, null)
     }
 
-    fun saveDonorDetails(
+    fun saveGroupDetails(
         name: String,
-        donateItems: String,
-        status: String,
+        address: String,
+        groupName: String,
         lat: String,
         lng: String,
+        locationAddress: String,
         mobile: String,
-        address: String
+        regNo: String
     ) {
-        saveDonorLiveData.value = Resource.loading(null)
+        saveGroupLiveData.value = Resource.loading(null)
 
         viewModelScope.launch(handler) {
             var firebaseId = memoryStorage.getString(FIREBASE_USER_ID_PREFS_KEY, "")!!
-            val saveDonorRequest =
-                SaveDonorRequest(donateItems, firebaseId, lat, lng, mobile, name, status, address)
+            val saveGroupRequest = SaveGroupRequest(address, name,
+                firebaseId, groupName, lat, lng, locationAddress, mobile, regNo)
 
-            repository.saveDonor(saveDonorRequest).let { response ->
-                if (response.userId != null) {
-                    val statusFlag = status == "1"
+            repository.saveGroup(saveGroupRequest).let { response ->
+                if (response.userId != null){
                     storage.putString(APP_USER_ID_PREFS_KEY, response.userId)
                     var user = UserEntity(
                         response.userId,
                         firebaseId,
                         name,
                         mobile,
-                        UserType.DONOR,
-                        false,
+                        UserType.MEMBER,
+                        true,
                         "",
-                        donateItems,
-                        statusFlag,
+                        "",
+                        false,
                         lat,
                         lng,
-                        ""
+                        groupName
                     )
                     utils.setLoggedUser(user)
-                    saveDonorLiveData.value = Resource.success(response.userId)
+                    saveGroupLiveData.value = Resource.success(response.userId)
                 }
             }
         }

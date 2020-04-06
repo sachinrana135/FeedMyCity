@@ -11,7 +11,9 @@ import com.alfanse.feedindia.FeedIndiaApplication
 import com.alfanse.feedindia.R
 import com.alfanse.feedindia.factory.ViewModelFactory
 import com.alfanse.feedindia.ui.donordetails.DonorDetailsActivity
+import com.alfanse.feedindia.ui.groupdetails.GroupDetailsActivity
 import com.alfanse.feedindia.utils.FirebaseAuthHandler
+import com.alfanse.feedindia.utils.UserType
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -26,6 +28,7 @@ class CodeVerificationActivity : AppCompatActivity() {
     private var storedVerificationId: String? = null
     private lateinit var codeVerificationViewModel: CodeVerificationViewModel
     private var phoneNumber: String? = null
+    private var userType: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +44,11 @@ class CodeVerificationActivity : AppCompatActivity() {
         readVerificationId()
         initListener()
         observeLiveData()
+        readUserType()
+    }
+
+    private fun readUserType() {
+        userType = intent.getStringExtra(MobileVerificationActivity.USER_TYPE_KEY)
     }
 
     private fun initListener(){
@@ -82,17 +90,27 @@ class CodeVerificationActivity : AppCompatActivity() {
             if(phoneNumber == null){
                 phoneNumber = ""
             }
-            if(it) navigateToNextScreen(phoneNumber!!)
+            if(it) navigateToUserTypeDetailsScreen(phoneNumber!!)
         })
     }
 
+    private fun navigateToUserTypeDetailsScreen(phone: String?) {
+        var intent: Intent? = null
+        when (userType) {
+            UserType.DONOR -> {
+                intent = Intent(this, DonorDetailsActivity::class.java).also {
+                    it.putExtra(MOBILE_NUM_KEY, phone)
+                }
+            }
+            UserType.MEMBER -> {
+                intent = Intent(this, GroupDetailsActivity::class.java).also {
+                    it.putExtra(MOBILE_NUM_KEY, phone)
+                }
+            }
+        }
 
-    private fun navigateToNextScreen(phone: String){
-        val intent = Intent(this, DonorDetailsActivity::class.java)
-        intent.putExtra(MOBILE_NUM_KEY, phone)
         startActivity(intent)
     }
-
 
     private fun readVerificationId(){
         storedVerificationId = intent.getStringExtra(VERIFICATION_ID_KEY)
