@@ -4,11 +4,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.alfanse.feedindia.data.repository.FeedAppRepository
 import com.alfanse.feedindia.data.storage.ApplicationStorage
-import com.alfanse.feedindia.ui.donordetails.DonorDetailsViewModel
-import com.alfanse.feedindia.ui.donordetails.DonorHomeViewModel
-import com.alfanse.feedindia.ui.donordetails.UpdateDonorViewModel
+import com.alfanse.feedindia.ui.donor.DonorDetailsViewModel
+import com.alfanse.feedindia.ui.donor.DonorHomeViewModel
+import com.alfanse.feedindia.ui.donor.UpdateDonorViewModel
 import com.alfanse.feedindia.ui.mobileauth.CodeVerificationViewModel
 import com.alfanse.feedindia.ui.mobileauth.MobileVerificationViewModel
+import com.alfanse.feedindia.ui.needier.NeedierListViewModel
 import com.alfanse.feedindia.ui.splash.SplashViewModel
 import com.alfanse.feedindia.utils.Utils
 import javax.inject.Inject
@@ -53,6 +54,8 @@ class ViewModelFactory @Inject constructor(
                     MobileVerificationViewModel(memoryStorage, feedAppRepository, utils)
                 isAssignableFrom(UpdateDonorViewModel::class.java) ->
                     UpdateDonorViewModel(feedAppRepository)
+                isAssignableFrom(NeedierListViewModel::class.java) ->
+                    NeedierListViewModel(feedAppRepository,sharedPreferences)
                 else ->
                     error("Invalid View Model class")
             }

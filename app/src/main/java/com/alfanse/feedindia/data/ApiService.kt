@@ -1,9 +1,6 @@
 package com.alfanse.feedindia.data
 
-import com.alfanse.feedindia.data.models.SaveDonorRequest
-import com.alfanse.feedindia.data.models.SaveDonorResponse
-import com.alfanse.feedindia.data.models.UpdateDonorRequest
-import com.alfanse.feedindia.data.models.UserEntity
+import com.alfanse.feedindia.data.models.*
 import retrofit2.http.*
 
 interface ApiService {
@@ -18,4 +15,7 @@ interface ApiService {
 
     @PUT("updateDonor")
     suspend fun updateDonor(@Body updateDonorRequest: UpdateDonorRequest): Any
+
+    @GET("getGroupNeedierItems")
+    suspend fun getNeediers(@Query("group_id") groupId: String,@Query("status") status: String,@Query("page") page: Int, @Query("page_load") pageLoad: Int): List<NeedieritemEntity>
 }

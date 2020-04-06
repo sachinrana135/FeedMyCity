@@ -1,4 +1,4 @@
-package com.alfanse.feedindia.ui.donordetails
+package com.alfanse.feedindia.ui.donor
 
 import android.app.Activity
 import android.content.Intent

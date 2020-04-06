@@ -24,15 +24,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.donordetails.UpdateDonorActivity"></activity>
-        <activity android:name=".ui.donordetails.DonorHomeActivity" />
-        <activity android:name=".ui.donordetails.DonorDetailsActivity" />
+        <activity android:name=".ui.needier.NeedierListActivity"></activity>
+        <activity android:name=".ui.donor.UpdateDonorActivity" />
+        <activity android:name=".ui.donor.DonorHomeActivity" />
+        <activity android:name=".ui.donor.DonorDetailsActivity" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
-
-        <activity android:name=".ui.donordetails.DonorDetailsActivity" />
+        
         <activity android:name=".ui.mobileauth.CodeVerificationActivity" />
         <activity android:name=".ui.mobileauth.MobileVerificationActivity" />
         <activity android:name=".ui.usertypes.UserTypesActivity" />
@@ -59,7 +59,7 @@
                 android:resource="@xml/leku_searchable" />
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.donordetails.DonorDetailsActivity" />
+                android:value=".ui.donor.DonorDetailsActivity" />
         </activity>
     </application>
 

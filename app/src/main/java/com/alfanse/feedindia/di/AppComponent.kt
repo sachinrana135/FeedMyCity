@@ -1,10 +1,11 @@
 package com.alfanse.feedindia.di
 
-import com.alfanse.feedindia.ui.donordetails.DonorDetailsActivity
-import com.alfanse.feedindia.ui.donordetails.DonorHomeActivity
-import com.alfanse.feedindia.ui.donordetails.UpdateDonorActivity
+import com.alfanse.feedindia.ui.donor.DonorDetailsActivity
+import com.alfanse.feedindia.ui.donor.DonorHomeActivity
+import com.alfanse.feedindia.ui.donor.UpdateDonorActivity
 import com.alfanse.feedindia.ui.mobileauth.CodeVerificationActivity
 import com.alfanse.feedindia.ui.mobileauth.MobileVerificationActivity
+import com.alfanse.feedindia.ui.needier.NeedierListActivity
 import com.alfanse.feedindia.ui.splash.SplashActivity
 import dagger.Component
 import javax.inject.Singleton
@@ -22,4 +23,5 @@ interface AppComponent {
     fun inject(splashActivity: SplashActivity)
     fun inject(donorHomeActivity: DonorHomeActivity)
     fun inject(updateDonorActivity: UpdateDonorActivity)
+    fun inject(needierListActivity: NeedierListActivity)
 }

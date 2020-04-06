@@ -36,6 +36,7 @@ buildscript {
         circular_image_version = "3.1.0"
         cardview_version = "1.0.0"
         androidx_material = "1.0.0"
+        paging_version = "2.1.2"
 
         libraries = [
                 "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version",
@@ -82,6 +83,9 @@ buildscript {
 
                 //Leku library
                 "com.schibstedspain.android:leku:6.4.0",
+
+                //Paging
+                "androidx.paging:paging-runtime:$paging_version",
 
                  "com.android.support:multidex:1.0.3"
         ]
