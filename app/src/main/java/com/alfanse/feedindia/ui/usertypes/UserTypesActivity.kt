@@ -6,6 +6,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.alfanse.feedindia.R
 import com.alfanse.feedindia.ui.mobileauth.MobileVerificationActivity
+import com.alfanse.feedindia.utils.UserType
 import kotlinx.android.synthetic.main.activity_joinee_types.*
 
 class UserTypesActivity : AppCompatActivity() {
@@ -22,8 +23,18 @@ class UserTypesActivity : AppCompatActivity() {
 
     private fun setListener(){
         layoutDonorType.setOnClickListener {
-            startActivity(Intent(mContext, MobileVerificationActivity::class.java))
+            navigateToMobileVerification(UserType.DONOR)
         }
+
+        layoutNgoOrGroupType.setOnClickListener {
+            navigateToMobileVerification(UserType.MEMBER)
+        }
+    }
+
+    private fun navigateToMobileVerification(userType: String){
+        var intent = Intent(mContext, MobileVerificationActivity::class.java)
+        intent.putExtra(MobileVerificationActivity.USER_TYPE_KEY, userType)
+        startActivity(intent)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

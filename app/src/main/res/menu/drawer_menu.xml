@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item android:id="@+id/nav_profile"
+            android:title="@string/profile_label"/>
+        <item android:id="@+id/nav_add_member"
+            android:title="@string/add_member_label"/>
+        <item android:id="@+id/nav_add_needy"
+            android:title="@string/add_needy_label"/>
+        <item android:id="@+id/nav_needy_list"
+            android:title="@string/needy_list_label"/>
+    </group>
+</menu>

@@ -30,10 +30,12 @@
     <string name="verification_info_label">Enter six digit OTP send on your registered mobile</string>
     <string name="verify_button_label">Verify</string>
     <string name="name_label">Name</string>
+    <string name="your_name_label">Your Name</string>
     <string name="help_info_label">How you can help?</string>
     <string name="radio_button_active">Active</string>
     <string name="radio_button_inactive">Inactive</string>
     <string name="allow_access_label">Allow location access</string>
+    <string name="update_your_location">Update your location</string>
     <string name="my_location">My Location</string>
     <string name="save_button_label">Save</string>
     <string name="donor_address_hint">Address</string>
@@ -46,4 +48,16 @@
     <string name="required_for_this_app">Required for this app</string>
     <string name="enable_now">Enable Now</string>
     <string name="location_permission_not_granted">Location Permission not granted</string>
+    <string name="group_details_screen_label">Group Details</string>
+    <string name="group_name_label">Group Name</string>
+    <string name="registered_name_label">Registered Address</string>
+    <string name="gvt_reg_number_label">Gvt. reg number (Optional)</string>
+    <string name="profile_label">Profile</string>
+    <string name="add_needy_label">Add Needy</string>
+    <string name="needy_list_label">Needy List</string>
+    <string name="add_member_label">Add Member</string>
+    <string name="invite_member">Invite Member</string>
+    <string name="sign_out">Sign Out</string>
+    <string name="navigation_drawer_open">Open Drawer</string>
+    <string name="navigation_drawer_close">Close Drawer</string>
 </resources>

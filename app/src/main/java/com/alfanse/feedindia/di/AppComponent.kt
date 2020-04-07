@@ -3,6 +3,8 @@ package com.alfanse.feedindia.di
 import com.alfanse.feedindia.ui.donor.DonorDetailsActivity
 import com.alfanse.feedindia.ui.donor.DonorHomeActivity
 import com.alfanse.feedindia.ui.donor.UpdateDonorActivity
+import com.alfanse.feedindia.ui.groupdetails.GroupDetailsActivity
+import com.alfanse.feedindia.ui.groupdetails.GroupHomeActivity
 import com.alfanse.feedindia.ui.mobileauth.CodeVerificationActivity
 import com.alfanse.feedindia.ui.mobileauth.MobileVerificationActivity
 import com.alfanse.feedindia.ui.needier.NeedierListActivity
@@ -24,4 +26,6 @@ interface AppComponent {
     fun inject(donorHomeActivity: DonorHomeActivity)
     fun inject(updateDonorActivity: UpdateDonorActivity)
     fun inject(needierListActivity: NeedierListActivity)
+    fun inject(groupDetailsActivity: GroupDetailsActivity)
+    fun inject(groupHomeActivity: GroupHomeActivity)
 }

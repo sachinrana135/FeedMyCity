@@ -6,7 +6,6 @@ import android.text.TextUtils
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -16,10 +15,10 @@ import com.alfanse.feedindia.data.Resource
 import com.alfanse.feedindia.data.Status
 import com.alfanse.feedindia.data.models.UserEntity
 import com.alfanse.feedindia.factory.ViewModelFactory
-import com.alfanse.feedindia.ui.donordetails.DonorDetailsActivity
-import com.alfanse.feedindia.ui.donordetails.DonorHomeActivity
-import com.alfanse.feedindia.ui.usertypes.UserTypesActivity
 import com.alfanse.feedindia.ui.donor.DonorDetailsActivity
+import com.alfanse.feedindia.ui.donor.DonorHomeActivity
+import com.alfanse.feedindia.ui.groupdetails.GroupDetailsActivity
+import com.alfanse.feedindia.ui.groupdetails.GroupHomeActivity
 import com.alfanse.feedindia.utils.FirebaseAuthHandler
 import com.alfanse.feedindia.utils.UserType
 import com.google.firebase.FirebaseException
@@ -42,6 +41,7 @@ class MobileVerificationActivity : AppCompatActivity() {
     private lateinit var firebaseAuthHandler: FirebaseAuthHandler
     private lateinit var mobileVerificationViewModel: MobileVerificationViewModel
     private var phoneNumber: String? = null
+    private var userType: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,7 +49,6 @@ class MobileVerificationActivity : AppCompatActivity() {
         title = getString(R.string.phone_verification_screen_label)
         supportActionBar?.setHomeButtonEnabled(true);
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        initListener()
 
         (application as FeedIndiaApplication).appComponent.inject(this)
         mobileVerificationViewModel = ViewModelProviders.of(this, viewModelFactory)
@@ -125,14 +124,21 @@ class MobileVerificationActivity : AppCompatActivity() {
                 navigateToCodeVerificationScreen(storedVerificationId)
             }
         }
+
+        readUserType()
     }
+
+    private fun readUserType() {
+        userType = intent.getStringExtra(USER_TYPE_KEY)
+    }
+
 
     private fun observeLiveData() {
         mobileVerificationViewModel.firebaseUserIdLiveData.observe(this, Observer<Boolean> {
             if (phoneNumber == null) {
                 phoneNumber = ""
             }
-            if (it) navigateToDonorDetailsScreen(phoneNumber!!)
+            if (it) navigateToUserTypeDetailsScreen(phoneNumber!!)
         })
 
         mobileVerificationViewModel.userLiveData.observe(
@@ -153,7 +159,13 @@ class MobileVerificationActivity : AppCompatActivity() {
                             }
                             UserType.MEMBER -> {
                                 //navigate to member screen
-
+                                val intent = Intent(mContext, GroupHomeActivity::class.java)
+                                intent.putExtra(GroupHomeActivity.GROUP_NAME_INTENT_EXTRA_KEY, resource.data.groupName)
+                                intent.putExtra(GroupHomeActivity.USER_LNG_INTENT_EXTRA_KEY, resource.data.lat)
+                                intent.putExtra(GroupHomeActivity.USER_LNG_INTENT_EXTRA_KEY, resource.data.lng)
+                                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                startActivity(intent)
+                                finish()
                             }
                         }
                     }
@@ -167,16 +179,30 @@ class MobileVerificationActivity : AppCompatActivity() {
             })
     }
 
-    private fun navigateToDonorDetailsScreen(phone: String?) {
-        val intent = Intent(mContext, DonorDetailsActivity::class.java).also {
-            it.putExtra(CodeVerificationActivity.MOBILE_NUM_KEY, phone)
+    private fun navigateToUserTypeDetailsScreen(phone: String?) {
+        var intent: Intent? = null
+        when (userType) {
+            UserType.DONOR -> {
+                intent = Intent(mContext, DonorDetailsActivity::class.java).also {
+                    it.putExtra(CodeVerificationActivity.MOBILE_NUM_KEY, phone)
+                    it.putExtra(USER_TYPE_KEY, userType)
+                }
+            }
+            UserType.MEMBER -> {
+                intent = Intent(mContext, GroupDetailsActivity::class.java).also {
+                    it.putExtra(CodeVerificationActivity.MOBILE_NUM_KEY, phone)
+                    it.putExtra(USER_TYPE_KEY, userType)
+                }
+            }
         }
+
         startActivity(intent)
     }
 
     private fun navigateToCodeVerificationScreen(verificationId: String?) {
         val intent = Intent(mContext, CodeVerificationActivity::class.java).also {
             it.putExtra(CodeVerificationActivity.VERIFICATION_ID_KEY, verificationId)
+            it.putExtra(USER_TYPE_KEY, userType)
         }
         startActivity(intent)
     }
@@ -254,5 +280,6 @@ class MobileVerificationActivity : AppCompatActivity() {
         private const val TAG = "MobileVerification"
         private const val SPACE = " "
         private const val CODE = "+91"
+        const val USER_TYPE_KEY = "UserTypeKey"
     }
 }
