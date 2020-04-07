@@ -4,7 +4,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alfanse.feedindia.data.Resource
-import com.alfanse.feedindia.data.models.SaveDonorRequest
 import com.alfanse.feedindia.data.models.SaveGroupRequest
 import com.alfanse.feedindia.data.models.UserEntity
 import com.alfanse.feedindia.data.repository.FeedAppRepository
@@ -61,6 +60,7 @@ class GroupDetailsViewModel
                         "",
                         "",
                         false,
+                        "",
                         lat,
                         lng,
                         groupName,
