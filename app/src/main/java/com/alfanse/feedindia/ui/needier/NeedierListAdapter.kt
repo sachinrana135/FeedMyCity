@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
@@ -13,7 +14,8 @@ import com.alfanse.feedindia.data.models.NeedieritemEntity
 import kotlinx.android.synthetic.main.row_item_needier_item.view.*
 
 class NeedierListAdapter(
-    private val context: Context
+    private val context: Context,
+    private val callHandler: (NeedieritemEntity?)-> Unit
 ) : PagedListAdapter<NeedieritemEntity, NeedierListAdapter.NeedierListViewHolder>(DiffUtilCallBack()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NeedierListViewHolder {
@@ -32,10 +34,15 @@ class NeedierListAdapter(
         holder.status.text = getItem(position)?.name
         holder.needItems.text = getItem(position)?.needItems
         holder.locationAddress.text = getItem(position)?.address
+
+        holder.callAction.setOnClickListener {
+            callHandler(getItem(position))
+        }
     }
 
     class NeedierListViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val userName: TextView = view.tvUserName
+        val callAction: ImageView = view.callAction
         val status: TextView = view.status
         val needItems: TextView = view.tv_items_need
         val locationAddress: TextView = view.tv_address

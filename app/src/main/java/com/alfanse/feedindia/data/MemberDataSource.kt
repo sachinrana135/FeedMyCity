@@ -2,21 +2,20 @@ package com.alfanse.feedindia.data
 
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.PageKeyedDataSource
-import com.alfanse.feedindia.data.models.NeedieritemEntity
+import com.alfanse.feedindia.data.models.UserEntity
 import com.alfanse.feedindia.data.repository.FeedAppRepository
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-class NeedierDataSource(
+class MemberDataSource(
     private val scope: CoroutineScope,
     private val repository: FeedAppRepository,
-    private val groupId: String,
-    private val status: String
-) : PageKeyedDataSource<Int, NeedieritemEntity>() {
+    private val groupId: String
+) : PageKeyedDataSource<Int, UserEntity>() {
 
     val FIRST_PAGE = 1
-    var responseLiveData = MutableLiveData<Resource<List<NeedieritemEntity>>>()
+    var responseLiveData = MutableLiveData<Resource<List<UserEntity>>>()
 
     private val handler = CoroutineExceptionHandler { _, throwable ->
         responseLiveData.postValue(Resource.error(throwable.message, null))
@@ -24,13 +23,12 @@ class NeedierDataSource(
 
     override fun loadInitial(
         params: LoadInitialParams<Int>,
-        callback: LoadInitialCallback<Int, NeedieritemEntity>
+        callback: LoadInitialCallback<Int, UserEntity>
     ) {
         responseLiveData.postValue(Resource.loading(null))
         scope.launch (handler){
-            val response = repository.getNeediers(
+            val response = repository.getMembers(
                 groupId = groupId,
-                status = status,
                 page = FIRST_PAGE,
                 pageLoad = params.requestedLoadSize
             )
@@ -45,13 +43,12 @@ class NeedierDataSource(
 
     override fun loadAfter(
         params: LoadParams<Int>,
-        callback: LoadCallback<Int, NeedieritemEntity>
+        callback: LoadCallback<Int, UserEntity>
     ) {
         scope.launch(handler) {
             responseLiveData.postValue(Resource.loading(null))
-            val response = repository.getNeediers(
+            val response = repository.getMembers(
                 groupId = groupId,
-                status = status,
                 page = params.key,
                 pageLoad = params.requestedLoadSize
             )
@@ -67,7 +64,7 @@ class NeedierDataSource(
 
     override fun loadBefore(
         params: LoadParams<Int>,
-        callback: LoadCallback<Int, NeedieritemEntity>
+        callback: LoadCallback<Int, UserEntity>
     ) {
     }
 }

@@ -5,12 +5,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alfanse.feedindia.data.Resource
 import com.alfanse.feedindia.data.models.SaveDonorRequest
-import com.alfanse.feedindia.data.models.UserEntity
 import com.alfanse.feedindia.data.repository.FeedAppRepository
 import com.alfanse.feedindia.data.storage.ApplicationStorage
 import com.alfanse.feedindia.utils.APP_USER_ID_PREFS_KEY
 import com.alfanse.feedindia.utils.FIREBASE_USER_ID_PREFS_KEY
-import com.alfanse.feedindia.utils.UserType
 import com.alfanse.feedindia.utils.Utils
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
@@ -46,26 +44,13 @@ class DonorDetailsViewModel
             val saveDonorRequest =
                 SaveDonorRequest(donateItems, firebaseId, lat, lng, mobile, name, status, address)
 
-            repository.saveDonor(saveDonorRequest).let { response ->
-                if (response.userId != null) {
-                    val statusFlag = status == "1"
+            repository.saveDonor(saveDonorRequest)?.let { response ->
+                response.userId?.let { userId ->
                     storage.putString(APP_USER_ID_PREFS_KEY, response.userId)
-                    var user = UserEntity(
-                        response.userId,
-                        firebaseId,
-                        name,
-                        mobile,
-                        UserType.DONOR,
-                        false,
-                        "",
-                        donateItems,
-                        statusFlag,
-                        lat,
-                        lng,
-                        ""
-                    )
-                    utils.setLoggedUser(user)
-                    saveDonorLiveData.value = Resource.success(response.userId)
+                    repository.getUserById(userId)?.let { user ->
+                        utils.setLoggedUser(user)
+                        saveDonorLiveData.value = Resource.success(response.userId)
+                    }
                 }
             }
         }

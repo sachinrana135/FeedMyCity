@@ -17,6 +17,7 @@ import com.alfanse.feedindia.data.models.UserEntity
 import com.alfanse.feedindia.factory.ViewModelFactory
 import com.alfanse.feedindia.ui.donor.DonorDetailsActivity
 import com.alfanse.feedindia.ui.donor.DonorHomeActivity
+import com.alfanse.feedindia.ui.donor.DonorHomeActivity
 import com.alfanse.feedindia.ui.groupdetails.GroupDetailsActivity
 import com.alfanse.feedindia.ui.groupdetails.GroupHomeActivity
 import com.alfanse.feedindia.utils.FirebaseAuthHandler

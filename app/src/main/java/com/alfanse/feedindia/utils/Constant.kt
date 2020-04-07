@@ -7,6 +7,9 @@ const val APP_GROUP_ID_PREFS_KEY = "appUserIdPrefsKey"
 const val API_TOKEN_PREFS_KEY = "apiTokenPrefsKey"
 const val BUNDLE_KEY_USER = "bundleKeyUser"
 
+const val LOADING = "Loading"
+const val LOADED = "Loaded"
+
 object UserType{
     const val MEMBER = "MBR"
     const val DONOR = "DNR"

@@ -47,4 +47,19 @@ object PermissionUtils {
             }
             .show()
     }
+
+    fun isAccessPhoneCallGranted(context: Context): Boolean {
+        return ContextCompat
+            .checkSelfPermission(
+                context,
+                Manifest.permission.CALL_PHONE
+            ) == PackageManager.PERMISSION_GRANTED
+    }
+    fun requestAccessPhoneCallPermission(activity: AppCompatActivity, requestId: Int) {
+        ActivityCompat.requestPermissions(
+            activity,
+            arrayOf(Manifest.permission.CALL_PHONE),
+            requestId
+        )
+    }
 }

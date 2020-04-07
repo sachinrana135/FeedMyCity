@@ -1,8 +1,6 @@
 package com.alfanse.feedindia.ui.needier
 
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import androidx.paging.DataSource
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
@@ -12,9 +10,8 @@ import com.alfanse.feedindia.data.models.NeedieritemEntity
 import com.alfanse.feedindia.data.repository.FeedAppRepository
 import com.alfanse.feedindia.data.storage.ApplicationStorage
 import com.alfanse.feedindia.utils.APP_GROUP_ID_PREFS_KEY
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import javax.inject.Inject
+
 
 class NeedierListViewModel
 @Inject constructor(
@@ -28,33 +25,33 @@ class NeedierListViewModel
             .setEnablePlaceholders(true)
             .build()
 
-    val needierLiveData = MutableLiveData<Resource<PagedList<NeedieritemEntity>>>()
+    lateinit var needierLiveData: LiveData<PagedList<NeedieritemEntity>>
+    lateinit var needierResourceLiveData: LiveData<Resource<List<NeedieritemEntity>>>
 
     fun getNeediers(status: String) {
-        needierLiveData.value = Resource.loading(null)
-        initializedPagedListBuilder(config, groupId, status).build().observeForever {
-            needierLiveData.value = Resource.success(it)
+        dataSourceFactory.status = status
+        needierLiveData =
+            LivePagedListBuilder<Int, NeedieritemEntity>(dataSourceFactory, config).build()
+        needierResourceLiveData = Transformations.switchMap(
+            dataSourceFactory.needierDataSourceLiveData,
+            NeedierDataSource::responseLiveData
+        )
+    }
+
+    private val dataSourceFactory = object : DataSource.Factory<Int, NeedieritemEntity>() {
+
+        open var status: String = ""
+        val needierDataSourceLiveData = MutableLiveData<NeedierDataSource>()
+
+        override fun create(): DataSource<Int, NeedieritemEntity> {
+            val needierDataSource = NeedierDataSource(viewModelScope, repository, groupId, status)
+            needierDataSourceLiveData.postValue(needierDataSource)
+            return needierDataSource
         }
     }
 
-    private fun initializedPagedListBuilder(
-        config: PagedList.Config,
-        groupId: String,
-        status: String
-    ): LivePagedListBuilder<Int, NeedieritemEntity> {
-
-        val dataSourceFactory = object : DataSource.Factory<Int, NeedieritemEntity>() {
-            override fun create(): DataSource<Int, NeedieritemEntity> {
-                val source = NeedierDataSource(viewModelScope, repository, groupId, status)
-                viewModelScope.launch(Dispatchers.Main) {
-                    source.errorLiveData.observeForever {
-                        needierLiveData.value = Resource.error(it, null)
-                    }
-                }
-                return source
-            }
-        }
-        return LivePagedListBuilder<Int, NeedieritemEntity>(dataSourceFactory, config)
+    fun refresh() {
+        dataSourceFactory.needierDataSourceLiveData.value?.invalidate()
     }
 
     companion object {

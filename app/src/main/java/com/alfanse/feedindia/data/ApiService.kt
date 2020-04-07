@@ -27,4 +27,7 @@ interface ApiService {
                                @Query("lng") lng: Double,
                                @Query("distance") distance: Int,
                                @Query("user_type") userType: String): List<NearByUsersEntity>
+
+    @GET("getGroupMember")
+    suspend fun getMembers(@Query("group_id") groupId: String,@Query("page") page: Int, @Query("page_load") pageLoad: Int): List<UserEntity>
 }

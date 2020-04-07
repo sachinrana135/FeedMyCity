@@ -15,6 +15,7 @@ import com.alfanse.feedindia.data.models.UserEntity
 import com.alfanse.feedindia.factory.ViewModelFactory
 import com.alfanse.feedindia.ui.donor.DonorHomeActivity
 import com.alfanse.feedindia.ui.groupdetails.GroupHomeActivity
+import com.alfanse.feedindia.ui.donor.DonorHomeActivity
 import com.alfanse.feedindia.ui.usertypes.UserTypesActivity
 import com.alfanse.feedindia.utils.UserType
 import com.google.android.material.snackbar.Snackbar
