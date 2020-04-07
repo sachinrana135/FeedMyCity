@@ -21,6 +21,10 @@ class FeedAppRepository
     suspend fun updateDonor(updateDonorRequest: UpdateDonorRequest) =
         remote.updateDonor(updateDonorRequest)
 
+    suspend fun getNeediers(groupId: String, status: String, page: Int, pageLoad:Int) =
+        remote.getNeediers(groupId, status, page, pageLoad)
+
+
     suspend fun saveGroup(saveGroupRequest: SaveGroupRequest) =
         remote.saveGroup(saveGroupRequest)
 

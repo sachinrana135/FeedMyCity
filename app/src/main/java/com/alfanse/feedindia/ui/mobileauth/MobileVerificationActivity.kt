@@ -6,14 +6,21 @@ import android.text.TextUtils
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.alfanse.feedindia.FeedIndiaApplication
 import com.alfanse.feedindia.R
+import com.alfanse.feedindia.data.Resource
+import com.alfanse.feedindia.data.Status
+import com.alfanse.feedindia.data.models.UserEntity
 import com.alfanse.feedindia.factory.ViewModelFactory
 import com.alfanse.feedindia.ui.donordetails.DonorDetailsActivity
 import com.alfanse.feedindia.ui.groupdetails.GroupDetailsActivity
+import com.alfanse.feedindia.ui.donordetails.DonorHomeActivity
+import com.alfanse.feedindia.ui.usertypes.UserTypesActivity
+import com.alfanse.feedindia.ui.donor.DonorDetailsActivity
 import com.alfanse.feedindia.utils.FirebaseAuthHandler
 import com.alfanse.feedindia.utils.UserType
 import com.google.firebase.FirebaseException
@@ -34,7 +41,7 @@ class MobileVerificationActivity : AppCompatActivity() {
     private lateinit var resendToken: PhoneAuthProvider.ForceResendingToken
     private lateinit var callbacks: PhoneAuthProvider.OnVerificationStateChangedCallbacks
     private lateinit var firebaseAuthHandler: FirebaseAuthHandler
-    private lateinit var phoneVerificationViewModel: MobileVerificationViewModel
+    private lateinit var mobileVerificationViewModel: MobileVerificationViewModel
     private var phoneNumber: String? = null
     private var userType: String? = null
 
@@ -46,7 +53,7 @@ class MobileVerificationActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         (application as FeedIndiaApplication).appComponent.inject(this)
-        phoneVerificationViewModel = ViewModelProviders.of(this, viewModelFactory)
+        mobileVerificationViewModel = ViewModelProviders.of(this, viewModelFactory)
             .get(MobileVerificationViewModel::class.java)
         auth = FirebaseAuth.getInstance()
 
@@ -71,7 +78,7 @@ class MobileVerificationActivity : AppCompatActivity() {
                             // If success then navigate user to Donor details screen
                             if (user != null) {
                                 phoneNumber = user.phoneNumber
-                                phoneVerificationViewModel.saveFirebaseUserId(user.uid)
+                                mobileVerificationViewModel.saveFirebaseUserId(user.uid)
                             }
                         }
 
@@ -129,12 +136,43 @@ class MobileVerificationActivity : AppCompatActivity() {
 
 
     private fun observeLiveData() {
-        phoneVerificationViewModel.firebaseUserIdLiveData.observe(this, Observer<Boolean> {
+        mobileVerificationViewModel.firebaseUserIdLiveData.observe(this, Observer<Boolean> {
             if (phoneNumber == null) {
                 phoneNumber = ""
             }
-            if (it) navigateToUserTypeDetailsScreen(phoneNumber!!)
+            if (it) navigateToDonorDetailsScreen(phoneNumber!!)
         })
+
+        mobileVerificationViewModel.userLiveData.observe(
+            this,
+            Observer<Resource<UserEntity>> { resource ->
+                when (resource.status) {
+                    Status.LOADING -> {
+                        progressBar.visibility = View.VISIBLE
+                    }
+                    Status.SUCCESS -> {
+                        progressBar.visibility = View.GONE
+                        when (resource.data?.userType) {
+                            UserType.DONOR -> {
+                                val intent = Intent(mContext, DonorHomeActivity::class.java)
+                                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                startActivity(intent)
+                                finish()
+                            }
+                            UserType.MEMBER -> {
+                                //navigate to member screen
+
+                            }
+                        }
+                    }
+                    Status.ERROR -> {
+                        startPhoneNumberVerification(addCodeToPhoneNumber(etPhone.text.toString()))
+                    }
+                    Status.EMPTY -> {
+                        startPhoneNumberVerification(addCodeToPhoneNumber(etPhone.text.toString()))
+                    }
+                }
+            })
     }
 
     private fun navigateToUserTypeDetailsScreen(phone: String?) {
@@ -170,8 +208,7 @@ class MobileVerificationActivity : AppCompatActivity() {
             if (!validatePhoneNumber()) {
                 return@setOnClickListener
             }
-
-            startPhoneNumberVerification(addCodeToPhoneNumber(etPhone.text.toString()))
+            mobileVerificationViewModel.getUserByMobile(etPhone.text.toString())
         }
 
         btnResend.setOnClickListener {
@@ -188,7 +225,7 @@ class MobileVerificationActivity : AppCompatActivity() {
             callbacks
         )
 
-        progressBar.visibility = View.VISIBLE
+//        progressBar.visibility = View.VISIBLE
     }
 
     private fun resendVerificationCode(

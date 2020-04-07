@@ -1,10 +1,9 @@
-package com.alfanse.feedindia.ui.donordetails
+package com.alfanse.feedindia.ui.donor
 
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -14,6 +13,7 @@ import com.alfanse.feedindia.data.Resource
 import com.alfanse.feedindia.data.Status
 import com.alfanse.feedindia.factory.ViewModelFactory
 import com.alfanse.feedindia.utils.User
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_update_donor.*
 import javax.inject.Inject
 import kotlinx.android.synthetic.main.activity_update_donor.rbActive as rbActive1
@@ -66,18 +66,16 @@ class UpdateDonorActivity : AppCompatActivity() {
             }
             Status.SUCCESS -> {
                 progressBar.visibility = View.GONE
-                Toast.makeText(
-                    applicationContext,
-                    getString(R.string.txt_save_success),
-                    Toast.LENGTH_LONG
-                ).show()
+                Snackbar.make(findViewById(android.R.id.content), getString(R.string.txt_save_success),
+                    Snackbar.LENGTH_SHORT).show()
                 val intent = Intent(this, DonorHomeActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
                 startActivity(intent)
             }
             Status.ERROR -> {
                 progressBar.visibility = View.GONE
-                Toast.makeText(applicationContext, it.message, Toast.LENGTH_LONG).show()
+                Snackbar.make(findViewById(android.R.id.content), it.message!!,
+                    Snackbar.LENGTH_SHORT).show()
             }
             Status.EMPTY -> {
 
