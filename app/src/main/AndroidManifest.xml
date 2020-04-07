@@ -24,15 +24,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.needier.NeedierListActivity"></activity>
+        <activity android:name=".ui.needier.NeedierListActivity"/>
         <activity android:name=".ui.donor.UpdateDonorActivity" />
         <activity android:name=".ui.donor.DonorHomeActivity" />
         <activity android:name=".ui.donor.DonorDetailsActivity" />
-        <activity android:name=".ui.groupdetails.GroupHomeActivity"></activity>
+        <activity android:name=".ui.groupdetails.GroupHomeActivity"/>
         <activity android:name=".ui.groupdetails.GroupDetailsActivity" />
-        <activity android:name=".ui.donordetails.UpdateDonorActivity" />
-        <activity android:name=".ui.donordetails.DonorHomeActivity" />
-        <activity android:name=".ui.donordetails.DonorDetailsActivity" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

@@ -7,9 +7,6 @@ import com.alfanse.feedindia.data.storage.ApplicationStorage
 import com.alfanse.feedindia.ui.donor.DonorDetailsViewModel
 import com.alfanse.feedindia.ui.donor.DonorHomeViewModel
 import com.alfanse.feedindia.ui.donor.UpdateDonorViewModel
-import com.alfanse.feedindia.ui.donordetails.DonorDetailsViewModel
-import com.alfanse.feedindia.ui.donordetails.DonorHomeViewModel
-import com.alfanse.feedindia.ui.donordetails.UpdateDonorViewModel
 import com.alfanse.feedindia.ui.groupdetails.GroupDetailsViewModel
 import com.alfanse.feedindia.ui.groupdetails.GroupHomeViewModel
 import com.alfanse.feedindia.ui.mobileauth.CodeVerificationViewModel

@@ -1,13 +1,10 @@
 package com.alfanse.feedindia.di
 
-import com.alfanse.feedindia.ui.donordetails.DonorDetailsActivity
-import com.alfanse.feedindia.ui.donordetails.DonorHomeActivity
-import com.alfanse.feedindia.ui.donordetails.UpdateDonorActivity
-import com.alfanse.feedindia.ui.groupdetails.GroupDetailsActivity
-import com.alfanse.feedindia.ui.groupdetails.GroupHomeActivity
 import com.alfanse.feedindia.ui.donor.DonorDetailsActivity
 import com.alfanse.feedindia.ui.donor.DonorHomeActivity
 import com.alfanse.feedindia.ui.donor.UpdateDonorActivity
+import com.alfanse.feedindia.ui.groupdetails.GroupDetailsActivity
+import com.alfanse.feedindia.ui.groupdetails.GroupHomeActivity
 import com.alfanse.feedindia.ui.mobileauth.CodeVerificationActivity
 import com.alfanse.feedindia.ui.mobileauth.MobileVerificationActivity
 import com.alfanse.feedindia.ui.needier.NeedierListActivity

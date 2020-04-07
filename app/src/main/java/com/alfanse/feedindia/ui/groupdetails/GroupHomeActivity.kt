@@ -1,5 +1,6 @@
 package com.alfanse.feedindia.ui.groupdetails
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
@@ -13,13 +14,16 @@ import com.alfanse.feedindia.data.Resource
 import com.alfanse.feedindia.data.Status
 import com.alfanse.feedindia.data.models.NearByUsersEntity
 import com.alfanse.feedindia.factory.ViewModelFactory
-import com.alfanse.feedindia.utils.InfoWindowAdapter
+import com.alfanse.feedindia.ui.needier.NeedierListActivity
 import com.alfanse.feedindia.utils.UserType
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.*
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_group_home.*
 import javax.inject.Inject
@@ -123,6 +127,9 @@ class GroupHomeActivity : AppCompatActivity(),
             R.id.nav_add_needy -> {
                 //Open add needy screen
             }
+            R.id.nav_needy_list -> {
+                startActivity(Intent(this, NeedierListActivity::class.java))
+            }
         }
         return true
     }
@@ -182,11 +189,6 @@ class GroupHomeActivity : AppCompatActivity(),
                 ).zoom(10.5f).build()
             )
         )
-    }
-
-    private fun setViewToMarkerWindow(){
-        val infoAdapter = InfoWindowAdapter(this)
-        googleMap.setInfoWindowAdapter(infoAdapter)
     }
 
     override fun onMapReady(googleMap: GoogleMap) {

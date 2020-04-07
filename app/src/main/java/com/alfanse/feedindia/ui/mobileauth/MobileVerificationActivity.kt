@@ -6,7 +6,6 @@ import android.text.TextUtils
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -16,11 +15,10 @@ import com.alfanse.feedindia.data.Resource
 import com.alfanse.feedindia.data.Status
 import com.alfanse.feedindia.data.models.UserEntity
 import com.alfanse.feedindia.factory.ViewModelFactory
-import com.alfanse.feedindia.ui.donordetails.DonorDetailsActivity
-import com.alfanse.feedindia.ui.groupdetails.GroupDetailsActivity
-import com.alfanse.feedindia.ui.donordetails.DonorHomeActivity
-import com.alfanse.feedindia.ui.usertypes.UserTypesActivity
 import com.alfanse.feedindia.ui.donor.DonorDetailsActivity
+import com.alfanse.feedindia.ui.donor.DonorHomeActivity
+import com.alfanse.feedindia.ui.groupdetails.GroupDetailsActivity
+import com.alfanse.feedindia.ui.groupdetails.GroupHomeActivity
 import com.alfanse.feedindia.utils.FirebaseAuthHandler
 import com.alfanse.feedindia.utils.UserType
 import com.google.firebase.FirebaseException
@@ -140,7 +138,7 @@ class MobileVerificationActivity : AppCompatActivity() {
             if (phoneNumber == null) {
                 phoneNumber = ""
             }
-            if (it) navigateToDonorDetailsScreen(phoneNumber!!)
+            if (it) navigateToUserTypeDetailsScreen(phoneNumber!!)
         })
 
         mobileVerificationViewModel.userLiveData.observe(
@@ -161,7 +159,13 @@ class MobileVerificationActivity : AppCompatActivity() {
                             }
                             UserType.MEMBER -> {
                                 //navigate to member screen
-
+                                val intent = Intent(mContext, GroupHomeActivity::class.java)
+                                intent.putExtra(GroupHomeActivity.GROUP_NAME_INTENT_EXTRA_KEY, resource.data.groupName)
+                                intent.putExtra(GroupHomeActivity.USER_LNG_INTENT_EXTRA_KEY, resource.data.lat)
+                                intent.putExtra(GroupHomeActivity.USER_LNG_INTENT_EXTRA_KEY, resource.data.lng)
+                                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                startActivity(intent)
+                                finish()
                             }
                         }
                     }
