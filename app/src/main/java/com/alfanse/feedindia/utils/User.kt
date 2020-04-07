@@ -10,4 +10,5 @@ object User {
     var needItems: String? = ""
     var donateItems: String? = ""
     var donorVisibility: Boolean? = false
+    var groupId: String? = ""
 }

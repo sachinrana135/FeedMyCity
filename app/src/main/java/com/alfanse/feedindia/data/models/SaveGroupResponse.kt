@@ -2,7 +2,9 @@ package com.alfanse.feedindia.data.models
 
 import com.google.gson.annotations.SerializedName
 
-data class SaveDonorResponse(
+data class SaveGroupResponse(
     @SerializedName("userId")
-    val userId: String?
+    val userId: String?,
+    @SerializedName("groupId")
+    val groupId: String?
 )

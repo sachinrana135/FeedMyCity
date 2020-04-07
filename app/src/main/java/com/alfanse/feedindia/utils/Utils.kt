@@ -78,6 +78,7 @@ class Utils
             donateItems = user.donateItems
             needItems = user.needItems
             donorVisibility = user.donorVisibility
+            groupId = user.groupId
         }
     }
 
