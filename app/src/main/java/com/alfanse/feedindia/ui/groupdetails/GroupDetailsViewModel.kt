@@ -63,7 +63,8 @@ class GroupDetailsViewModel
                         false,
                         lat,
                         lng,
-                        groupName
+                        groupName,
+                        response.groupId
                     )
                     utils.setLoggedUser(user)
                     saveGroupLiveData.value = Resource.success(response.userId)

@@ -26,5 +26,7 @@ data class UserEntity(
     @SerializedName("lng")
     val lng: String?,
     @SerializedName("groupName")
-    val groupName: String?
+    val groupName: String?,
+    @SerializedName("groupId")
+    val groupId: String?
 )
