@@ -1,4 +1,4 @@
-package com.alfanse.feedindia.ui.needier
+package com.alfanse.feedindia.ui.member
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -14,52 +14,53 @@ import com.alfanse.feedindia.FeedIndiaApplication
 import com.alfanse.feedindia.R
 import com.alfanse.feedindia.data.Resource
 import com.alfanse.feedindia.data.Status
-import com.alfanse.feedindia.data.models.NeedieritemEntity
+import com.alfanse.feedindia.data.models.UserEntity
 import com.alfanse.feedindia.factory.ViewModelFactory
 import com.alfanse.feedindia.utils.PermissionUtils
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.activity_needier_list.*
+import kotlinx.android.synthetic.main.activity_member_list.*
 import javax.inject.Inject
 
-class NeedierListActivity : AppCompatActivity() {
 
-    private lateinit var adapter: NeedierListAdapter
+class MemberListActivity : AppCompatActivity() {
+
+    private lateinit var adapter: MemberListAdapter
+    var user: UserEntity? = null
 
     @Inject
     internal lateinit var viewModelFactory: ViewModelFactory
-    private lateinit var viewModel: NeedierListViewModel
-    val status = DEFAULT_NEEDIER_STATUS
-    var user: NeedieritemEntity? = null
+    private lateinit var viewModel: MemberListViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_needier_list)
+        setContentView(R.layout.activity_member_list)
         supportActionBar?.setHomeButtonEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        title = getString(R.string.txt_Needier)
+        title = getString(R.string.txt_member)
 
         (application as FeedIndiaApplication).appComponent.inject(this)
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(NeedierListViewModel::class.java)
+        viewModel =
+            ViewModelProviders.of(this, viewModelFactory).get(MemberListViewModel::class.java)
 
-        rvNeedierList.showShimmer()
-        viewModel.getNeediers(status)
+        rvMemberList.showShimmer()
+        viewModel.getMembers()
 
-        viewModel.needierResourceLiveData.observe(this, observer)
-        viewModel.needierLiveData.observe(this, Observer {
+        viewModel.memberResourceLiveData.observe(this, observer)
+        viewModel.memberLiveData.observe(this, Observer {
             adapter.submitList(it)
         })
 
-        adapter = NeedierListAdapter(this){
-            user = it
+        adapter = MemberListAdapter(this) {
+                    user = it
             requestPermission(user)
         }
-        rvNeedierList.adapter = adapter
+        rvMemberList.adapter = adapter
 
         initListener()
     }
 
     @SuppressLint("MissingPermission")
-    private fun requestPermission(user: NeedieritemEntity?) {
+    private fun requestPermission(user: UserEntity?) {
         if (PermissionUtils.isAccessPhoneCallGranted(this)) {
             val callIntent = Intent(Intent.ACTION_CALL)
             callIntent.data = Uri.parse("tel:{${user?.mobile}}")
@@ -96,35 +97,38 @@ class NeedierListActivity : AppCompatActivity() {
         }
     }
 
-    private fun initListener(){
+    private fun initListener() {
         mainLayout.setOnRefreshListener {
-            rvNeedierList.showShimmer()
+            rvMemberList.showShimmer()
             viewModel.refresh()
-            viewModel.getNeediers(status)
+            viewModel.getMembers()
         }
     }
 
-    private var observer = Observer<Resource<List<NeedieritemEntity>>> {
+    private var observer = Observer<Resource<List<UserEntity>>> {
         when (it.status) {
             Status.LOADING -> {
-                rvNeedierList.visibility = View.VISIBLE
+                rvMemberList.visibility = View.VISIBLE
                 txt_no_data.visibility = View.GONE
             }
             Status.SUCCESS -> {
-                rvNeedierList.visibility = View.VISIBLE
-                rvNeedierList.hideShimmer()
+                rvMemberList.visibility = View.VISIBLE
+                rvMemberList.hideShimmer()
                 mainLayout.isRefreshing = false
             }
             Status.ERROR -> {
-                rvNeedierList.hideShimmer()
+                rvMemberList.hideShimmer()
                 mainLayout.isRefreshing = false
-                Snackbar.make(findViewById(android.R.id.content), it.message!!,
-                    Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(
+                    findViewById(android.R.id.content), it.message!!,
+                    Snackbar.LENGTH_SHORT
+                ).show()
             }
-            Status.EMPTY ->{
+            Status.EMPTY -> {
                 mainLayout.isRefreshing = false
-                rvNeedierList.hideShimmer()
-                rvNeedierList.visibility = View.GONE
+                rvMemberList.hideShimmer()
+                rvMemberList.visibility = View.GONE
+                rvMemberList.visibility = View.GONE
                 txt_no_data.visibility = View.VISIBLE
             }
         }
@@ -143,7 +147,7 @@ class NeedierListActivity : AppCompatActivity() {
 
     companion object {
         private const val TAG = "NeedierListActivity"
-        private const val DEFAULT_NEEDIER_STATUS = "1"
         private const val PHONE_CALL_PERMISSION_REQUEST_CODE = 888
     }
+
 }

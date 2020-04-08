@@ -18,7 +18,6 @@ import com.alfanse.feedindia.ui.groupdetails.GroupHomeActivity
 import com.alfanse.feedindia.ui.usertypes.UserTypesActivity
 import com.alfanse.feedindia.utils.UserType
 import com.google.android.material.snackbar.Snackbar
-import com.google.android.gms.maps.model.LatLng
 import kotlinx.android.synthetic.main.activity_splash.*
 import javax.inject.Inject
 

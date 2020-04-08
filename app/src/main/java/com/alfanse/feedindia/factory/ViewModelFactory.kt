@@ -9,6 +9,7 @@ import com.alfanse.feedindia.ui.donor.DonorHomeViewModel
 import com.alfanse.feedindia.ui.donor.UpdateDonorViewModel
 import com.alfanse.feedindia.ui.groupdetails.GroupDetailsViewModel
 import com.alfanse.feedindia.ui.groupdetails.GroupHomeViewModel
+import com.alfanse.feedindia.ui.member.MemberListViewModel
 import com.alfanse.feedindia.ui.mobileauth.CodeVerificationViewModel
 import com.alfanse.feedindia.ui.mobileauth.MobileVerificationViewModel
 import com.alfanse.feedindia.ui.needier.NeedierListViewModel
@@ -66,6 +67,8 @@ class ViewModelFactory @Inject constructor(
                         utils)
                 isAssignableFrom(GroupHomeViewModel::class.java) ->
                     GroupHomeViewModel(feedAppRepository)
+                isAssignableFrom(MemberListViewModel::class.java) ->
+                    MemberListViewModel(feedAppRepository,sharedPreferences)
                 else ->
                     error("Invalid View Model class")
             }

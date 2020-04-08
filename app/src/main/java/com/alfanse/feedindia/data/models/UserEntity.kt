@@ -21,6 +21,8 @@ data class UserEntity(
     val donateItems: String?,
     @SerializedName("donorVisibility")
     val donorVisibility: Boolean?,
+    @SerializedName("address")
+    val address: String?,
     @SerializedName("lat")
     val lat: String?,
     @SerializedName("lng")

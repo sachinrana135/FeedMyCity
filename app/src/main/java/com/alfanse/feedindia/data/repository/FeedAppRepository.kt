@@ -24,6 +24,9 @@ class FeedAppRepository
     suspend fun getNeediers(groupId: String, status: String, page: Int, pageLoad:Int) =
         remote.getNeediers(groupId, status, page, pageLoad)
 
+    suspend fun getMembers(groupId: String, page: Int, pageLoad:Int) =
+        remote.getMembers(groupId, page, pageLoad)
+
 
     suspend fun saveGroup(saveGroupRequest: SaveGroupRequest) =
         remote.saveGroup(saveGroupRequest)
