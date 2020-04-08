@@ -30,4 +30,19 @@ interface ApiService {
 
     @GET("getGroupMember")
     suspend fun getMembers(@Query("group_id") groupId: String,@Query("page") page: Int, @Query("page_load") pageLoad: Int): List<UserEntity>
+
+    @GET("getComments")
+    suspend fun getComments(@Query("needier_item_id") needierItemId: String,@Query("page") page: Int, @Query("page_load") pageLoad: Int): List<CommentEntity>
+
+    @GET("getNeedier")
+    suspend fun getNeedier(@Query("needier_item_id")  needier_item_id:String): NeedieritemEntity
+
+    @GET("getNeedierItemStatusTypes")
+    suspend fun getNeedierItemStatusTypes(): List<NeedierItemStatusEntity>
+
+    @PUT("updateNeedierItemStatus")
+    suspend fun updateNeedierItemStatus(@Body request: UpdateNeedierItemStatusRequest): Any
+
+    @POST("saveComment")
+    suspend fun saveComment(@Body saveCommentRequest: SaveCommentRequest): Any
 }

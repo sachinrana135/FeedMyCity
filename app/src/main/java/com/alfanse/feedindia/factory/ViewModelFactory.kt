@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.alfanse.feedindia.data.repository.FeedAppRepository
 import com.alfanse.feedindia.data.storage.ApplicationStorage
+import com.alfanse.feedindia.ui.comment.CommentViewModel
 import com.alfanse.feedindia.ui.donor.DonorDetailsViewModel
 import com.alfanse.feedindia.ui.donor.DonorHomeViewModel
 import com.alfanse.feedindia.ui.donor.UpdateDonorViewModel
@@ -12,6 +13,7 @@ import com.alfanse.feedindia.ui.groupdetails.GroupHomeViewModel
 import com.alfanse.feedindia.ui.member.MemberListViewModel
 import com.alfanse.feedindia.ui.mobileauth.CodeVerificationViewModel
 import com.alfanse.feedindia.ui.mobileauth.MobileVerificationViewModel
+import com.alfanse.feedindia.ui.needier.NeedierDetailViewModel
 import com.alfanse.feedindia.ui.needier.NeedierListViewModel
 import com.alfanse.feedindia.ui.splash.SplashViewModel
 import com.alfanse.feedindia.utils.Utils
@@ -69,6 +71,10 @@ class ViewModelFactory @Inject constructor(
                     GroupHomeViewModel(feedAppRepository)
                 isAssignableFrom(MemberListViewModel::class.java) ->
                     MemberListViewModel(feedAppRepository,sharedPreferences)
+                isAssignableFrom(CommentViewModel::class.java) ->
+                    CommentViewModel(feedAppRepository)
+                isAssignableFrom(NeedierDetailViewModel::class.java) ->
+                    NeedierDetailViewModel(feedAppRepository)
                 else ->
                     error("Invalid View Model class")
             }
