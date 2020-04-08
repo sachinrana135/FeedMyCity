@@ -1,9 +1,7 @@
 package com.alfanse.feedindia.data.repository
 
 import com.alfanse.feedindia.data.ApiService
-import com.alfanse.feedindia.data.models.SaveDonorRequest
-import com.alfanse.feedindia.data.models.SaveGroupRequest
-import com.alfanse.feedindia.data.models.UpdateDonorRequest
+import com.alfanse.feedindia.data.models.*
 import javax.inject.Inject
 
 class FeedAppRepository
@@ -33,4 +31,20 @@ class FeedAppRepository
 
     suspend fun getNearByUsers(lat: Double, lng: Double, distance: Int, userType: String) =
         remote.getNearByUsers(lat, lng, distance, userType)
+
+    suspend fun getComments(needierItemId: String, page: Int, pageLoad:Int) =
+        remote.getComments(needierItemId, page, pageLoad)
+
+    suspend fun getNeedier(needierItemId: String) =
+        remote.getNeedier(needierItemId)
+
+    suspend fun getNeedierItemStatusTypes() =
+        remote.getNeedierItemStatusTypes()
+
+    suspend fun updateNeedierItemStatus(request: UpdateNeedierItemStatusRequest) =
+        remote.updateNeedierItemStatus(request)
+
+
+    suspend fun saveComment(saveCommentRequest: SaveCommentRequest): Any =
+        remote.saveComment(saveCommentRequest)
 }

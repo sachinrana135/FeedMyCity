@@ -15,7 +15,8 @@ import kotlinx.android.synthetic.main.row_item_needier_item.view.*
 
 class NeedierListAdapter(
     private val context: Context,
-    private val callHandler: (NeedieritemEntity?)-> Unit
+    private val callHandler: (NeedieritemEntity?)-> Unit,
+    private val itemClickHandler: (NeedieritemEntity?)-> Unit
 ) : PagedListAdapter<NeedieritemEntity, NeedierListAdapter.NeedierListViewHolder>(DiffUtilCallBack()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NeedierListViewHolder {
@@ -31,12 +32,16 @@ class NeedierListAdapter(
 
     override fun onBindViewHolder(holder: NeedierListViewHolder, position: Int) {
         holder.userName.text = getItem(position)?.name
-        holder.status.text = getItem(position)?.name
+        holder.status.text = getItem(position)?.status
         holder.needItems.text = getItem(position)?.needItems
         holder.locationAddress.text = getItem(position)?.address
 
         holder.callAction.setOnClickListener {
             callHandler(getItem(position))
+        }
+
+        holder.container.setOnClickListener {
+            itemClickHandler(getItem(position))
         }
     }
 
@@ -46,6 +51,7 @@ class NeedierListAdapter(
         val status: TextView = view.status
         val needItems: TextView = view.tv_items_need
         val locationAddress: TextView = view.tv_address
+        val container:ViewGroup = view.container
     }
 
     class DiffUtilCallBack : DiffUtil.ItemCallback<NeedieritemEntity>() {
