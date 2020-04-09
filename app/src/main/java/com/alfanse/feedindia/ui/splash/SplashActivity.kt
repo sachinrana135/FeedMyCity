@@ -41,8 +41,8 @@ class SplashActivity : AppCompatActivity() {
         (application as FeedIndiaApplication).appComponent.inject(this)
         splashViewModel = ViewModelProviders.of(this, viewModelFactory).get(SplashViewModel::class.java)
 
-        detectDynamicLink()
-
+        //detectDynamicLink()
+        defaultNavigation()
     }
 
     private fun detectDynamicLink() {

@@ -22,7 +22,6 @@ import com.alfanse.feedindia.utils.User
 import com.alfanse.feedindia.ui.profile.GroupProfileActivity
 import com.alfanse.feedindia.ui.usertypes.UserTypesActivity
 import com.alfanse.feedindia.utils.PermissionUtils
-import com.alfanse.feedindia.utils.User
 import com.alfanse.feedindia.utils.UserType
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -87,15 +86,10 @@ class GroupHomeActivity : AppCompatActivity(),
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when(item.itemId){
-            R.id.invite_member -> //Open invite member screen
             R.id.invite_member -> {
                 shareDynamicLink()
                 true
             }
-            R.id.add_needy -> //Open add needy screen
-            true
-            R.id.sign_out -> //Call sign out method
-            true
             android.R.id.home -> {
                 if (layoutDrawer.isDrawerOpen(Gravity.LEFT)){
                     layoutDrawer.closeDrawer(Gravity.LEFT)
