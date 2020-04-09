@@ -63,13 +63,6 @@ class SplashActivity : AppCompatActivity() {
                     UserType.MEMBER -> {
                         //navigate to member screen
                         val intent = Intent(mContext, GroupHomeActivity::class.java)
-                        intent.putExtra(GroupHomeActivity.GROUP_NAME_INTENT_EXTRA_KEY, resource.data.groupName)
-                        intent.putExtra(GroupHomeActivity.USER_LAT_INTENT_EXTRA_KEY,
-                            resource.data.lat?.toDouble()
-                        )
-                        intent.putExtra(GroupHomeActivity.USER_LNG_INTENT_EXTRA_KEY,
-                            resource.data.lng?.toDouble()
-                        )
                         startActivity(intent)
                         finish()
                     }

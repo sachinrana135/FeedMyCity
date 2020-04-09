@@ -46,6 +46,7 @@ class SplashViewModel @Inject constructor(
 
             repository.getUserById(userId).let { user ->
                 // setting logged user in singleton to access anywhere in app
+                storage.putString(APP_USER_ID_PREFS_KEY, user.userId)
                 utils.setLoggedUser(user)
                 userLiveData.value = Resource.success(user)
             }

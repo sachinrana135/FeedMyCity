@@ -48,26 +48,12 @@ class GroupDetailsViewModel
                 firebaseId, groupName, lat, lng, locationAddress, mobile, regNo)
 
             repository.saveGroup(saveGroupRequest).let { response ->
-                if (response.userId != null){
-                    storage.putString(APP_USER_ID_PREFS_KEY, response.userId)
-                    var user = UserEntity(
-                        response.userId,
-                        firebaseId,
-                        name,
-                        mobile,
-                        UserType.MEMBER,
-                        true,
-                        "",
-                        "",
-                        false,
-                        "",
-                        lat,
-                        lng,
-                        groupName,
-                        response.groupId
-                    )
-                    utils.setLoggedUser(user)
-                    saveGroupLiveData.value = Resource.success(response.userId)
+                response.userId?.let {
+                    storage.putString(APP_USER_ID_PREFS_KEY, it)
+                    repository.getUserById(it).let { userEntity ->
+                        utils.setLoggedUser(userEntity)
+                        saveGroupLiveData.value = Resource.success(it)
+                    }
                 }
             }
         }

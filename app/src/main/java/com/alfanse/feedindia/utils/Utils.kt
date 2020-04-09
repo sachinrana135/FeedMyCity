@@ -79,6 +79,10 @@ class Utils
             needItems = user.needItems
             donorVisibility = user.donorVisibility
             groupId = user.groupId
+            lat = user.lat
+            lng = user.lng
+            groupName = user.groupName
+            address = user.address
         }
     }
 

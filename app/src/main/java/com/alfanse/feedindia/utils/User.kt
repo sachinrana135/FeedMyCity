@@ -11,4 +11,8 @@ object User {
     var donateItems: String? = ""
     var donorVisibility: Boolean? = false
     var groupId: String? = ""
+    var lat: String? =  ""
+    var lng: String? = ""
+    var groupName: String? = ""
+    var address: String? = ""
 }

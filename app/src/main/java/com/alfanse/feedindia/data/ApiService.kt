@@ -30,4 +30,10 @@ interface ApiService {
 
     @GET("getGroupMember")
     suspend fun getMembers(@Query("group_id") groupId: String,@Query("page") page: Int, @Query("page_load") pageLoad: Int): List<UserEntity>
+
+    @POST("saveNeedier")
+    suspend fun saveNeedier(@Body saveNeedierRequest: SaveNeedierRequest) : SaveNeedierResponse
+
+    @POST("saveMember")
+    suspend fun saveMember(@Body saveNeedierRequest: SaveNeedierRequest) : SaveNeedierResponse
 }

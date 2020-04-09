@@ -9,5 +9,7 @@
             android:title="@string/add_needy_label"/>
         <item android:id="@+id/nav_needy_list"
             android:title="@string/needy_list_label"/>
+        <item android:id="@+id/nav_sign_out"
+            android:title="@string/sign_out"/>
     </group>
 </menu>
