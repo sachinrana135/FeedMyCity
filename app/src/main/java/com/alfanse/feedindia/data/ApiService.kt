@@ -45,4 +45,10 @@ interface ApiService {
 
     @POST("saveComment")
     suspend fun saveComment(@Body saveCommentRequest: SaveCommentRequest): Any
+
+    @POST("saveNeedier")
+    suspend fun saveNeedier(@Body saveNeedierRequest: SaveNeedierRequest) : SaveNeedierResponse
+
+    @POST("saveMember")
+    suspend fun saveMember(@Body saveNeedierRequest: SaveNeedierRequest) : SaveNeedierResponse
 }

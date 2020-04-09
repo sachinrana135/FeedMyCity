@@ -13,7 +13,7 @@
         style="@style/BlackText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/your_name_label"
+        android:text="@string/name_label"
         android:textSize="@dimen/font_normal"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -29,78 +29,69 @@
         android:layout_marginTop="@dimen/spacing_normal" />
 
     <TextView
-        android:id="@+id/tvGroupLabel"
+        android:id="@+id/tvMobileLabel"
         style="@style/BlackText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_normal"
-        android:text="@string/group_name_label"
+        android:text="@string/mobile_name_label"
         android:textSize="@dimen/font_normal"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/etName" />
 
     <EditText
-        android:id="@+id/etGroupInfo"
+        android:id="@+id/etMobile"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:ems="10"
-        android:inputType="textPersonName"
-        app:layout_constraintTop_toBottomOf="@+id/tvGroupLabel"
+        android:inputType="phone"
+        app:layout_constraintTop_toBottomOf="@+id/tvMobileLabel"
         android:layout_marginTop="@dimen/spacing_normal" />
 
     <TextView
-        android:id="@+id/tvRegisteredAddress"
+        android:id="@+id/tvGroupCode"
         style="@style/BlackText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_normal"
-        android:text="@string/registered_name_label"
+        android:text="@string/group_code_label"
         android:textSize="@dimen/font_normal"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etGroupInfo" />
+        app:layout_constraintTop_toBottomOf="@+id/etMobile" />
 
     <EditText
-        android:id="@+id/etRegisteredAddress"
+        android:id="@+id/etGroupCode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvGroupCode"
+        android:layout_marginTop="@dimen/spacing_normal" />
+
+    <TextView
+        android:id="@+id/tvAddress"
+        style="@style/BlackText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_normal"
+        android:text="@string/donor_address_hint"
+        android:textSize="@dimen/font_normal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etGroupCode" />
+
+    <EditText
+        android:id="@+id/etAddress"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textMultiLine"
         android:maxLength="100"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvRegisteredAddress"
-        android:layout_marginTop="@dimen/spacing_normal" />
-
-    <TextView
-        android:id="@+id/tvGvtRegNumber"
-        style="@style/BlackText"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/tvAddress"
         android:layout_marginTop="@dimen/spacing_normal"
-        android:text="@string/gvt_reg_number_label"
-        android:textSize="@dimen/font_normal"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etRegisteredAddress" />
-
-    <EditText
-        android:id="@+id/etGvtRegNumber"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="text"
-        android:maxLength="100"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvGvtRegNumber"
-        android:layout_marginTop="@dimen/spacing_normal" />
-
-    <CheckBox
-        android:id="@+id/cbAllowLocationAccess"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacing_normal"
-        android:text="@string/allow_access_label"
-        android:textSize="@dimen/font_normal"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etGvtRegNumber"/>
+        android:focusableInTouchMode="false"
+        android:focusable="false"/>
 
     <Button
         android:id="@+id/btnSave"
@@ -114,7 +105,7 @@
         android:textSize="@dimen/font_normal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cbAllowLocationAccess" />
+        app:layout_constraintTop_toBottomOf="@id/etAddress" />
 
     <ProgressBar
         android:id="@+id/progressBar"

@@ -25,8 +25,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.needier.NeedierDetailActivity"></activity>
         <activity android:name=".ui.member.MemberListActivity" />
+        <activity android:name=".ui.profile.GroupProfileActivity"/>
+        <activity android:name=".ui.member.AddMemberActivity" />
+        <activity android:name=".ui.needier.NeedierDetailsActivity" />
         <activity android:name=".ui.needier.NeedierListActivity" />
         <activity android:name=".ui.donor.UpdateDonorActivity" />
         <activity android:name=".ui.donor.DonorHomeActivity" />
@@ -67,9 +69,6 @@
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/leku_searchable" />
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.donor.DonorDetailsActivity" />
         </activity>
     </application>
 

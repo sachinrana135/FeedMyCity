@@ -10,9 +10,11 @@ import com.alfanse.feedindia.ui.donor.DonorHomeViewModel
 import com.alfanse.feedindia.ui.donor.UpdateDonorViewModel
 import com.alfanse.feedindia.ui.groupdetails.GroupDetailsViewModel
 import com.alfanse.feedindia.ui.groupdetails.GroupHomeViewModel
+import com.alfanse.feedindia.ui.member.AddMemberViewModel
 import com.alfanse.feedindia.ui.member.MemberListViewModel
 import com.alfanse.feedindia.ui.mobileauth.CodeVerificationViewModel
 import com.alfanse.feedindia.ui.mobileauth.MobileVerificationViewModel
+import com.alfanse.feedindia.ui.needier.NeedierDetailsViewModel
 import com.alfanse.feedindia.ui.needier.NeedierDetailViewModel
 import com.alfanse.feedindia.ui.needier.NeedierListViewModel
 import com.alfanse.feedindia.ui.splash.SplashViewModel
@@ -56,7 +58,7 @@ class ViewModelFactory @Inject constructor(
                         utils
                     )
                 isAssignableFrom(MobileVerificationViewModel::class.java) ->
-                    MobileVerificationViewModel(memoryStorage, feedAppRepository, utils)
+                    MobileVerificationViewModel(memoryStorage, feedAppRepository, utils, sharedPreferences)
                 isAssignableFrom(UpdateDonorViewModel::class.java) ->
                     UpdateDonorViewModel(feedAppRepository)
                 isAssignableFrom(NeedierListViewModel::class.java) ->
@@ -68,9 +70,13 @@ class ViewModelFactory @Inject constructor(
                         memoryStorage,
                         utils)
                 isAssignableFrom(GroupHomeViewModel::class.java) ->
-                    GroupHomeViewModel(feedAppRepository)
+                    GroupHomeViewModel(feedAppRepository, utils)
                 isAssignableFrom(MemberListViewModel::class.java) ->
                     MemberListViewModel(feedAppRepository,sharedPreferences)
+                isAssignableFrom(NeedierDetailsViewModel::class.java) ->
+                    NeedierDetailsViewModel(feedAppRepository)
+                isAssignableFrom(AddMemberViewModel::class.java) ->
+                    AddMemberViewModel(feedAppRepository)
                 isAssignableFrom(CommentViewModel::class.java) ->
                     CommentViewModel(feedAppRepository)
                 isAssignableFrom(NeedierDetailViewModel::class.java) ->

@@ -1,8 +1,7 @@
-package com.alfanse.feedindia.ui.groupdetails
+package com.alfanse.feedindia.ui.member
 
 import android.app.Activity
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Looper
 import android.view.View
@@ -15,8 +14,6 @@ import com.alfanse.feedindia.R
 import com.alfanse.feedindia.data.Resource
 import com.alfanse.feedindia.data.Status
 import com.alfanse.feedindia.factory.ViewModelFactory
-import com.alfanse.feedindia.ui.mobileauth.CodeVerificationActivity
-import com.alfanse.feedindia.utils.PermissionUtils
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
@@ -27,75 +24,69 @@ import com.schibstedspain.leku.LATITUDE
 import com.schibstedspain.leku.LOCATION_ADDRESS
 import com.schibstedspain.leku.LONGITUDE
 import com.schibstedspain.leku.LocationPickerActivity
-import kotlinx.android.synthetic.main.activity_group_details.*
+import kotlinx.android.synthetic.main.activity_add_member.*
+import kotlinx.android.synthetic.main.activity_needier_details.btnSave
+import kotlinx.android.synthetic.main.activity_needier_details.etAddress
+import kotlinx.android.synthetic.main.activity_needier_details.etMobile
+import kotlinx.android.synthetic.main.activity_needier_details.etName
+import kotlinx.android.synthetic.main.activity_needier_details.progressBar
 import javax.inject.Inject
 
-class GroupDetailsActivity : AppCompatActivity() {
+class AddMemberActivity : AppCompatActivity() {
     @Inject
     internal lateinit var viewModelFactory: ViewModelFactory
-    private lateinit var groupDetailsViewModel: GroupDetailsViewModel
-    private var groupLat = 0.0
-    private var groupLng = 0.0
-    private var phone = ""
+    private lateinit var addMemberViewModel: AddMemberViewModel
+    private var lat = 0.0
+    private var lng = 0.0
     private var fusedLocationProviderClient: FusedLocationProviderClient? = null
     private lateinit var locationCallback: LocationCallback
     private var currentLatLng: LatLng? = null
-    private var geoLocationAddress = ""
-    private var groupName = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_group_details)
-        title = getString(R.string.group_details_screen_label)
+        setContentView(R.layout.activity_add_member)
+        title = getString(R.string.add_member_screen_label)
         (application as FeedIndiaApplication).appComponent.inject(this)
-        groupDetailsViewModel = ViewModelProviders.of(this, viewModelFactory).
-            get(GroupDetailsViewModel::class.java)
-
-        groupDetailsViewModel.saveGroupLiveData.observe(this, observer)
-        readPhoneNum()
+        addMemberViewModel = ViewModelProviders.of(this, viewModelFactory).
+            get(AddMemberViewModel::class.java)
+        addMemberViewModel.addMemberLiveData.observe(this, observer)
         initListener()
     }
 
-    private fun readPhoneNum() {
-        if (intent != null){
-            phone = intent.getStringExtra(CodeVerificationActivity.MOBILE_NUM_KEY)!!
-        }
-    }
-
     private fun initListener(){
-        cbAllowLocationAccess.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked){
-                requestPermission()
-            }
+        etAddress.setOnClickListener {
+            setUpLocationListener()
         }
 
         btnSave.setOnClickListener {
-            val name = etName.text.toString().trim()
-            groupName = etGroupInfo.text.toString().trim()
-            val registeredAddress = etRegisteredAddress.text.toString().trim()
             when {
-                name.isEmpty() -> {
+                etName.text.toString().trim().isEmpty() -> {
                     etName.error = "Enter name"
                     return@setOnClickListener
                 }
-                groupName.isEmpty() -> {
-                    etGroupInfo.error = "Enter group name"
+
+                etMobile.text.toString().trim().isEmpty() -> {
+                    etMobile.error = "Enter Phone"
                     return@setOnClickListener
                 }
-                registeredAddress.isEmpty() -> {
-                    etRegisteredAddress.error = "Enter address"
+
+                etGroupCode.text.toString().trim().isEmpty() -> {
+                    etGroupCode.error = "Enter group code"
                     return@setOnClickListener
                 }
-                geoLocationAddress == "" -> {
-                    Snackbar.make(findViewById(android.R.id.content), "Please give your location",
+
+                etAddress.text.toString().trim().isEmpty() -> {
+                    Snackbar.make(findViewById(android.R.id.content), "Please give address",
                         Snackbar.LENGTH_SHORT).show()
                     return@setOnClickListener
                 }
             }
-
-            groupDetailsViewModel.saveGroupDetails(name, registeredAddress, groupName,
-                groupLat.toString(), groupLng.toString(),
-                geoLocationAddress, phone, etGvtRegNumber.text.toString().trim())
+            val name = etName.text.toString().trim()
+            val mobile = etMobile.text.toString().trim()
+            val groupCode = etGroupCode.text.toString().trim()
+            val address = etAddress.text.toString().trim()
+            addMemberViewModel.saveMember(name, mobile, groupCode,
+                lat.toString(), lng.toString(), address, groupCode)
         }
     }
 
@@ -106,9 +97,8 @@ class GroupDetailsActivity : AppCompatActivity() {
             }
             Status.SUCCESS -> {
                 progressBar.visibility = View.GONE
-                val intent = Intent(this, GroupHomeActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                startActivity(intent)
+                Snackbar.make(findViewById(android.R.id.content), "Member saved successfully",
+                    Snackbar.LENGTH_SHORT).show()
             }
             Status.ERROR -> {
                 progressBar.visibility = View.GONE
@@ -120,56 +110,6 @@ class GroupDetailsActivity : AppCompatActivity() {
         }
     }
 
-    private fun requestPermission(){
-        when {
-            PermissionUtils.isAccessFineLocationGranted(this) -> {
-                when {
-                    PermissionUtils.isLocationEnabled(this) -> {
-                        setUpLocationListener()
-                    }
-                    else -> {
-                        PermissionUtils.showGPSNotEnabledDialog(this)
-                    }
-                }
-            }
-            else -> {
-                PermissionUtils.requestAccessFineLocationPermission(
-                    this,
-                    LOCATION_PERMISSION_REQUEST_CODE
-                )
-            }
-        }
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        when (requestCode) {
-            LOCATION_PERMISSION_REQUEST_CODE -> {
-                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    when {
-                        PermissionUtils.isLocationEnabled(this) -> {
-                            setUpLocationListener()
-                        }
-                        else -> {
-                            PermissionUtils.showGPSNotEnabledDialog(this)
-                        }
-                    }
-                } else {
-                    Snackbar.make(
-                        findViewById(android.R.id.content),
-                        getString(R.string.location_permission_not_granted),
-                        Snackbar.LENGTH_SHORT
-                    ).show()
-                }
-            }
-        }
-    }
-
-
     private fun setUpLocationListener() {
         fusedLocationProviderClient = FusedLocationProviderClient(this)
         val locationRequest = LocationRequest().setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
@@ -180,8 +120,6 @@ class GroupDetailsActivity : AppCompatActivity() {
                     for (location in locationResult.locations) {
                         if (currentLatLng == null) {
                             currentLatLng = LatLng(location.latitude, location.longitude)
-                            groupLat = location.latitude
-                            groupLng = location.longitude
 
                             // start map search screen to find address
                             startLocationPicker(currentLatLng!!)
@@ -214,26 +152,24 @@ class GroupDetailsActivity : AppCompatActivity() {
         if (resultCode != Activity.RESULT_CANCELED){
             if (requestCode == 1){
                 if (data != null){
-                    groupLat = data.getDoubleExtra(LATITUDE, 0.0)
-                    groupLng = data.getDoubleExtra(LONGITUDE, 0.0)
+                    lat = data.getDoubleExtra(LATITUDE, 0.0)
+                    lng = data.getDoubleExtra(LONGITUDE, 0.0)
                     val address = data.getStringExtra(LOCATION_ADDRESS)
                     if (address != null){
-                        geoLocationAddress = address
+                        setAddressToView(address)
                     }
                 }
             }
         }
     }
 
-    override fun onDestroy() {
-        fusedLocationProviderClient?.removeLocationUpdates(locationCallback)
-        super.onDestroy()
+    private fun setAddressToView(address: String){
+        etAddress.setText(address)
     }
 
     companion object {
-        private const val TAG = "GroupDetailsActivity"
-        private const val INDIA_LOCALE_ZONE = "en_in"
-        private const val LOCATION_PERMISSION_REQUEST_CODE = 999
+        private const val TAG = "NeedierDetailsActivity"
         private const val MAP_BUTTON_REQUEST_CODE = 1
+        private const val INDIA_LOCALE_ZONE = "en_in"
     }
 }

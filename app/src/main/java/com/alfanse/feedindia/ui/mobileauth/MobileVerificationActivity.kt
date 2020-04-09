@@ -160,9 +160,6 @@ class MobileVerificationActivity : AppCompatActivity() {
                             UserType.MEMBER -> {
                                 //navigate to member screen
                                 val intent = Intent(mContext, GroupHomeActivity::class.java)
-                                intent.putExtra(GroupHomeActivity.GROUP_NAME_INTENT_EXTRA_KEY, resource.data.groupName)
-                                intent.putExtra(GroupHomeActivity.USER_LNG_INTENT_EXTRA_KEY, resource.data.lat)
-                                intent.putExtra(GroupHomeActivity.USER_LNG_INTENT_EXTRA_KEY, resource.data.lng)
                                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                                 startActivity(intent)
                                 finish()

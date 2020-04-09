@@ -72,4 +72,12 @@
     <string name="txt_share_invite_link">Share Invite link</string>
     <string name="txt_join_group">Join Group</string>
     <string name="txt_choose_one">Choose one</string>
+    <string name="mobile_name_label">Mobile</string>
+    <string name="what_is_needed_label">What is needed?</string>
+    <string name="needier_details_screen_label">Needier Details</string>
+    <string name="add_member_screen_label">Add Member</string>
+    <string name="group_code_label">Group Code</string>
+    <string name="phone_label">Phone</string>
+    <string name="group_label">Group</string>
+    <string name="profile_screen_label">Profile</string>
 </resources>

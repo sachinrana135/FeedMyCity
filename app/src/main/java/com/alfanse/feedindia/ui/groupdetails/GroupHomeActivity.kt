@@ -14,9 +14,14 @@ import com.alfanse.feedindia.data.Resource
 import com.alfanse.feedindia.data.Status
 import com.alfanse.feedindia.data.models.NearByUsersEntity
 import com.alfanse.feedindia.factory.ViewModelFactory
+import com.alfanse.feedindia.ui.member.AddMemberActivity
+import com.alfanse.feedindia.ui.needier.NeedierDetailsActivity
 import com.alfanse.feedindia.ui.needier.NeedierListActivity
 import com.alfanse.feedindia.utils.FIREBASE_DYNAMIC_URL
 import com.alfanse.feedindia.utils.User
+import com.alfanse.feedindia.ui.profile.GroupProfileActivity
+import com.alfanse.feedindia.ui.usertypes.UserTypesActivity
+import com.alfanse.feedindia.utils.PermissionUtils
 import com.alfanse.feedindia.utils.UserType
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -42,34 +47,35 @@ class GroupHomeActivity : AppCompatActivity(),
     internal lateinit var viewModelFactory: ViewModelFactory
     private lateinit var groupHomeViewModel: GroupHomeViewModel
     private lateinit var googleMap: GoogleMap
-    private var lat = 0.0
-    private var lng = 0.0
+    private var lat = User.lat?.toDouble()
+    private var lng = User.lng?.toDouble()
+    private val mContext = this
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_group_home)
+        title = User.groupName
         (application as FeedIndiaApplication).appComponent.inject(this)
         groupHomeViewModel = ViewModelProviders.of(this, viewModelFactory).
             get(GroupHomeViewModel::class.java)
-        readUserData()
-        setUpNavigationDrawer()
         groupHomeViewModel.nearByUsersLiveData.observe(this, observer)
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+        setUpNavigationDrawer()
+        checkLocation()
+        getNearByUsers()
     }
 
-    private fun readUserData(){
-        val groupName = intent.getStringExtra(GROUP_NAME_INTENT_EXTRA_KEY)
-        title = groupName
-        lat = intent.getDoubleExtra(USER_LAT_INTENT_EXTRA_KEY, 0.0)
-        lng = intent.getDoubleExtra(USER_LNG_INTENT_EXTRA_KEY, 0.0)
-        // Call to get near by users
-        getNearByUsers(lat, lng)
+
+    private fun checkLocation(){
+        if (!PermissionUtils.isLocationEnabled(this)){
+            PermissionUtils.showGPSNotEnabledDialog(this)
+        }
     }
 
-    private fun getNearByUsers(lat: Double, lng: Double){
-        groupHomeViewModel.getNearByUsers(lat, lng, DISTANCE)
+    private fun getNearByUsers(){
+        groupHomeViewModel.getNearByUsers(DISTANCE)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -84,10 +90,6 @@ class GroupHomeActivity : AppCompatActivity(),
                 shareDynamicLink()
                 true
             }
-            R.id.add_needy -> //Open add needy screen
-            true
-            R.id.sign_out -> //Call sign out method
-            true
             android.R.id.home -> {
                 if (layoutDrawer.isDrawerOpen(Gravity.LEFT)){
                     layoutDrawer.closeDrawer(Gravity.LEFT)
@@ -143,24 +145,47 @@ class GroupHomeActivity : AppCompatActivity(),
         drawerToggle.isDrawerIndicatorEnabled = true
         layoutDrawer?.addDrawerListener(drawerToggle)
         drawerToggle.syncState()
+        viewDrawer.setNavigationItemSelectedListener(this)
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
             R.id.nav_profile -> {
-                //Open profile screen
+                closeDrawer()
+                startActivity(Intent(this, GroupProfileActivity::class.java))
             }
             R.id.nav_add_member -> {
-                //Open add member screen
+                closeDrawer()
+                startActivity(Intent(this, AddMemberActivity::class.java))
             }
             R.id.nav_add_needy -> {
-                //Open add needy screen
+                closeDrawer()
+                startActivity(Intent(this, NeedierDetailsActivity::class.java))
             }
             R.id.nav_needy_list -> {
+                closeDrawer()
                 startActivity(Intent(this, NeedierListActivity::class.java))
+            }
+            R.id.nav_sign_out -> {
+                closeDrawer()
+                groupHomeViewModel.logOutUserLiveData.observe(this, Observer {
+                    if (it) {
+                        val intent = Intent(mContext, UserTypesActivity::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP and Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        finish()
+                        startActivity(intent)
+                    }
+                })
+                groupHomeViewModel.signOut()
             }
         }
         return true
+    }
+
+    private fun closeDrawer(){
+        if(layoutDrawer.isDrawerOpen(Gravity.LEFT)){
+            layoutDrawer.closeDrawer(Gravity.LEFT)
+        }
     }
 
     private var observer = Observer<Resource<List<NearByUsersEntity>>> {
@@ -185,7 +210,7 @@ class GroupHomeActivity : AppCompatActivity(),
     }
 
     private fun addMarkersToMap(users: List<NearByUsersEntity>){
-        val latlng = LatLng(lat, lng)
+        val latlng = LatLng(lat!!, lng!!)
         moveCamera(latlng)
         animateCamera(latlng)
         for (user in users){
@@ -226,9 +251,6 @@ class GroupHomeActivity : AppCompatActivity(),
 
     companion object {
         private const val TAG = "GroupHomeActivity"
-        const val GROUP_NAME_INTENT_EXTRA_KEY = "GROUP_NAME_INTENT_EXTRA_KEY"
-        const val USER_LAT_INTENT_EXTRA_KEY = "USER_LAT_INTENT_EXTRA_KEY"
-        const val USER_LNG_INTENT_EXTRA_KEY = "USER_LNG_INTENT_EXTRA_KEY"
         private const val DISTANCE = 50
     }
 }

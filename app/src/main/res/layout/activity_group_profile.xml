@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/spacing_large"
+    tools:context=".ui.profile.GroupProfileActivity"
+    android:background="@android:color/background_light">
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/groupCardView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="@dimen/spacing_normal"
+        app:cardElevation="2dp"
+        android:elevation="2dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layoutGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/groupImageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="@+id/layoutGroup"
+                app:layout_constraintBottom_toBottomOf="@+id/layoutGroup"
+                app:layout_constraintStart_toStartOf="@+id/layoutGroup"
+                app:srcCompat="@drawable/ic_group_black_24dp"
+                android:paddingLeft="@dimen/spacing_normal"/>
+
+            <!-- Donor type layout -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layoutGroupView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="10dp"
+                app:layout_constraintLeft_toRightOf="@+id/groupImageView"
+                app:layout_constraintTop_toTopOf="@+id/layoutGroup"
+                android:layout_marginLeft="@dimen/spacing_normal">
+
+                <TextView
+                    android:id="@+id/tvGroupName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Demo"
+                    android:textSize="@dimen/font_xlarge"
+                    app:layout_constraintTop_toTopOf="@+id/layoutGroupView"
+                    app:layout_constraintStart_toStartOf="@+id/layoutGroupView"/>
+
+                <TextView
+                    android:id="@+id/tvGroupNameLabel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/group_label"
+                    android:textSize="@dimen/font_xlarge"
+                    app:layout_constraintTop_toBottomOf="@+id/tvGroupName"
+                    app:layout_constraintStart_toStartOf="@+id/layoutGroupView"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/mobileCardView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/groupCardView"
+        android:layout_marginTop="@dimen/spacing_large"
+        app:cardElevation="2dp"
+        android:elevation="2dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layoutPhone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/phoneImageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="@+id/layoutPhone"
+                app:layout_constraintBottom_toBottomOf="@+id/layoutPhone"
+                app:layout_constraintStart_toStartOf="@+id/layoutPhone"
+                app:srcCompat="@drawable/ic_phone_black_24dp"
+                android:paddingLeft="@dimen/spacing_normal"/>
+
+            <!-- Donor type layout -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layoutPhoneView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="10dp"
+                app:layout_constraintLeft_toRightOf="@+id/phoneImageView"
+                app:layout_constraintTop_toTopOf="@+id/layoutPhone"
+                android:layout_marginLeft="@dimen/spacing_normal">
+
+                <TextView
+                    android:id="@+id/tvPhone"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    tools:text="Demo"
+                    android:textSize="@dimen/font_xlarge"
+                    app:layout_constraintTop_toTopOf="@+id/layoutPhoneView"
+                    app:layout_constraintStart_toStartOf="@+id/layoutPhoneView"/>
+
+                <TextView
+                    android:id="@+id/tvPhoneLabel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/phone_label"
+                    android:textSize="@dimen/font_xlarge"
+                    app:layout_constraintTop_toBottomOf="@+id/tvPhone"
+                    app:layout_constraintStart_toStartOf="@+id/layoutPhoneView"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/addressCardView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/mobileCardView"
+        android:layout_marginTop="@dimen/spacing_large"
+        app:cardElevation="2dp"
+        android:elevation="2dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layoutAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/addressImageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="@+id/layoutAddress"
+                app:layout_constraintBottom_toBottomOf="@+id/layoutAddress"
+                app:layout_constraintStart_toStartOf="@+id/layoutAddress"
+                app:srcCompat="@drawable/ic_home_black_24dp"
+                android:paddingLeft="@dimen/spacing_normal"/>
+
+            <!-- Donor type layout -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layoutHomeView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="10dp"
+                app:layout_constraintLeft_toRightOf="@+id/addressImageView"
+                app:layout_constraintTop_toTopOf="@+id/layoutAddress"
+                android:layout_marginLeft="@dimen/spacing_normal">
+
+                <TextView
+                    android:id="@+id/tvAddress"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    tools:text="Demo"
+                    android:textSize="@dimen/font_xlarge"
+                    app:layout_constraintTop_toTopOf="@+id/layoutHomeView"
+                    app:layout_constraintStart_toStartOf="@+id/layoutHomeView"/>
+
+                <TextView
+                    android:id="@+id/tvAddressLabel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/donor_address_hint"
+                    android:textSize="@dimen/font_xlarge"
+                    app:layout_constraintTop_toBottomOf="@+id/tvAddress"
+                    app:layout_constraintStart_toStartOf="@+id/layoutHomeView"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
+</androidx.constraintlayout.widget.ConstraintLayout>
