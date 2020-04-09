@@ -65,7 +65,7 @@ buildscript {
                 "de.hdodenhof:circleimageview:$circular_image_version",
 
                 //Lifecycle and Livedata
-                "android.arch.lifecycle:extensions:$lifecycle_version",
+                "androidx.lifecycle:lifecycle-extensions:$lifecycle_version",
                 "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version",
                 "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version",
                 "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version",
@@ -78,8 +78,9 @@ buildscript {
                 "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutine",
 
                 //Firebase
-                "com.google.firebase:firebase-config:16.1.0",
-                "com.google.firebase:firebase-auth:16.0.5",
+                "com.google.firebase:firebase-auth:19.3.0",
+                "com.google.firebase:firebase-dynamic-links-ktx:19.1.0",
+                "com.google.firebase:firebase-analytics:17.3.0",
 
                 //Leku library
                 "com.schibstedspain.android:leku:6.4.0",
@@ -87,7 +88,9 @@ buildscript {
                 //Paging
                 "androidx.paging:paging-runtime:$paging_version",
 
-                 "com.android.support:multidex:1.0.3"
+                 "com.android.support:multidex:1.0.3",
+                "androidx.legacy:legacy-support-v4:1.0.0",
+
         ]
         librariesKapt = [
                 "com.google.dagger:dagger-android-processor:$dagger_version",

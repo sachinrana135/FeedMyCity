@@ -1,8 +1,10 @@
 package com.alfanse.feedindia.ui.splash
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -15,9 +17,13 @@ import com.alfanse.feedindia.data.models.UserEntity
 import com.alfanse.feedindia.factory.ViewModelFactory
 import com.alfanse.feedindia.ui.donor.DonorHomeActivity
 import com.alfanse.feedindia.ui.groupdetails.GroupHomeActivity
+import com.alfanse.feedindia.ui.member.MemberListActivity
 import com.alfanse.feedindia.ui.usertypes.UserTypesActivity
+import com.alfanse.feedindia.utils.BUNDLE_KEY_GROUP_CODE
 import com.alfanse.feedindia.utils.UserType
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.dynamiclinks.ktx.dynamicLinks
+import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_splash.*
 import javax.inject.Inject
 
@@ -35,6 +41,36 @@ class SplashActivity : AppCompatActivity() {
         (application as FeedIndiaApplication).appComponent.inject(this)
         splashViewModel = ViewModelProviders.of(this, viewModelFactory).get(SplashViewModel::class.java)
 
+        detectDynamicLink()
+
+    }
+
+    private fun detectDynamicLink() {
+        Firebase.dynamicLinks
+            .getDynamicLink(intent)
+            .addOnSuccessListener(this) { pendingDynamicLinkData ->
+                // Get deep link from result (may be null if no link is found)
+                var deepLink: Uri? = null
+                if (pendingDynamicLinkData != null) {
+                    deepLink = pendingDynamicLinkData.link
+                    val groupCode = deepLink?.getQueryParameter("groupCode")
+
+                    val intent = Intent(mContext, MemberListActivity::class.java)//todo change to add member screen
+                    intent.putExtra(BUNDLE_KEY_GROUP_CODE, groupCode)
+                    startActivity(intent)
+                    finish()
+
+                } else{
+                    startActivity(Intent(this, GroupHomeActivity::class.java))
+                }
+
+            }
+            .addOnFailureListener(this) {
+                    e -> Log.w("Dynamic link", e.message)
+            }
+    }
+
+    private fun defaultNavigation() {
         splashViewModel.getLoggedUser().let { loggedUserId ->
             if (loggedUserId != null) {
                 splashViewModel.getUserById(loggedUserId)

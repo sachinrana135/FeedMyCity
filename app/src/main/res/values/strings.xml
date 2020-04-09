@@ -69,4 +69,7 @@
     <string name="txt_comments">Comments :</string>
     <string name="hint_add_comment">Add comment...</string>
     <string name="error_mandatory">Please enter input</string>
+    <string name="txt_share_invite_link">Share Invite link</string>
+    <string name="txt_join_group">Join Group</string>
+    <string name="txt_choose_one">Choose one</string>
 </resources>
