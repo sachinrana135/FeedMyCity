@@ -17,6 +17,8 @@ import com.alfanse.feedindia.factory.ViewModelFactory
 import com.alfanse.feedindia.ui.member.AddMemberActivity
 import com.alfanse.feedindia.ui.needier.NeedierDetailsActivity
 import com.alfanse.feedindia.ui.needier.NeedierListActivity
+import com.alfanse.feedindia.utils.FIREBASE_DYNAMIC_URL
+import com.alfanse.feedindia.utils.User
 import com.alfanse.feedindia.ui.profile.GroupProfileActivity
 import com.alfanse.feedindia.ui.usertypes.UserTypesActivity
 import com.alfanse.feedindia.utils.PermissionUtils
@@ -31,8 +33,13 @@ import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.navigation.NavigationView
+import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.dynamiclinks.ktx.dynamicLinks
+import com.google.firebase.dynamiclinks.ktx.shortLinkAsync
+import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_group_home.*
 import javax.inject.Inject
+
 
 class GroupHomeActivity : AppCompatActivity(),
     NavigationView.OnNavigationItemSelectedListener,
@@ -81,6 +88,13 @@ class GroupHomeActivity : AppCompatActivity(),
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when(item.itemId){
             R.id.invite_member -> //Open invite member screen
+            R.id.invite_member -> {
+                shareDynamicLink()
+                true
+            }
+            R.id.add_needy -> //Open add needy screen
+            true
+            R.id.sign_out -> //Call sign out method
             true
             android.R.id.home -> {
                 if (layoutDrawer.isDrawerOpen(Gravity.LEFT)){
@@ -91,6 +105,26 @@ class GroupHomeActivity : AppCompatActivity(),
                 true
             }
             else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun shareDynamicLink(){
+        val shortLinkTask = Firebase.dynamicLinks.shortLinkAsync {
+            domainUriPrefix = FIREBASE_DYNAMIC_URL + "?groupCode="+ User.groupCode
+        }.addOnSuccessListener { result ->
+            // Short link created
+            val shortLink = result.shortLink
+            val i = Intent(Intent.ACTION_SEND)
+            i.type = "text/plain"
+            i.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.txt_join_group))
+            i.putExtra(Intent.EXTRA_TEXT, shortLink.toString())
+            startActivity(Intent.createChooser(i, getString(R.string.txt_share_invite_link)))
+        }.addOnFailureListener {
+            Snackbar.make(
+                findViewById(android.R.id.content),
+                it.message.toString(),
+                Snackbar.LENGTH_SHORT
+            ).show()
         }
     }
 

@@ -9,7 +9,8 @@
     <string name="txt_enable_phone_prmsn">Please enable phone permission in setting.</string>
     <string name="txt_save_success">Data Saved Successfully</string>
     <string name="txt_home">Home</string>
-    <string name="txt_Needier">Needier List</string>
+    <string name="txt_Needier">Needy List</string>
+    <string name="txt_Needier_detail">Needy Detail</string>
     <string name="txt_member">Member List</string>
     <string name="txt_admin">Admin</string>
     <string name="txt_another_try">Give it another try</string>
@@ -65,6 +66,12 @@
     <string name="navigation_drawer_open">Open Drawer</string>
     <string name="navigation_drawer_close">Close Drawer</string>
     <string name="call_permission_not_granted">Call Permission not granted</string>
+    <string name="txt_comments">Comments :</string>
+    <string name="hint_add_comment">Add comment...</string>
+    <string name="error_mandatory">Please enter input</string>
+    <string name="txt_share_invite_link">Share Invite link</string>
+    <string name="txt_join_group">Join Group</string>
+    <string name="txt_choose_one">Choose one</string>
     <string name="mobile_name_label">Mobile</string>
     <string name="what_is_needed_label">What is needed?</string>
     <string name="needier_details_screen_label">Needier Details</string>

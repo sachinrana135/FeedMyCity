@@ -83,6 +83,7 @@ class Utils
             lng = user.lng
             groupName = user.groupName
             address = user.address
+            groupCode = user.groupCode
         }
     }
 

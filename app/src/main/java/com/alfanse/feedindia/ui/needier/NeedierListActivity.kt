@@ -16,6 +16,7 @@ import com.alfanse.feedindia.data.Resource
 import com.alfanse.feedindia.data.Status
 import com.alfanse.feedindia.data.models.NeedieritemEntity
 import com.alfanse.feedindia.factory.ViewModelFactory
+import com.alfanse.feedindia.utils.BUNDLE_KEY_NEEDIER_ITEM
 import com.alfanse.feedindia.utils.PermissionUtils
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_needier_list.*
@@ -39,7 +40,8 @@ class NeedierListActivity : AppCompatActivity() {
         title = getString(R.string.txt_Needier)
 
         (application as FeedIndiaApplication).appComponent.inject(this)
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(NeedierListViewModel::class.java)
+        viewModel =
+            ViewModelProviders.of(this, viewModelFactory).get(NeedierListViewModel::class.java)
 
         rvNeedierList.showShimmer()
         viewModel.getNeediers(status)
@@ -49,10 +51,15 @@ class NeedierListActivity : AppCompatActivity() {
             adapter.submitList(it)
         })
 
-        adapter = NeedierListAdapter(this){
+        adapter = NeedierListAdapter(this, {
             user = it
             requestPermission(user)
-        }
+        }, {
+                val detailIntent = Intent(this, NeedierDetailActivity::class.java)
+                detailIntent.putExtra(BUNDLE_KEY_NEEDIER_ITEM, it?.needierItemId)
+                startActivity(detailIntent)
+            }
+        )
         rvNeedierList.adapter = adapter
 
         initListener()
@@ -96,7 +103,7 @@ class NeedierListActivity : AppCompatActivity() {
         }
     }
 
-    private fun initListener(){
+    private fun initListener() {
         mainLayout.setOnRefreshListener {
             rvNeedierList.showShimmer()
             viewModel.refresh()
@@ -118,10 +125,12 @@ class NeedierListActivity : AppCompatActivity() {
             Status.ERROR -> {
                 rvNeedierList.hideShimmer()
                 mainLayout.isRefreshing = false
-                Snackbar.make(findViewById(android.R.id.content), it.message!!,
-                    Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(
+                    findViewById(android.R.id.content), it.message!!,
+                    Snackbar.LENGTH_SHORT
+                ).show()
             }
-            Status.EMPTY ->{
+            Status.EMPTY -> {
                 mainLayout.isRefreshing = false
                 rvNeedierList.hideShimmer()
                 rvNeedierList.visibility = View.GONE

@@ -30,5 +30,7 @@ data class UserEntity(
     @SerializedName("groupName")
     val groupName: String?,
     @SerializedName("groupId")
-    val groupId: String?
+    val groupId: String?,
+    @SerializedName("groupCode")
+    val groupCode: String?
 )

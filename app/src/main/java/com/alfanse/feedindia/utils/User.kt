@@ -15,4 +15,5 @@ object User {
     var lng: String? = ""
     var groupName: String? = ""
     var address: String? = ""
+    var groupCode: String? = ""
 }
