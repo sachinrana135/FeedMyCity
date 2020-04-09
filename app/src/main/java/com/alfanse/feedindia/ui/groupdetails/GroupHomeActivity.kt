@@ -77,8 +77,8 @@ class GroupHomeActivity : AppCompatActivity(),
         }
     }
 
-    private fun getNearByUsers(){
-        groupHomeViewModel.getNearByUsers(DISTANCE)
+    private fun getNearByUsers() {
+        groupHomeViewModel.getNearByUsers(DISTANCE, User.groupId!!)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

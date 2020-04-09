@@ -23,11 +23,11 @@ class GroupHomeViewModel
         nearByUsersLiveData.value = Resource.error(throwable.message, null)
     }
 
-    fun getNearByUsers(distance: Int){
+    fun getNearByUsers(distance: Int, groupId: String){
         nearByUsersLiveData.value = Resource.loading(null)
         viewModelScope.launch(handler){
             repository.getNearByUsers(User.lat!!.toDouble(), User.lng!!.toDouble(),
-                distance, UserType.ALL).let { response ->
+                distance, UserType.ALL, groupId).let { response ->
                 if (response.isNotEmpty()){
                     nearByUsersLiveData.value = Resource.success(response)
                 }

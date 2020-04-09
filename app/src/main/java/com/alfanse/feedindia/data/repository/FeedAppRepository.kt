@@ -29,8 +29,14 @@ class FeedAppRepository
     suspend fun saveGroup(saveGroupRequest: SaveGroupRequest) =
         remote.saveGroup(saveGroupRequest)
 
-    suspend fun getNearByUsers(lat: Double, lng: Double, distance: Int, userType: String) =
-        remote.getNearByUsers(lat, lng, distance, userType)
+    suspend fun getNearByUsers(
+        lat: Double,
+        lng: Double,
+        distance: Int,
+        userType: String,
+        groupId: String
+    ) =
+        remote.getNearByUsers(lat, lng, distance, userType, groupId)
 
     suspend fun getComments(needierItemId: String, page: Int, pageLoad:Int) =
         remote.getComments(needierItemId, page, pageLoad)

@@ -23,10 +23,13 @@ interface ApiService {
     suspend fun saveGroup(@Body saveGroupRequest: SaveGroupRequest): SaveGroupResponse
 
     @GET("getNearByUsers")
-    suspend fun getNearByUsers(@Query("lat") lat: Double,
-                               @Query("lng") lng: Double,
-                               @Query("distance") distance: Int,
-                               @Query("user_type") userType: String): List<NearByUsersEntity>
+    suspend fun getNearByUsers(
+        @Query("lat") lat: Double,
+        @Query("lng") lng: Double,
+        @Query("distance") distance: Int,
+        @Query("user_type") userType: String,
+        @Query("group_id") groupId: String
+    ): List<NearByUsersEntity>
 
     @GET("getGroupMember")
     suspend fun getMembers(@Query("group_id") groupId: String,@Query("page") page: Int, @Query("page_load") pageLoad: Int): List<UserEntity>
