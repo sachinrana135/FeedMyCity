@@ -3,6 +3,7 @@ package com.alfanse.feedindia.ui.mobileauth
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.alfanse.feedindia.data.storage.ApplicationStorage
+import com.alfanse.feedindia.utils.BUNDLE_KEY_GROUP_CODE
 import com.alfanse.feedindia.utils.FIREBASE_USER_ID_PREFS_KEY
 import javax.inject.Inject
 import javax.inject.Named
@@ -15,4 +16,6 @@ class CodeVerificationViewModel
         memoryStorage.putString(FIREBASE_USER_ID_PREFS_KEY, id)
         firebaseUserIdLiveData.value = true
     }
+
+    fun isGroupIdExist() = !memoryStorage.getString(BUNDLE_KEY_GROUP_CODE, null).isNullOrEmpty()
 }

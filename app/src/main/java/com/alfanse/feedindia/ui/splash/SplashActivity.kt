@@ -17,9 +17,8 @@ import com.alfanse.feedindia.data.models.UserEntity
 import com.alfanse.feedindia.factory.ViewModelFactory
 import com.alfanse.feedindia.ui.donor.DonorHomeActivity
 import com.alfanse.feedindia.ui.groupdetails.GroupHomeActivity
-import com.alfanse.feedindia.ui.member.MemberListActivity
+import com.alfanse.feedindia.ui.mobileauth.MobileVerificationActivity
 import com.alfanse.feedindia.ui.usertypes.UserTypesActivity
-import com.alfanse.feedindia.utils.BUNDLE_KEY_GROUP_CODE
 import com.alfanse.feedindia.utils.UserType
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.dynamiclinks.ktx.dynamicLinks
@@ -39,9 +38,8 @@ class SplashActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
         (application as FeedIndiaApplication).appComponent.inject(this)
-        splashViewModel = ViewModelProviders.of(this, viewModelFactory).get(SplashViewModel::class.java)
-
-        //detectDynamicLink()
+        splashViewModel =
+            ViewModelProviders.of(this, viewModelFactory).get(SplashViewModel::class.java)
         defaultNavigation()
     }
 
@@ -55,18 +53,21 @@ class SplashActivity : AppCompatActivity() {
                     deepLink = pendingDynamicLinkData.link
                     val groupCode = deepLink?.getQueryParameter("groupCode")
 
-                    val intent = Intent(mContext, MemberListActivity::class.java)//todo change to add member screen
-                    intent.putExtra(BUNDLE_KEY_GROUP_CODE, groupCode)
-                    startActivity(intent)
-                    finish()
+                    if (groupCode != null) {
+                        splashViewModel.saveGroupCode(groupCode)
+                        val intent = Intent(mContext, MobileVerificationActivity::class.java)
+                        intent.putExtra(MobileVerificationActivity.USER_TYPE_KEY, UserType.MEMBER)
+                        startActivity(intent)
+                        finish()
+                    }
 
-                } else{
-                    startActivity(Intent(this, GroupHomeActivity::class.java))
+                } else {
+                    launchUserTypeScreen(UserTypesActivity::class.java)
                 }
 
             }
-            .addOnFailureListener(this) {
-                    e -> Log.w("Dynamic link", e.message)
+            .addOnFailureListener(this) { e ->
+                Log.w("Dynamic link", e.message)
             }
     }
 
@@ -74,15 +75,15 @@ class SplashActivity : AppCompatActivity() {
         splashViewModel.getLoggedUser().let { loggedUserId ->
             if (loggedUserId != null) {
                 splashViewModel.getUserById(loggedUserId)
-            }else {
-                launchUserTypeScreen(UserTypesActivity::class.java)
+            } else {
+                detectDynamicLink()
             }
         }
 
         splashViewModel.userLiveData.observe(this, observer)
     }
 
-    private var observer = Observer<Resource<UserEntity>> { resource->
+    private var observer = Observer<Resource<UserEntity>> { resource ->
         when (resource.status) {
             Status.LOADING -> {
                 progressBar.visibility = View.VISIBLE
@@ -109,8 +110,10 @@ class SplashActivity : AppCompatActivity() {
             }
             Status.ERROR -> {
                 progressBar.visibility = View.GONE
-                Snackbar.make(findViewById(android.R.id.content), resource.message!!,
-                    Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(
+                    findViewById(android.R.id.content), resource.message!!,
+                    Snackbar.LENGTH_SHORT
+                ).show()
             }
             Status.EMPTY -> {
 

@@ -2,10 +2,6 @@ package com.alfanse.feedindia.data.repository
 
 import com.alfanse.feedindia.data.ApiService
 import com.alfanse.feedindia.data.models.*
-import com.alfanse.feedindia.data.models.SaveDonorRequest
-import com.alfanse.feedindia.data.models.SaveGroupRequest
-import com.alfanse.feedindia.data.models.SaveNeedierRequest
-import com.alfanse.feedindia.data.models.UpdateDonorRequest
 import javax.inject.Inject
 
 class FeedAppRepository
@@ -54,5 +50,5 @@ class FeedAppRepository
 
     suspend fun saveNeedierDetails(saveNeedierRequest: SaveNeedierRequest) = remote.saveNeedier(saveNeedierRequest)
 
-    suspend fun saveMember(saveNeedierRequest: SaveNeedierRequest) = remote.saveMember(saveNeedierRequest)
+    suspend fun saveMember(request: SaveMemberRequest) = remote.saveMember(request)
 }

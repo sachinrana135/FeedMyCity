@@ -12,6 +12,7 @@ import com.alfanse.feedindia.R
 import com.alfanse.feedindia.factory.ViewModelFactory
 import com.alfanse.feedindia.ui.donor.DonorDetailsActivity
 import com.alfanse.feedindia.ui.groupdetails.GroupDetailsActivity
+import com.alfanse.feedindia.ui.member.AddMemberActivity
 import com.alfanse.feedindia.utils.FirebaseAuthHandler
 import com.alfanse.feedindia.utils.UserType
 import com.google.android.material.snackbar.Snackbar
@@ -100,16 +101,27 @@ class CodeVerificationActivity : AppCompatActivity() {
             UserType.DONOR -> {
                 intent = Intent(this, DonorDetailsActivity::class.java).also {
                     it.putExtra(MOBILE_NUM_KEY, phone)
+                    it.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 }
             }
             UserType.MEMBER -> {
-                intent = Intent(this, GroupDetailsActivity::class.java).also {
-                    it.putExtra(MOBILE_NUM_KEY, phone)
+
+                if(codeVerificationViewModel.isGroupIdExist()){
+                    intent = Intent(this, AddMemberActivity::class.java).also {
+                        it.putExtra(MOBILE_NUM_KEY, phone)
+                        it.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    }
+                }else {
+                    intent = Intent(this, GroupDetailsActivity::class.java).also {
+                        it.putExtra(MOBILE_NUM_KEY, phone)
+                        it.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    }
                 }
             }
         }
 
         startActivity(intent)
+        finish()
     }
 
     private fun readVerificationId(){
