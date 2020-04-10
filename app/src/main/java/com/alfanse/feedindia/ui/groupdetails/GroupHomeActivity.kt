@@ -3,11 +3,10 @@ package com.alfanse.feedindia.ui.groupdetails
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.view.*
-import android.widget.TextView
 import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -19,10 +18,8 @@ import com.alfanse.feedindia.data.Resource
 import com.alfanse.feedindia.data.Status
 import com.alfanse.feedindia.data.models.NearByUsersEntity
 import com.alfanse.feedindia.factory.ViewModelFactory
-import com.alfanse.feedindia.ui.member.AddMemberActivity
-import com.alfanse.feedindia.ui.needier.AddNeedierDetailActivity
 import com.alfanse.feedindia.ui.member.MemberListActivity
-import com.alfanse.feedindia.ui.needier.NeedierDetailsActivity
+import com.alfanse.feedindia.ui.needier.AddNeedierDetailActivity
 import com.alfanse.feedindia.ui.needier.NeedierListActivity
 import com.alfanse.feedindia.ui.profile.GroupProfileActivity
 import com.alfanse.feedindia.ui.usertypes.UserTypesActivity

@@ -102,8 +102,9 @@ class AddNeedierDetailActivity : AppCompatActivity() {
             }
             Status.SUCCESS -> {
                 progressBar.visibility = View.GONE
-                Snackbar.make(findViewById(android.R.id.content), "Details saved successfully",
-                    Snackbar.LENGTH_SHORT).show()
+                val intent = Intent(this, NeedierListActivity::class.java)
+                startActivity(intent)
+                finish()
             }
             Status.ERROR -> {
                 progressBar.visibility = View.GONE

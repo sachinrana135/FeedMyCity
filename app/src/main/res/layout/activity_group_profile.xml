@@ -13,7 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_normal"
-        android:elevation="2dp"
+        app:cardBackgroundColor="@android:color/secondary_text_dark_nodisable"
+        app:elevation="2dp"
         app:cardElevation="2dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -62,6 +63,7 @@
         android:layout_marginTop="@dimen/spacing_large"
         android:elevation="2dp"
         app:cardElevation="2dp"
+        app:cardBackgroundColor="@android:color/secondary_text_dark_nodisable"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/groupCardView">
@@ -110,6 +112,7 @@
         android:layout_marginTop="@dimen/spacing_large"
         android:elevation="2dp"
         app:cardElevation="2dp"
+        app:cardBackgroundColor="@android:color/secondary_text_dark_nodisable"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/mobileCardView">
