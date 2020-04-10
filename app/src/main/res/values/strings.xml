@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Feed India</string>
+    <string name="app_name">FeedMyCity</string>
     <string name="join_as_screen_label">Join as</string>
     <string name="phone_verification_screen_label">Phone Verification</string>
     <string name="donor_details_screen_label">Donor Details</string>
