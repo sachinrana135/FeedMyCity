@@ -71,7 +71,7 @@
             android:id="@+id/status_spinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/spinner_style"
+            android:background="@drawable/gradient_spinner"
             android:layout_marginTop="@dimen/spacing_normal"
             app:layout_constraintEnd_toStartOf="@+id/btnUpdate"
             app:layout_constraintStart_toStartOf="parent"

@@ -6,10 +6,13 @@ import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import com.alfanse.feedindia.data.NeedierDataSource
 import com.alfanse.feedindia.data.Resource
+import com.alfanse.feedindia.data.models.NeedierItemStatusEntity
 import com.alfanse.feedindia.data.models.NeedieritemEntity
 import com.alfanse.feedindia.data.repository.FeedAppRepository
 import com.alfanse.feedindia.data.storage.ApplicationStorage
 import com.alfanse.feedindia.utils.User
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
@@ -27,6 +30,11 @@ class NeedierListViewModel
 
     lateinit var needierLiveData: LiveData<PagedList<NeedieritemEntity>>
     lateinit var needierResourceLiveData: LiveData<Resource<List<NeedieritemEntity>>>
+    val needierStatusTypesLiveData = MutableLiveData<Resource<List<NeedierItemStatusEntity>>>()
+
+    private val handler = CoroutineExceptionHandler { _, throwable ->
+        needierStatusTypesLiveData.value = Resource.error(throwable.message, null)
+    }
 
     fun getNeediers(status: String) {
         dataSourceFactory.status = status
@@ -36,6 +44,17 @@ class NeedierListViewModel
             dataSourceFactory.needierDataSourceLiveData,
             NeedierDataSource::responseLiveData
         )
+    }
+
+    fun getNeedierItemStatus() {
+        needierStatusTypesLiveData.value = Resource.loading(null)
+        viewModelScope.launch(handler) {
+            repository.getNeedierItemStatusTypes().let { response ->
+                response?.let {
+                    needierStatusTypesLiveData.value = Resource.success(response)
+                }
+            }
+        }
     }
 
     private val dataSourceFactory = object : DataSource.Factory<Int, NeedieritemEntity>() {
