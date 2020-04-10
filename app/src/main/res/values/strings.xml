@@ -81,4 +81,10 @@
     <string name="phone_label">Phone</string>
     <string name="group_label">Group</string>
     <string name="profile_screen_label">Profile</string>
+    <string name="donor_label">Donor</string>
+    <string name="member_label">Member</string>
+    <string name="needier_label">Needier</string>
+    <string name="volunteer_screen_label">Volunteer</string>
+    <string name="volunteer_text_info">If you know someone needy around your region,
+        you can call NGO/Local Groups marked on map. God bless your kind work.</string>
 </resources>

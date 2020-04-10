@@ -18,6 +18,7 @@ import com.alfanse.feedindia.ui.needier.NeedierDetailViewModel
 import com.alfanse.feedindia.ui.needier.NeedierDetailsViewModel
 import com.alfanse.feedindia.ui.needier.NeedierListViewModel
 import com.alfanse.feedindia.ui.splash.SplashViewModel
+import com.alfanse.feedindia.ui.volunteer.VolunteerViewModel
 import com.alfanse.feedindia.utils.Utils
 import javax.inject.Inject
 import javax.inject.Named
@@ -92,6 +93,8 @@ class ViewModelFactory @Inject constructor(
                     CommentViewModel(feedAppRepository)
                 isAssignableFrom(NeedierDetailViewModel::class.java) ->
                     NeedierDetailViewModel(feedAppRepository)
+                isAssignableFrom(VolunteerViewModel::class.java) ->
+                    VolunteerViewModel(feedAppRepository)
                 else ->
                     error("Invalid View Model class")
             }

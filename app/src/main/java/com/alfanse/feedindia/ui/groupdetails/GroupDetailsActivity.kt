@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Looper
+import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -38,7 +39,6 @@ class GroupDetailsActivity : AppCompatActivity() {
     private var groupLng = 0.0
     private var phone = ""
     private var fusedLocationProviderClient: FusedLocationProviderClient? = null
-    private lateinit var locationCallback: LocationCallback
     private var currentLatLng: LatLng? = null
     private var geoLocationAddress = ""
     private var groupName = ""
@@ -46,6 +46,8 @@ class GroupDetailsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_group_details)
+        supportActionBar?.setHomeButtonEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
         title = getString(R.string.group_details_screen_label)
         (application as FeedIndiaApplication).appComponent.inject(this)
         groupDetailsViewModel = ViewModelProviders.of(this, viewModelFactory).
@@ -172,29 +174,16 @@ class GroupDetailsActivity : AppCompatActivity() {
 
     private fun setUpLocationListener() {
         fusedLocationProviderClient = FusedLocationProviderClient(this)
-        val locationRequest = LocationRequest().setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-        locationCallback = object : LocationCallback() {
-            override fun onLocationResult(locationResult: LocationResult) {
-                super.onLocationResult(locationResult)
-                if (currentLatLng == null) {
-                    for (location in locationResult.locations) {
-                        if (currentLatLng == null) {
-                            currentLatLng = LatLng(location.latitude, location.longitude)
-                            groupLat = location.latitude
-                            groupLng = location.longitude
+        fusedLocationProviderClient?.lastLocation?.addOnSuccessListener {
+            if (it != null){
+                currentLatLng = LatLng(it.latitude, it.longitude)
+                groupLat = it.latitude
+                groupLng = it.longitude
 
-                            // start map search screen to find address
-                            startLocationPicker(currentLatLng!!)
-                        }
-                    }
-                }
+                // start map search screen to find address
+                startLocationPicker(currentLatLng!!)
             }
         }
-        fusedLocationProviderClient?.requestLocationUpdates(
-            locationRequest,
-            locationCallback,
-            Looper.myLooper()
-        )
     }
 
     private fun startLocationPicker(latLng: LatLng){
@@ -225,8 +214,18 @@ class GroupDetailsActivity : AppCompatActivity() {
         }
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Handle item selection
+        return when (item.itemId) {
+            android.R.id.home -> {
+                onBackPressed()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
     override fun onDestroy() {
-        fusedLocationProviderClient?.removeLocationUpdates(locationCallback)
         super.onDestroy()
     }
 

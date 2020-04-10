@@ -56,5 +56,8 @@ class FeedAppRepository
 
     suspend fun saveNeedierDetails(saveNeedierRequest: SaveNeedierRequest) = remote.saveNeedier(saveNeedierRequest)
 
+    suspend fun getNearByGroups(lat: Double, lng: Double, distance: Int) =
+        remote.getNearByGroups(lat, lng, distance)
+
     suspend fun saveMember(request: SaveMemberRequest) = remote.saveMember(request)
 }

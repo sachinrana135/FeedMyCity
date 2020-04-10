@@ -25,9 +25,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <activity android:name=".ui.volunteer.VolunteerHomeActivity"/>
         <activity android:name=".ui.member.MemberListActivity" />
-        <activity android:name=".ui.profile.GroupProfileActivity"/>
+        <activity android:name=".ui.profile.GroupProfileActivity" />
         <activity android:name=".ui.member.AddMemberActivity" />
+        <activity android:name=".ui.needier.AddNeedierDetailActivity" />
         <activity android:name=".ui.needier.NeedierDetailsActivity" />
         <activity android:name=".ui.needier.NeedierDetailActivity" />
         <activity android:name=".ui.needier.NeedierListActivity" />
@@ -36,6 +38,7 @@
         <activity android:name=".ui.donor.DonorDetailsActivity" />
         <activity android:name=".ui.groupdetails.GroupHomeActivity" />
         <activity android:name=".ui.groupdetails.GroupDetailsActivity" />
+        <activity android:name=".ui.needier.NeedierDetailActivity"/>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

@@ -53,5 +53,11 @@ interface ApiService {
     suspend fun saveNeedier(@Body saveNeedierRequest: SaveNeedierRequest) : SaveNeedierResponse
 
     @POST("saveMember")
+    suspend fun saveMember(@Body saveNeedierRequest: SaveNeedierRequest) : SaveNeedierResponse
+
+    @GET("getNearByGroups")
+    suspend fun getNearByGroups(@Query("lat") lat: Double,
+                                @Query("lng") lng: Double,
+                                @Query("distance") distance: Int): List<NearByUsersEntity>
     suspend fun saveMember(@Body request: SaveMemberRequest) : SaveMemberResponse
 }
