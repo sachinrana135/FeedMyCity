@@ -46,6 +46,7 @@ class DonorDetailsViewModel
 
             repository.saveDonor(saveDonorRequest)?.let { response ->
                 response.userId?.let { userId ->
+                    memoryStorage.clearValue(FIREBASE_USER_ID_PREFS_KEY)
                     storage.putString(APP_USER_ID_PREFS_KEY, response.userId)
                     repository.getUserById(userId)?.let { user ->
                         utils.setLoggedUser(user)

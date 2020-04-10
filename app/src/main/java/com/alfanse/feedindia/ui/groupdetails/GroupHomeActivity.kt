@@ -111,8 +111,8 @@ class GroupHomeActivity : AppCompatActivity(),
             val shortLink = result.shortLink
             val i = Intent(Intent.ACTION_SEND)
             i.type = "text/plain"
-            i.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.txt_join_group))
-            i.putExtra(Intent.EXTRA_TEXT, shortLink.toString())
+            //i.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.txt_join_group))
+            i.putExtra(Intent.EXTRA_TEXT, getString(R.string.txt_join_group) + " s" + shortLink.toString())
             startActivity(Intent.createChooser(i, getString(R.string.txt_share_invite_link)))
         }.addOnFailureListener {
             Snackbar.make(

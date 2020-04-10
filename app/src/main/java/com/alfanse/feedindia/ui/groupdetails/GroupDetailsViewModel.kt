@@ -47,6 +47,7 @@ class GroupDetailsViewModel
 
             repository.saveGroup(saveGroupRequest).let { response ->
                 response.userId?.let {
+                    memoryStorage.clearValue(FIREBASE_USER_ID_PREFS_KEY)
                     storage.putString(APP_USER_ID_PREFS_KEY, it)
                     repository.getUserById(it).let { userEntity ->
                         utils.setLoggedUser(userEntity)
