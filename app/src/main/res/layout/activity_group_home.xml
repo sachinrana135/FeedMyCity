@@ -30,22 +30,12 @@
             android:padding="@dimen/spacing_normal"
             android:background="@android:color/white">
 
-            <TextView
-                android:id="@+id/tvMarkerInfoLabel"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="@+id/layoutMarkerInfo"
-                app:layout_constraintTop_toTopOf="@+id/layoutMarkerInfo"
-                android:gravity="center"
-                android:text="Marker Info"
-                android:textSize="@dimen/font_normal"/>
-
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/layoutFirst"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="@+id/layoutMarkerInfo"
-                app:layout_constraintTop_toBottomOf="@+id/tvMarkerInfoLabel"
+                app:layout_constraintTop_toTopOf="@+id/layoutMarkerInfo"
                 android:layout_marginLeft="@dimen/spacing_small"
                 android:layout_marginTop="@dimen/spacing_small">
 
@@ -72,7 +62,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintLeft_toRightOf="@+id/layoutFirst"
-                app:layout_constraintTop_toBottomOf="@+id/tvMarkerInfoLabel"
+                app:layout_constraintTop_toTopOf="@+id/layoutMarkerInfo"
                 android:layout_marginLeft="@dimen/spacing_normal"
                 android:layout_marginTop="@dimen/spacing_small">
 
@@ -99,7 +89,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintLeft_toRightOf="@+id/layoutSecond"
-                app:layout_constraintTop_toBottomOf="@+id/tvMarkerInfoLabel"
+                app:layout_constraintTop_toTopOf="@+id/layoutMarkerInfo"
                 android:layout_marginLeft="@dimen/spacing_normal"
                 android:layout_marginTop="@dimen/spacing_small">
 

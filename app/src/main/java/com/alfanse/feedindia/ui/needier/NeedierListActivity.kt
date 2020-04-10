@@ -7,6 +7,8 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -14,6 +16,7 @@ import com.alfanse.feedindia.FeedIndiaApplication
 import com.alfanse.feedindia.R
 import com.alfanse.feedindia.data.Resource
 import com.alfanse.feedindia.data.Status
+import com.alfanse.feedindia.data.models.NeedierItemStatusEntity
 import com.alfanse.feedindia.data.models.NeedieritemEntity
 import com.alfanse.feedindia.factory.ViewModelFactory
 import com.alfanse.feedindia.utils.BUNDLE_KEY_NEEDIER_ITEM
@@ -29,8 +32,11 @@ class NeedierListActivity : AppCompatActivity() {
     @Inject
     internal lateinit var viewModelFactory: ViewModelFactory
     private lateinit var viewModel: NeedierListViewModel
-    val status = DEFAULT_NEEDIER_STATUS
     var user: NeedieritemEntity? = null
+    private var needItemStatusList = listOf<NeedierItemStatusEntity>()
+    private var selectedStatus:String? = null
+    private var selectedStatusId:String = DEFAULT_NEEDIER_STATUS
+    private var needItem: NeedieritemEntity? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,9 +50,11 @@ class NeedierListActivity : AppCompatActivity() {
             ViewModelProviders.of(this, viewModelFactory).get(NeedierListViewModel::class.java)
 
         rvNeedierList.showShimmer()
-        viewModel.getNeediers(status)
+        viewModel.getNeediers(selectedStatusId)
+        viewModel.getNeedierItemStatus()
 
         viewModel.needierResourceLiveData.observe(this, observer)
+        viewModel.needierStatusTypesLiveData.observe(this, needierStatusObserver)
         viewModel.needierLiveData.observe(this, Observer {
             adapter.submitList(it)
         })
@@ -107,7 +115,7 @@ class NeedierListActivity : AppCompatActivity() {
         mainLayout.setOnRefreshListener {
             rvNeedierList.showShimmer()
             viewModel.refresh()
-            viewModel.getNeediers(status)
+            viewModel.getNeediers(selectedStatusId)
         }
     }
 
@@ -138,6 +146,53 @@ class NeedierListActivity : AppCompatActivity() {
             }
         }
     }
+
+    private var needierStatusObserver = Observer<Resource<List<NeedierItemStatusEntity>>> {
+        when (it.status) {
+            Status.LOADING -> {
+                rvNeedierList.showShimmer()
+            }
+            Status.SUCCESS -> {
+                rvNeedierList.hideShimmer()
+                needItemStatusList = it.data!!
+
+                var spinnerArray = needItemStatusList.map {status ->
+                    status.name
+                }
+
+                val arrayAdapter = ArrayAdapter(this, R.layout.simple_spinner_item, spinnerArray)
+                arrayAdapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item)
+                status_spinner.adapter = arrayAdapter
+
+                status_spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                    override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+                        selectedStatus = needItemStatusList[position].name
+                        selectedStatusId = needItemStatusList[position].id!!
+                        rvNeedierList.showShimmer()
+                        viewModel.refresh()
+                        viewModel.getNeediers(selectedStatusId!!)
+                    }
+
+                    override fun onNothingSelected(parent: AdapterView<*>) {
+                        // Code to perform some action when nothing is selected
+                    }
+                }
+
+
+            }
+            Status.ERROR -> {
+                rvNeedierList.hideShimmer()
+                Snackbar.make(
+                    findViewById(android.R.id.content), it.message!!,
+                    Snackbar.LENGTH_SHORT
+                ).show()
+            }
+            Status.EMPTY -> {
+
+            }
+        }
+    }
+
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // Handle item selection
