@@ -9,6 +9,7 @@ import com.alfanse.feedindia.data.repository.FeedAppRepository
 import com.alfanse.feedindia.data.storage.ApplicationStorage
 import com.alfanse.feedindia.utils.APP_USER_ID_PREFS_KEY
 import com.alfanse.feedindia.utils.BUNDLE_KEY_GROUP_CODE
+import com.alfanse.feedindia.utils.FIREBASE_USER_ID_PREFS_KEY
 import com.alfanse.feedindia.utils.Utils
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
@@ -32,10 +33,11 @@ class AddMemberViewModel
         request: SaveMemberRequest
     ) {
         addMemberLiveData.value = Resource.loading(null)
-
+        request.firebaseId = memoryStorage.getString(FIREBASE_USER_ID_PREFS_KEY, "")!!
         viewModelScope.launch(handler) {
             repository.saveMember(request)?.let { response ->
                 response.userId?.let { userId->
+                    memoryStorage.clearValue(FIREBASE_USER_ID_PREFS_KEY)
                     repository.getUserById(userId).let { user ->
                         storage.putString(APP_USER_ID_PREFS_KEY, user.userId)
                         utils.setLoggedUser(user)
