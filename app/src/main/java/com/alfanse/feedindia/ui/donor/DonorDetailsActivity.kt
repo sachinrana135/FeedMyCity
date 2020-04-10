@@ -38,7 +38,6 @@ class DonorDetailsActivity : AppCompatActivity() {
     private var donorLng = 0.0
     private var phone = ""
     private var fusedLocationProviderClient: FusedLocationProviderClient? = null
-    private lateinit var locationCallback: LocationCallback
     private var currentLatLng: LatLng? = null
 
 
@@ -186,27 +185,14 @@ class DonorDetailsActivity : AppCompatActivity() {
 
     private fun setUpLocationListener() {
         fusedLocationProviderClient = FusedLocationProviderClient(this)
-        val locationRequest = LocationRequest().setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-        locationCallback = object : LocationCallback() {
-            override fun onLocationResult(locationResult: LocationResult) {
-                super.onLocationResult(locationResult)
-                if (currentLatLng == null) {
-                    for (location in locationResult.locations) {
-                        if (currentLatLng == null) {
-                            currentLatLng = LatLng(location.latitude, location.longitude)
+        fusedLocationProviderClient?.lastLocation?.addOnSuccessListener {
+            if (it != null) {
+                currentLatLng = LatLng(it.latitude, it.longitude)
 
-                            // start map search screen to find address
-                            startLocationPicker(currentLatLng!!)
-                        }
-                    }
-                }
+                // start map search screen to find address
+                startLocationPicker(currentLatLng!!)
             }
         }
-        fusedLocationProviderClient?.requestLocationUpdates(
-            locationRequest,
-            locationCallback,
-            Looper.myLooper()
-        )
     }
 
     private fun startLocationPicker(latLng: LatLng){
@@ -242,7 +228,6 @@ class DonorDetailsActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        fusedLocationProviderClient?.removeLocationUpdates(locationCallback)
         super.onDestroy()
     }
 

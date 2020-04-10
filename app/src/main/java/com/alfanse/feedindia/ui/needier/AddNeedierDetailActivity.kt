@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Looper
 import android.util.Log
+import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -15,6 +16,7 @@ import com.alfanse.feedindia.R
 import com.alfanse.feedindia.data.Resource
 import com.alfanse.feedindia.data.Status
 import com.alfanse.feedindia.factory.ViewModelFactory
+import com.alfanse.feedindia.utils.PermissionUtils
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
@@ -28,21 +30,23 @@ import com.schibstedspain.leku.LocationPickerActivity
 import kotlinx.android.synthetic.main.activity_needier_details.*
 import javax.inject.Inject
 
-class NeedierDetailsActivity : AppCompatActivity() {
+class AddNeedierDetailActivity : AppCompatActivity() {
     @Inject
     internal lateinit var viewModelFactory: ViewModelFactory
     private lateinit var needierDetailsViewModel: NeedierDetailsViewModel
     private var lat = 0.0
     private var lng = 0.0
     private var fusedLocationProviderClient: FusedLocationProviderClient? = null
-    private lateinit var locationCallback: LocationCallback
     private var currentLatLng: LatLng? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_needier_details)
+        supportActionBar?.setHomeButtonEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
         title = getString(R.string.needier_details_screen_label)
+
         (application as FeedIndiaApplication).appComponent.inject(this)
         needierDetailsViewModel = ViewModelProviders.of(this, viewModelFactory).
             get(NeedierDetailsViewModel::class.java)
@@ -52,6 +56,10 @@ class NeedierDetailsActivity : AppCompatActivity() {
 
     private fun initListener(){
         etAddress.setOnClickListener {
+            if(!PermissionUtils.isLocationEnabled(this)){
+                PermissionUtils.showGPSNotEnabledDialog(this)
+                return@setOnClickListener
+            }
             setUpLocationListener()
         }
 
@@ -109,27 +117,14 @@ class NeedierDetailsActivity : AppCompatActivity() {
 
     private fun setUpLocationListener() {
         fusedLocationProviderClient = FusedLocationProviderClient(this)
-        val locationRequest = LocationRequest().setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-        locationCallback = object : LocationCallback() {
-            override fun onLocationResult(locationResult: LocationResult) {
-                super.onLocationResult(locationResult)
-                if (currentLatLng == null) {
-                    for (location in locationResult.locations) {
-                        if (currentLatLng == null) {
-                            currentLatLng = LatLng(location.latitude, location.longitude)
+        fusedLocationProviderClient?.lastLocation?.addOnSuccessListener {
+            if (it != null) {
+                currentLatLng = LatLng(it.latitude, it.longitude)
 
-                            // start map search screen to find address
-                            startLocationPicker(currentLatLng!!)
-                        }
-                    }
-                }
+                // start map search screen to find address
+                startLocationPicker(currentLatLng!!)
             }
         }
-        fusedLocationProviderClient?.requestLocationUpdates(
-            locationRequest,
-            locationCallback,
-            Looper.myLooper()
-        )
     }
 
     private fun startLocationPicker(latLng: LatLng){
@@ -157,6 +152,17 @@ class NeedierDetailsActivity : AppCompatActivity() {
                     }
                 }
             }
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Handle item selection
+        return when (item.itemId) {
+            android.R.id.home -> {
+                onBackPressed()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
     }
 

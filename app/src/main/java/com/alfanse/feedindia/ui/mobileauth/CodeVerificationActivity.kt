@@ -1,19 +1,31 @@
 package com.alfanse.feedindia.ui.mobileauth
 
-import android.content.Intent
+import android.app.Activity
+import android.content.*
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.alfanse.feedindia.FeedIndiaApplication
 import com.alfanse.feedindia.R
 import com.alfanse.feedindia.factory.ViewModelFactory
+import com.alfanse.feedindia.receiver.SmsBroadcastReceiver
 import com.alfanse.feedindia.ui.donor.DonorDetailsActivity
 import com.alfanse.feedindia.ui.groupdetails.GroupDetailsActivity
 import com.alfanse.feedindia.utils.FirebaseAuthHandler
 import com.alfanse.feedindia.utils.UserType
+import com.google.android.gms.auth.api.phone.SmsRetriever
+import com.google.android.gms.common.api.CommonStatusCodes
+import com.google.android.gms.common.api.Status
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -22,6 +34,7 @@ import kotlinx.android.synthetic.main.activity_code_verification.*
 import javax.inject.Inject
 
 class CodeVerificationActivity : AppCompatActivity() {
+    private var mContext = this
     @Inject
     internal lateinit var viewModelFactory: ViewModelFactory
     private lateinit var auth: FirebaseAuth
@@ -29,6 +42,7 @@ class CodeVerificationActivity : AppCompatActivity() {
     private lateinit var codeVerificationViewModel: CodeVerificationViewModel
     private var phoneNumber: String? = null
     private var userType: String? = null
+    private lateinit var smsBroadcastReceiver: SmsBroadcastReceiver
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,10 +59,71 @@ class CodeVerificationActivity : AppCompatActivity() {
         initListener()
         observeLiveData()
         readUserType()
+
+        startSmsUserConsent()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        registerToSmsBroadcastReceiver()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        unregisterReceiver(smsBroadcastReceiver)
+    }
+
+    private fun startSmsUserConsent(){
+        SmsRetriever.getClient(this).also {
+            //We can add user phone number or leave it blank
+            it.startSmsUserConsent(null)
+                .addOnSuccessListener {
+                    Log.d(TAG, "LISTENING_SUCCESS")
+                }
+                .addOnFailureListener {
+                    Log.d(TAG, "LISTENING_FAILURE")
+                }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when (requestCode) {
+            REQ_USER_CONSENT -> {
+                if ((resultCode == Activity.RESULT_OK) && (data != null)) {
+                    //That gives all message to us. We need to get the code from inside with regex
+                    val message = data.getStringExtra(SmsRetriever.EXTRA_SMS_MESSAGE)
+                    val code = message?.let { fetchVerificationCode(it) }
+
+                    etOtp.setText(code)
+                }
+            }
+        }
+    }
+
+    private fun registerToSmsBroadcastReceiver() {
+        smsBroadcastReceiver = SmsBroadcastReceiver().also {
+            it.smsBroadcastReceiverListener = object : SmsBroadcastReceiver.SmsBroadcastReceiverListener {
+                override fun onSuccess(intent: Intent?) {
+                    intent?.let { context -> startActivityForResult(context, REQ_USER_CONSENT) }
+                }
+
+                override fun onFailure() {
+                }
+            }
+        }
+
+        val intentFilter = IntentFilter(SmsRetriever.SMS_RETRIEVED_ACTION)
+        registerReceiver(smsBroadcastReceiver, intentFilter)
+    }
+
+    private fun fetchVerificationCode(message: String): String {
+        return Regex("(\\d{6})").find(message)?.value ?: ""
     }
 
     private fun readUserType() {
         userType = intent.getStringExtra(MobileVerificationActivity.USER_TYPE_KEY)
+        val phone = intent.getStringExtra(MOBILE_NUM_KEY)
     }
 
     private fun initListener(){
@@ -132,5 +207,6 @@ class CodeVerificationActivity : AppCompatActivity() {
         private const val TAG = "MobileVerification"
         const val VERIFICATION_ID_KEY = "VerificationIdKey"
         const val MOBILE_NUM_KEY = "mobileNum"
+        const val REQ_USER_CONSENT = 100
     }
 }

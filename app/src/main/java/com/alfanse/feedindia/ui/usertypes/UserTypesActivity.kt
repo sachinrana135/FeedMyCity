@@ -6,6 +6,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.alfanse.feedindia.R
 import com.alfanse.feedindia.ui.mobileauth.MobileVerificationActivity
+import com.alfanse.feedindia.ui.volunteer.VolunteerHomeActivity
 import com.alfanse.feedindia.utils.UserType
 import kotlinx.android.synthetic.main.activity_joinee_types.*
 
@@ -28,6 +29,11 @@ class UserTypesActivity : AppCompatActivity() {
 
         layoutNgoOrGroupType.setOnClickListener {
             navigateToMobileVerification(UserType.MEMBER)
+        }
+
+        layoutVolunteerType.setOnClickListener {
+            val intent = Intent(mContext, VolunteerHomeActivity::class.java)
+            startActivity(intent)
         }
     }
 

@@ -10,10 +10,11 @@ import com.alfanse.feedindia.ui.member.AddMemberActivity
 import com.alfanse.feedindia.ui.member.MemberListActivity
 import com.alfanse.feedindia.ui.mobileauth.CodeVerificationActivity
 import com.alfanse.feedindia.ui.mobileauth.MobileVerificationActivity
-import com.alfanse.feedindia.ui.needier.NeedierDetailsActivity
+import com.alfanse.feedindia.ui.needier.AddNeedierDetailActivity
 import com.alfanse.feedindia.ui.needier.NeedierDetailActivity
 import com.alfanse.feedindia.ui.needier.NeedierListActivity
 import com.alfanse.feedindia.ui.splash.SplashActivity
+import com.alfanse.feedindia.ui.volunteer.VolunteerHomeActivity
 import dagger.Component
 import javax.inject.Singleton
 
@@ -36,6 +37,7 @@ interface AppComponent {
     fun inject(memberListActivity: MemberListActivity)
     fun inject(commentFragment: CommentFragment)
     fun inject(needierDetailActivity: NeedierDetailActivity)
-    fun inject(needierDetailsActivity: NeedierDetailsActivity)
+    fun inject(addNeedierDetailActivity: AddNeedierDetailActivity)
     fun inject(addMemberActivity: AddMemberActivity)
+    fun inject(volunteerHomeActivity: VolunteerHomeActivity)
 }

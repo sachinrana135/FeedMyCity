@@ -14,6 +14,7 @@ import com.alfanse.feedindia.R
 import com.alfanse.feedindia.data.Resource
 import com.alfanse.feedindia.data.Status
 import com.alfanse.feedindia.factory.ViewModelFactory
+import com.alfanse.feedindia.utils.PermissionUtils
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
@@ -39,7 +40,6 @@ class AddMemberActivity : AppCompatActivity() {
     private var lat = 0.0
     private var lng = 0.0
     private var fusedLocationProviderClient: FusedLocationProviderClient? = null
-    private lateinit var locationCallback: LocationCallback
     private var currentLatLng: LatLng? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,6 +55,10 @@ class AddMemberActivity : AppCompatActivity() {
 
     private fun initListener(){
         etAddress.setOnClickListener {
+            if(!PermissionUtils.isLocationEnabled(this)){
+                PermissionUtils.showGPSNotEnabledDialog(this)
+                return@setOnClickListener
+            }
             setUpLocationListener()
         }
 
@@ -90,6 +94,7 @@ class AddMemberActivity : AppCompatActivity() {
         }
     }
 
+
     private var observer = Observer<Resource<String>> {
         when (it.status) {
             Status.LOADING -> {
@@ -112,27 +117,14 @@ class AddMemberActivity : AppCompatActivity() {
 
     private fun setUpLocationListener() {
         fusedLocationProviderClient = FusedLocationProviderClient(this)
-        val locationRequest = LocationRequest().setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-        locationCallback = object : LocationCallback() {
-            override fun onLocationResult(locationResult: LocationResult) {
-                super.onLocationResult(locationResult)
-                if (currentLatLng == null) {
-                    for (location in locationResult.locations) {
-                        if (currentLatLng == null) {
-                            currentLatLng = LatLng(location.latitude, location.longitude)
+        fusedLocationProviderClient?.lastLocation?.addOnSuccessListener {
+            if (it != null){
+                currentLatLng = LatLng(it.latitude, it.longitude)
 
-                            // start map search screen to find address
-                            startLocationPicker(currentLatLng!!)
-                        }
-                    }
-                }
+                // start map search screen to find address
+                startLocationPicker(currentLatLng!!)
             }
         }
-        fusedLocationProviderClient?.requestLocationUpdates(
-            locationRequest,
-            locationCallback,
-            Looper.myLooper()
-        )
     }
 
     private fun startLocationPicker(latLng: LatLng){

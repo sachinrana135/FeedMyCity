@@ -121,7 +121,7 @@ class MobileVerificationActivity : AppCompatActivity() {
                 storedVerificationId = verificationId
                 resendToken = token
 
-                navigateToCodeVerificationScreen(storedVerificationId)
+                navigateToCodeVerificationScreen(storedVerificationId, phoneNumber)
             }
         }
 
@@ -196,9 +196,10 @@ class MobileVerificationActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    private fun navigateToCodeVerificationScreen(verificationId: String?) {
+    private fun navigateToCodeVerificationScreen(verificationId: String?, phone: String?) {
         val intent = Intent(mContext, CodeVerificationActivity::class.java).also {
             it.putExtra(CodeVerificationActivity.VERIFICATION_ID_KEY, verificationId)
+            it.putExtra(CodeVerificationActivity.MOBILE_NUM_KEY, phone)
             it.putExtra(USER_TYPE_KEY, userType)
         }
         startActivity(intent)

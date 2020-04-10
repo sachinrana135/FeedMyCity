@@ -3,6 +3,7 @@ package com.alfanse.feedindia.ui.groupdetails
 import android.content.Intent
 import android.os.Bundle
 import android.view.*
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -15,7 +16,7 @@ import com.alfanse.feedindia.data.Status
 import com.alfanse.feedindia.data.models.NearByUsersEntity
 import com.alfanse.feedindia.factory.ViewModelFactory
 import com.alfanse.feedindia.ui.member.AddMemberActivity
-import com.alfanse.feedindia.ui.needier.NeedierDetailsActivity
+import com.alfanse.feedindia.ui.needier.AddNeedierDetailActivity
 import com.alfanse.feedindia.ui.needier.NeedierListActivity
 import com.alfanse.feedindia.utils.FIREBASE_DYNAMIC_URL
 import com.alfanse.feedindia.utils.User
@@ -63,12 +64,11 @@ class GroupHomeActivity : AppCompatActivity(),
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
         setUpNavigationDrawer()
-        checkLocation()
         getNearByUsers()
     }
 
-
-    private fun checkLocation(){
+    override fun onResume() {
+        super.onResume()
         if (!PermissionUtils.isLocationEnabled(this)){
             PermissionUtils.showGPSNotEnabledDialog(this)
         }
@@ -145,6 +145,8 @@ class GroupHomeActivity : AppCompatActivity(),
         drawerToggle.isDrawerIndicatorEnabled = true
         layoutDrawer?.addDrawerListener(drawerToggle)
         drawerToggle.syncState()
+        viewDrawer.getHeaderView(0).findViewById<TextView>(R.id.tvWelcomeMsg).text =
+            "Welcome, ${User.groupName}"
         viewDrawer.setNavigationItemSelectedListener(this)
     }
 
@@ -160,7 +162,7 @@ class GroupHomeActivity : AppCompatActivity(),
             }
             R.id.nav_add_needy -> {
                 closeDrawer()
-                startActivity(Intent(this, NeedierDetailsActivity::class.java))
+                startActivity(Intent(this, AddNeedierDetailActivity::class.java))
             }
             R.id.nav_needy_list -> {
                 closeDrawer()
@@ -214,10 +216,10 @@ class GroupHomeActivity : AppCompatActivity(),
         moveCamera(latlng)
         animateCamera(latlng)
         for (user in users){
-            if(user.user_type == UserType.DONOR){
-                getMarkerOptions(user, R.drawable.map_marker_green)
-            } else {
-                getMarkerOptions(user, R.drawable.map_marker_orange)
+            when(user.user_type){
+                UserType.DONOR -> getMarkerOptions(user, R.drawable.map_marker_green)
+                UserType.MEMBER -> getMarkerOptions(user, R.drawable.map_marker_orange)
+                UserType.NEEDIER -> getMarkerOptions(user, R.drawable.map_marker_red)
             }
         }
     }
@@ -247,6 +249,7 @@ class GroupHomeActivity : AppCompatActivity(),
 
     override fun onMapReady(googleMap: GoogleMap) {
         this.googleMap = googleMap
+        this.googleMap.isMyLocationEnabled = true
     }
 
     companion object {
