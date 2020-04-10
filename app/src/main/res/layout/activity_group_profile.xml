@@ -13,7 +13,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_normal"
-        app:cardBackgroundColor="@android:color/secondary_text_dark_nodisable"
         app:elevation="2dp"
         app:cardElevation="2dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -23,7 +22,8 @@
             android:id="@+id/layoutGroup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/spacing_large">
+            android:padding="@dimen/spacing_large"
+            android:background="@color/card_white">
 
             <ImageView
                 android:id="@+id/groupImageView"
@@ -63,7 +63,6 @@
         android:layout_marginTop="@dimen/spacing_large"
         android:elevation="2dp"
         app:cardElevation="2dp"
-        app:cardBackgroundColor="@android:color/secondary_text_dark_nodisable"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/groupCardView">
@@ -72,7 +71,8 @@
             android:id="@+id/layoutPhone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/spacing_large">
+            android:padding="@dimen/spacing_large"
+            android:background="@color/card_white">
 
             <ImageView
                 android:id="@+id/phoneImageView"
@@ -112,7 +112,6 @@
         android:layout_marginTop="@dimen/spacing_large"
         android:elevation="2dp"
         app:cardElevation="2dp"
-        app:cardBackgroundColor="@android:color/secondary_text_dark_nodisable"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/mobileCardView">
@@ -121,7 +120,8 @@
             android:id="@+id/layoutAddress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/spacing_large">
+            android:padding="@dimen/spacing_large"
+            android:background="@color/card_white">
 
             <ImageView
                 android:id="@+id/addressImageView"

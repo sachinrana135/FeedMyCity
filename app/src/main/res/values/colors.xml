@@ -7,4 +7,5 @@
 
     <color name="color_orange">#FF9900</color>
     <color name="color_green">#009E0F</color>
+    <color name="card_white">#99ECEAED</color>
 </resources>
