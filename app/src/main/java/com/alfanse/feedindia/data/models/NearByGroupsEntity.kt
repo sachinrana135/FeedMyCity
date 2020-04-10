@@ -1,11 +1,10 @@
 package com.alfanse.feedindia.data.models
 
-data class NearByUsersEntity(
+data class NearByGroupsEntity(
     val distance: String,
     val lat: String,
     val lng: String,
     val mobile: String,
     val name: String,
-    val user_type: String,
-    val items: String
+    val address: String
 )

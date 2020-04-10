@@ -230,10 +230,17 @@ class GroupHomeActivity : AppCompatActivity(),
     }
 
     private fun getMarkerOptions(user: NearByUsersEntity, icon: Int) {
+        val title = "Name- ${user.name} & " + "Mobile- ${user.mobile}"
+        var snippet = ""
+        if (user.user_type == UserType.NEEDIER){
+            snippet =  "Need Items- ${user.items}"
+        } else if (user.user_type == UserType.DONOR){
+            snippet = "Donate Items- ${user.items}"
+        }
         googleMap.addMarker(
             MarkerOptions().position(LatLng(user.lat.toDouble(), user.lng.toDouble()))
-                .title(user.name)
-                .snippet(user.mobile)
+                .title(title)
+                .snippet(snippet)
                 .icon(BitmapDescriptorFactory.fromResource(icon))
         )
     }
