@@ -8,6 +8,7 @@ import com.alfanse.feedindia.data.models.UserEntity
 import com.alfanse.feedindia.data.repository.FeedAppRepository
 import com.alfanse.feedindia.data.storage.ApplicationStorage
 import com.alfanse.feedindia.utils.APP_USER_ID_PREFS_KEY
+import com.alfanse.feedindia.utils.BUNDLE_KEY_GROUP_CODE
 import com.alfanse.feedindia.utils.Utils
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
@@ -27,18 +28,6 @@ class SplashViewModel @Inject constructor(
         userLiveData.value = Resource.error(throwable.message, null)
     }
 
-    fun getUserByMobile(mobile: String) {
-        userLiveData.value = Resource.loading(null)
-
-        viewModelScope.launch(userLiveDataHandler) {
-
-            repository.getUserByMobile(mobile).let { user ->
-                utils.setLoggedUser(user)
-                userLiveData.value = Resource.success(user)
-            }
-        }
-    }
-
     fun getUserById(userId: String) {
         userLiveData.value = Resource.loading(null)
 
@@ -54,4 +43,8 @@ class SplashViewModel @Inject constructor(
     }
 
     fun getLoggedUser() = storage.getString(APP_USER_ID_PREFS_KEY, null)
+
+    fun saveGroupCode(groupCode: String) {
+        memoryStorage.putString(BUNDLE_KEY_GROUP_CODE, groupCode)
+    }
 }

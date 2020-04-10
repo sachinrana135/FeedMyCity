@@ -5,12 +5,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alfanse.feedindia.data.Resource
 import com.alfanse.feedindia.data.models.SaveGroupRequest
-import com.alfanse.feedindia.data.models.UserEntity
 import com.alfanse.feedindia.data.repository.FeedAppRepository
 import com.alfanse.feedindia.data.storage.ApplicationStorage
 import com.alfanse.feedindia.utils.APP_USER_ID_PREFS_KEY
 import com.alfanse.feedindia.utils.FIREBASE_USER_ID_PREFS_KEY
-import com.alfanse.feedindia.utils.UserType
 import com.alfanse.feedindia.utils.Utils
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch

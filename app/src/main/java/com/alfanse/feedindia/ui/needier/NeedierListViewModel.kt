@@ -9,7 +9,7 @@ import com.alfanse.feedindia.data.Resource
 import com.alfanse.feedindia.data.models.NeedieritemEntity
 import com.alfanse.feedindia.data.repository.FeedAppRepository
 import com.alfanse.feedindia.data.storage.ApplicationStorage
-import com.alfanse.feedindia.utils.APP_GROUP_ID_PREFS_KEY
+import com.alfanse.feedindia.utils.User
 import javax.inject.Inject
 
 
@@ -18,7 +18,7 @@ class NeedierListViewModel
     private val repository: FeedAppRepository,
     private val storage: ApplicationStorage
 ) : ViewModel() {
-    val groupId: String = storage.getString(APP_GROUP_ID_PREFS_KEY, "")!!
+    val groupId: String = User.groupId!!
     private val config: PagedList.Config =
         PagedList.Config.Builder()
             .setPageSize(LOAD_SIZE)

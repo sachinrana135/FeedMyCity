@@ -47,7 +47,7 @@ class CommentFragment private constructor() : Fragment() {
         rvCommentList.adapter = adapter
 
         initListener()
-        viewModel.saveCommentLiveData.observe(this, saveCommentObserver)
+        viewModel.saveCommentLiveData.observe(viewLifecycleOwner, saveCommentObserver)
 
     }
 
@@ -72,8 +72,8 @@ class CommentFragment private constructor() : Fragment() {
         rvCommentList.showShimmer()
         viewModel.getComments(mNeedierItemId!!)
 
-        viewModel.commentResourceLiveData.observe(this, observer)
-        viewModel.commentLiveData.observe(this, Observer {
+        viewModel.commentResourceLiveData.observe(viewLifecycleOwner, observer)
+        viewModel.commentLiveData.observe(viewLifecycleOwner, Observer {
             adapter.submitList(it)
         })
     }
@@ -112,6 +112,7 @@ class CommentFragment private constructor() : Fragment() {
             }
             Status.SUCCESS -> {
                 saveCommentProgressBar.visibility = View.GONE
+                edt_comment?.text?.clear()
                 refreshComments()
             }
             Status.ERROR -> {

@@ -61,6 +61,7 @@
     <string name="add_needy_label">Add Needy</string>
     <string name="needy_list_label">Needy List</string>
     <string name="add_member_label">Add Member</string>
+    <string name="member_list_label">Member List</string>
     <string name="invite_member">Invite Member</string>
     <string name="sign_out">Sign Out</string>
     <string name="navigation_drawer_open">Open Drawer</string>

@@ -29,6 +29,7 @@
         <activity android:name=".ui.profile.GroupProfileActivity"/>
         <activity android:name=".ui.member.AddMemberActivity" />
         <activity android:name=".ui.needier.NeedierDetailsActivity" />
+        <activity android:name=".ui.needier.NeedierDetailActivity" />
         <activity android:name=".ui.needier.NeedierListActivity" />
         <activity android:name=".ui.donor.UpdateDonorActivity" />
         <activity android:name=".ui.donor.DonorHomeActivity" />
@@ -48,14 +49,17 @@
             android:theme="@style/FullScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter >
                 <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
-                <category android:name="android.intent.category.LAUNCHER" />
                 <data android:host="feedindia.page.link"/>
                 <data android:scheme="http"/>
                 <data android:scheme="https"/>
             </intent-filter>
+
         </activity>
         <activity
             android:name="com.schibstedspain.leku.LocationPickerActivity"

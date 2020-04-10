@@ -48,26 +48,6 @@
         app:layout_constraintTop_toBottomOf="@+id/tvMobileLabel"
         android:layout_marginTop="@dimen/spacing_normal" />
 
-    <TextView
-        android:id="@+id/tvGroupCode"
-        style="@style/BlackText"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacing_normal"
-        android:text="@string/group_code_label"
-        android:textSize="@dimen/font_normal"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etMobile" />
-
-    <EditText
-        android:id="@+id/etGroupCode"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="text"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvGroupCode"
-        android:layout_marginTop="@dimen/spacing_normal" />
 
     <TextView
         android:id="@+id/tvAddress"
@@ -78,7 +58,7 @@
         android:text="@string/donor_address_hint"
         android:textSize="@dimen/font_normal"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etGroupCode" />
+        app:layout_constraintTop_toBottomOf="@+id/etMobile" />
 
     <EditText
         android:id="@+id/etAddress"
