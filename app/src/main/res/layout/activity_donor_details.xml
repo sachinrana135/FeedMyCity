@@ -1,115 +1,132 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.donor.DonorDetailsActivity"
-    android:padding="@dimen/spacing_large">
+    tools:context=".ui.donor.DonorDetailsActivity">
 
-    <TextView
-        android:id="@+id/tvName"
-        style="@style/BlackText"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="@string/name_label"
-        android:textSize="@dimen/font_normal"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:focusedByDefault="true"/>
-
-    <EditText
-        android:id="@+id/etName"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        app:layout_constraintTop_toBottomOf="@+id/tvName"
-        android:layout_marginTop="@dimen/spacing_normal" />
+        android:layout_height="match_parent"
+        android:padding="@dimen/spacing_large">
 
-    <TextView
-        android:id="@+id/tvHelpLabel"
-        style="@style/BlackText"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacing_normal"
-        android:text="@string/help_info_label"
-        android:textSize="@dimen/font_normal"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etName" />
+        <TextView
+            android:id="@+id/tvName"
+            style="@style/BlackText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:focusedByDefault="true"
+            android:text="@string/name_label"
+            android:textSize="@dimen/font_normal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/etDonationInfo"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        app:layout_constraintTop_toBottomOf="@+id/tvHelpLabel"
-        android:layout_marginTop="@dimen/spacing_normal" />
+        <EditText
+            android:id="@+id/etName"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/spacing_normal"
+            android:ems="10"
+            android:inputType="textPersonName"
+            app:layout_constraintTop_toBottomOf="@+id/tvName" />
 
-    <RadioGroup
-        android:id="@+id/rgStatus"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/etDonationInfo"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="@dimen/spacing_huge"
-        android:orientation="horizontal"
-        android:weightSum="1"
-        android:checkedButton="@id/rbActive">
+        <TextView
+            android:id="@+id/tvHelpLabel"
+            style="@style/BlackText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_normal"
+            android:text="@string/help_info_label"
+            android:textSize="@dimen/font_normal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/etName" />
 
-        <RadioButton
-            android:id="@+id/rbActive"
+        <EditText
+            android:id="@+id/etDonationInfo"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/spacing_normal"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:hint="@string/hint_donation_item"
+            app:layout_constraintTop_toBottomOf="@+id/tvHelpLabel" />
+
+        <TextView
+            android:id="@+id/tv_status_label"
+            style="@style/BlackText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_normal"
+            android:text="@string/hint_donor_status"
+            android:textSize="@dimen/font_normal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/etDonationInfo" />
+
+        <RadioGroup
+            android:id="@+id/rgStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_small"
+            android:checkedButton="@id/rbActive"
+            android:orientation="horizontal"
+            android:weightSum="1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_status_label">
+
+            <RadioButton
+                android:id="@+id/rbActive"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:text="@string/radio_button_active"
+                android:textSize="@dimen/font_normal" />
+
+            <RadioButton
+                android:id="@+id/rbInActive"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:text="@string/radio_button_inactive" />
+        </RadioGroup>
+
+        <EditText
+            android:id="@+id/etDonorAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_normal"
+            android:ems="10"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:hint="@string/donor_address_hint"
+            android:inputType="textMultiLine"
+            android:maxLength="100"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rgStatus" />
+
+        <Button
+            android:id="@+id/btnSave"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/spacing_huge"
+            android:background="@drawable/volunteer_bg"
+            android:text="@string/save_button_label"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/font_normal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/etDonorAddress" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/radio_button_active"
-            android:layout_weight="0.5"
-            android:textSize="@dimen/font_normal"/>
-
-        <RadioButton
-            android:id="@+id/rbInActive"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/radio_button_inactive"
-            android:layout_weight="0.5"/>
-    </RadioGroup>
-
-    <EditText
-        android:id="@+id/etDonorAddress"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacing_huge"
-        android:ems="10"
-        android:hint="@string/donor_address_hint"
-        android:inputType="textMultiLine"
-        android:maxLength="100"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rgStatus"
-        android:focusableInTouchMode="false"
-        android:focusable="false"/>
-
-    <Button
-        android:id="@+id/btnSave"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="@dimen/spacing_huge"
-        android:background="@drawable/volunteer_bg"
-        android:text="@string/save_button_label"
-        android:textAllCaps="false"
-        android:textColor="@android:color/white"
-        android:textSize="@dimen/font_normal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/etDonorAddress" />
-
-    <ProgressBar
-        android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:visibility="gone"/>
-</androidx.constraintlayout.widget.ConstraintLayout>
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
