@@ -1,9 +1,13 @@
 package com.alfanse.feedindia.ui.groupdetails
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.*
 import android.widget.TextView
+import android.view.Gravity
+import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -17,12 +21,14 @@ import com.alfanse.feedindia.data.models.NearByUsersEntity
 import com.alfanse.feedindia.factory.ViewModelFactory
 import com.alfanse.feedindia.ui.member.AddMemberActivity
 import com.alfanse.feedindia.ui.needier.AddNeedierDetailActivity
+import com.alfanse.feedindia.ui.member.MemberListActivity
+import com.alfanse.feedindia.ui.needier.NeedierDetailsActivity
 import com.alfanse.feedindia.ui.needier.NeedierListActivity
-import com.alfanse.feedindia.utils.FIREBASE_DYNAMIC_URL
-import com.alfanse.feedindia.utils.User
 import com.alfanse.feedindia.ui.profile.GroupProfileActivity
 import com.alfanse.feedindia.ui.usertypes.UserTypesActivity
+import com.alfanse.feedindia.utils.FIREBASE_DYNAMIC_URL
 import com.alfanse.feedindia.utils.PermissionUtils
+import com.alfanse.feedindia.utils.User
 import com.alfanse.feedindia.utils.UserType
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -74,22 +80,12 @@ class GroupHomeActivity : AppCompatActivity(),
         }
     }
 
-    private fun getNearByUsers(){
-        groupHomeViewModel.getNearByUsers(DISTANCE)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        val inflater : MenuInflater = menuInflater
-        inflater.inflate(R.menu.group_home_menu, menu)
-        return true
+    private fun getNearByUsers() {
+        groupHomeViewModel.getNearByUsers(DISTANCE, User.groupId!!)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when(item.itemId){
-            R.id.invite_member -> {
-                shareDynamicLink()
-                true
-            }
             android.R.id.home -> {
                 if (layoutDrawer.isDrawerOpen(Gravity.LEFT)){
                     layoutDrawer.closeDrawer(Gravity.LEFT)
@@ -104,7 +100,9 @@ class GroupHomeActivity : AppCompatActivity(),
 
     private fun shareDynamicLink(){
         val shortLinkTask = Firebase.dynamicLinks.shortLinkAsync {
-            domainUriPrefix = FIREBASE_DYNAMIC_URL + "?groupCode="+ User.groupCode
+            val builder: Uri.Builder = Uri.Builder()
+            link = builder.scheme("https").authority(FIREBASE_DYNAMIC_URL).appendQueryParameter("groupCode", User.groupCode).build()
+            domainUriPrefix = FIREBASE_DYNAMIC_URL
         }.addOnSuccessListener { result ->
             // Short link created
             val shortLink = result.shortLink
@@ -156,9 +154,9 @@ class GroupHomeActivity : AppCompatActivity(),
                 closeDrawer()
                 startActivity(Intent(this, GroupProfileActivity::class.java))
             }
-            R.id.nav_add_member -> {
+            R.id.nav_invite_member -> {
                 closeDrawer()
-                startActivity(Intent(this, AddMemberActivity::class.java))
+                shareDynamicLink()
             }
             R.id.nav_add_needy -> {
                 closeDrawer()
@@ -167,6 +165,10 @@ class GroupHomeActivity : AppCompatActivity(),
             R.id.nav_needy_list -> {
                 closeDrawer()
                 startActivity(Intent(this, NeedierListActivity::class.java))
+            }
+            R.id.nav_member_list -> {
+                closeDrawer()
+                startActivity(Intent(this, MemberListActivity::class.java))
             }
             R.id.nav_sign_out -> {
                 closeDrawer()

@@ -13,8 +13,11 @@ import com.alfanse.feedindia.FeedIndiaApplication
 import com.alfanse.feedindia.R
 import com.alfanse.feedindia.data.Resource
 import com.alfanse.feedindia.data.Status
+import com.alfanse.feedindia.data.models.SaveMemberRequest
 import com.alfanse.feedindia.factory.ViewModelFactory
 import com.alfanse.feedindia.utils.PermissionUtils
+import com.alfanse.feedindia.ui.groupdetails.GroupHomeActivity
+import com.alfanse.feedindia.ui.mobileauth.CodeVerificationActivity
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
@@ -25,12 +28,7 @@ import com.schibstedspain.leku.LATITUDE
 import com.schibstedspain.leku.LOCATION_ADDRESS
 import com.schibstedspain.leku.LONGITUDE
 import com.schibstedspain.leku.LocationPickerActivity
-import kotlinx.android.synthetic.main.activity_add_member.*
-import kotlinx.android.synthetic.main.activity_needier_details.btnSave
-import kotlinx.android.synthetic.main.activity_needier_details.etAddress
-import kotlinx.android.synthetic.main.activity_needier_details.etMobile
-import kotlinx.android.synthetic.main.activity_needier_details.etName
-import kotlinx.android.synthetic.main.activity_needier_details.progressBar
+import kotlinx.android.synthetic.main.activity_needier_details.*
 import javax.inject.Inject
 
 class AddMemberActivity : AppCompatActivity() {
@@ -41,19 +39,28 @@ class AddMemberActivity : AppCompatActivity() {
     private var lng = 0.0
     private var fusedLocationProviderClient: FusedLocationProviderClient? = null
     private var currentLatLng: LatLng? = null
+    private lateinit var phone: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_member)
         title = getString(R.string.add_member_screen_label)
         (application as FeedIndiaApplication).appComponent.inject(this)
-        addMemberViewModel = ViewModelProviders.of(this, viewModelFactory).
-            get(AddMemberViewModel::class.java)
+        addMemberViewModel =
+            ViewModelProviders.of(this, viewModelFactory).get(AddMemberViewModel::class.java)
         addMemberViewModel.addMemberLiveData.observe(this, observer)
         initListener()
+        readIntent()
     }
 
-    private fun initListener(){
+
+    private fun readIntent() {
+        if (intent != null){
+            phone = intent.getStringExtra(CodeVerificationActivity.MOBILE_NUM_KEY)!!
+        }
+    }
+
+    private fun initListener() {
         etAddress.setOnClickListener {
             if(!PermissionUtils.isLocationEnabled(this)){
                 PermissionUtils.showGPSNotEnabledDialog(this)
@@ -74,23 +81,24 @@ class AddMemberActivity : AppCompatActivity() {
                     return@setOnClickListener
                 }
 
-                etGroupCode.text.toString().trim().isEmpty() -> {
-                    etGroupCode.error = "Enter group code"
-                    return@setOnClickListener
-                }
-
                 etAddress.text.toString().trim().isEmpty() -> {
-                    Snackbar.make(findViewById(android.R.id.content), "Please give address",
-                        Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(
+                        findViewById(android.R.id.content), "Please give address",
+                        Snackbar.LENGTH_SHORT
+                    ).show()
                     return@setOnClickListener
                 }
             }
             val name = etName.text.toString().trim()
-            val mobile = etMobile.text.toString().trim()
-            val groupCode = etGroupCode.text.toString().trim()
+            val mobile = phone
+            val groupCode = addMemberViewModel.getGroupId()
             val address = etAddress.text.toString().trim()
-            addMemberViewModel.saveMember(name, mobile, groupCode,
-                lat.toString(), lng.toString(), address, groupCode)
+            addMemberViewModel.saveMember(
+                SaveMemberRequest(
+                    name = name, mobile = mobile, groupCode = groupCode!!,
+                    lat = lat.toString(), lng = lng.toString(), location_address = address
+                )
+            )
         }
     }
 
@@ -102,8 +110,9 @@ class AddMemberActivity : AppCompatActivity() {
             }
             Status.SUCCESS -> {
                 progressBar.visibility = View.GONE
-                Snackbar.make(findViewById(android.R.id.content), "Member saved successfully",
-                    Snackbar.LENGTH_SHORT).show()
+                val intent = Intent(this, GroupHomeActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
             }
             Status.ERROR -> {
                 progressBar.visibility = View.GONE
@@ -127,7 +136,7 @@ class AddMemberActivity : AppCompatActivity() {
         }
     }
 
-    private fun startLocationPicker(latLng: LatLng){
+    private fun startLocationPicker(latLng: LatLng) {
         val locationPickerIntent = LocationPickerActivity.Builder()
             .withLocation(latLng.latitude, latLng.longitude)
             .withSearchZone(INDIA_LOCALE_ZONE)
@@ -141,13 +150,13 @@ class AddMemberActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode != Activity.RESULT_CANCELED){
-            if (requestCode == 1){
-                if (data != null){
+        if (resultCode != Activity.RESULT_CANCELED) {
+            if (requestCode == 1) {
+                if (data != null) {
                     lat = data.getDoubleExtra(LATITUDE, 0.0)
                     lng = data.getDoubleExtra(LONGITUDE, 0.0)
                     val address = data.getStringExtra(LOCATION_ADDRESS)
-                    if (address != null){
+                    if (address != null) {
                         setAddressToView(address)
                     }
                 }
@@ -155,7 +164,7 @@ class AddMemberActivity : AppCompatActivity() {
         }
     }
 
-    private fun setAddressToView(address: String){
+    private fun setAddressToView(address: String) {
         etAddress.setText(address)
     }
 

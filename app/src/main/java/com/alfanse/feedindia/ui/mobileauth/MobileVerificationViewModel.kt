@@ -8,6 +8,7 @@ import com.alfanse.feedindia.data.models.UserEntity
 import com.alfanse.feedindia.data.repository.FeedAppRepository
 import com.alfanse.feedindia.data.storage.ApplicationStorage
 import com.alfanse.feedindia.utils.APP_USER_ID_PREFS_KEY
+import com.alfanse.feedindia.utils.BUNDLE_KEY_GROUP_CODE
 import com.alfanse.feedindia.utils.FIREBASE_USER_ID_PREFS_KEY
 import com.alfanse.feedindia.utils.Utils
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -41,6 +42,7 @@ class MobileVerificationViewModel
         viewModelScope.launch(userLiveDataHandler) {
 
             repository.getUserByMobile(mobile).let { user ->
+                memoryStorage.clearValue(BUNDLE_KEY_GROUP_CODE)
                 storage.putString(APP_USER_ID_PREFS_KEY, user.userId)
                 utils.setLoggedUser(user)
                 userLiveData.value = Resource.success(user)
