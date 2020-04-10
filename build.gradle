@@ -81,6 +81,7 @@ buildscript {
 
                 //Firebase
                 "com.google.firebase:firebase-auth:19.3.0",
+                "com.firebaseui:firebase-ui-auth:6.2.0",
                 "com.google.firebase:firebase-dynamic-links-ktx:19.1.0",
                 "com.google.firebase:firebase-analytics:17.3.0",
 

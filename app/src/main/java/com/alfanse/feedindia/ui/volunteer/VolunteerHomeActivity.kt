@@ -11,6 +11,7 @@ import com.alfanse.feedindia.FeedIndiaApplication
 import com.alfanse.feedindia.R
 import com.alfanse.feedindia.data.Resource
 import com.alfanse.feedindia.data.Status
+import com.alfanse.feedindia.data.models.NearByGroupsEntity
 import com.alfanse.feedindia.data.models.NearByUsersEntity
 import com.alfanse.feedindia.factory.ViewModelFactory
 import com.alfanse.feedindia.utils.PermissionUtils
@@ -119,7 +120,7 @@ class VolunteerHomeActivity : AppCompatActivity(), OnMapReadyCallback {
         volunteerViewModel.getNearByUsers(lat, lng, DISTANCE)
     }
 
-    private var observer = Observer<Resource<List<NearByUsersEntity>>> {
+    private var observer = Observer<Resource<List<NearByGroupsEntity>>> {
         when (it.status) {
             Status.LOADING -> {
                 progressBar.visibility = View.VISIBLE
@@ -140,7 +141,7 @@ class VolunteerHomeActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
-    private fun addMarkersToMap(users: List<NearByUsersEntity>){
+    private fun addMarkersToMap(users: List<NearByGroupsEntity>){
         val latlng = LatLng(lat, lng)
         moveCamera(latlng)
         animateCamera(latlng)

@@ -58,6 +58,7 @@ interface ApiService {
     @GET("getNearByGroups")
     suspend fun getNearByGroups(@Query("lat") lat: Double,
                                 @Query("lng") lng: Double,
-                                @Query("distance") distance: Int): List<NearByUsersEntity>
+                                @Query("distance") distance: Int): List<NearByGroupsEntity>
+
     suspend fun saveMember(@Body request: SaveMemberRequest) : SaveMemberResponse
 }

@@ -21,6 +21,9 @@ import com.alfanse.feedindia.ui.groupdetails.GroupDetailsActivity
 import com.alfanse.feedindia.ui.groupdetails.GroupHomeActivity
 import com.alfanse.feedindia.utils.FirebaseAuthHandler
 import com.alfanse.feedindia.utils.UserType
+import com.firebase.ui.auth.data.model.CountryInfo
+import com.firebase.ui.auth.util.ExtraConstants
+import com.firebase.ui.auth.util.data.PhoneNumberUtils
 import com.google.firebase.FirebaseException
 import com.google.firebase.FirebaseTooManyRequestsException
 import com.google.firebase.auth.*
@@ -126,8 +129,15 @@ class MobileVerificationActivity : AppCompatActivity() {
         }
 
         readUserType()
+        setUpCountrySpinner()
     }
 
+    private fun setUpCountrySpinner(){
+        val bundle = Bundle()
+        bundle.putString(ExtraConstants.PHONE, PhoneAuthProvider.PROVIDER_ID)
+        countryList.init(bundle)
+
+    }
     private fun readUserType() {
         userType = intent.getStringExtra(USER_TYPE_KEY)
     }
@@ -167,13 +177,39 @@ class MobileVerificationActivity : AppCompatActivity() {
                         }
                     }
                     Status.ERROR -> {
-                        startPhoneNumberVerification(addCodeToPhoneNumber(etPhone.text.toString()))
+                        verifyPhoneAndAuthenticate()
                     }
                     Status.EMPTY -> {
-                        startPhoneNumberVerification(addCodeToPhoneNumber(etPhone.text.toString()))
+                        verifyPhoneAndAuthenticate()
                     }
                 }
             })
+    }
+
+    private fun verifyPhoneAndAuthenticate(){
+        val phoneNumber = getValidPhoneNumber()
+        if(phoneNumber == null){
+            etPhone.error = "Invalid Phone"
+            return
+        }
+        startPhoneNumberVerification(phoneNumber)
+    }
+
+    private fun getValidPhoneNumber(): String? {
+        val everythingElse: String = etPhone.text.toString().trim()
+        if (TextUtils.isEmpty(everythingElse)) {
+            return null
+        }
+
+        return format(everythingElse, countryList.selectedCountryInfo.countryCode)
+    }
+
+    private fun format(phoneNumber: String, countryCode: Int): String? {
+        return if (phoneNumber.startsWith("+")) {
+            phoneNumber
+        } else {
+            ("+" + countryCode.toString() + phoneNumber.replace("[^\\d.]".toRegex(), ""))
+        }
     }
 
     private fun navigateToUserTypeDetailsScreen(phone: String?) {
@@ -214,7 +250,7 @@ class MobileVerificationActivity : AppCompatActivity() {
         }
 
         btnResend.setOnClickListener {
-            resendVerificationCode(addCodeToPhoneNumber(etPhone.text.toString()), resendToken)
+            resendVerificationCode(getValidPhoneNumber()!!, resendToken)
         }
     }
 
@@ -252,15 +288,6 @@ class MobileVerificationActivity : AppCompatActivity() {
         }
 
         return true
-    }
-
-    private fun addCodeToPhoneNumber(phoneInput: String): String {
-        return if (phoneInput.contains(CODE)) {
-            val array = phoneInput.split("+91");
-            CODE + SPACE + array[1]
-        } else {
-            "$CODE$SPACE$phoneInput"
-        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

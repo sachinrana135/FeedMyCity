@@ -96,8 +96,7 @@ class AddMemberActivity : AppCompatActivity() {
             addMemberViewModel.saveMember(
                 SaveMemberRequest(
                     name = name, mobile = mobile, groupCode = groupCode!!,
-                    lat = lat.toString(), lng = lng.toString(), location_address = address
-                )
+                    lat = lat.toString(), lng = lng.toString(), location_address = address, firebaseId = "")
             )
         }
     }
