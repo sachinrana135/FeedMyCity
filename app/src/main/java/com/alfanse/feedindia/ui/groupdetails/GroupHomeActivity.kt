@@ -51,8 +51,8 @@ class GroupHomeActivity : AppCompatActivity(),
     internal lateinit var viewModelFactory: ViewModelFactory
     private lateinit var groupHomeViewModel: GroupHomeViewModel
     private lateinit var googleMap: GoogleMap
-    private var lat = User.lat?.toDouble()
-    private var lng = User.lng?.toDouble()
+    private var lat = 0.0
+    private var lng = 0.0
     private val mContext = this
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,6 +68,12 @@ class GroupHomeActivity : AppCompatActivity(),
         mapFragment.getMapAsync(this)
         setUpNavigationDrawer()
         getNearByUsers()
+        if (User.lat != null){
+            lat = User.lat!!.toDouble()
+        }
+        if (User.lng != null){
+            lng = User.lng!!.toDouble()
+        }
     }
 
     override fun onResume() {
@@ -141,7 +147,7 @@ class GroupHomeActivity : AppCompatActivity(),
         layoutDrawer?.addDrawerListener(drawerToggle)
         drawerToggle.syncState()
         viewDrawer.getHeaderView(0).findViewById<TextView>(R.id.tvWelcomeMsg).text =
-            "Welcome, ${User.groupName}"
+            "Welcome, ${User.name}"
         viewDrawer.setNavigationItemSelectedListener(this)
     }
 
