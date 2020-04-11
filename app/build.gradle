@@ -5,11 +5,16 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 apply plugin: 'kotlin-kapt'
+
 apply plugin: 'com.google.gms.google-services'
+
+apply plugin: 'com.google.firebase.crashlytics'
+
 def localProperties = new Properties()
 localProperties.load(new FileInputStream(rootProject.file("local.properties")))
 
 android {
+
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
 
@@ -35,33 +40,42 @@ android {
         multiDexEnabled true
     }
     buildTypes {
-        debug {
+        release {
+            shrinkResources true
+            minifyEnabled true
+            signingConfig signingConfigs.config
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            proguardFile 'proguard-rules.pro'
+        }
+    }
+
+    flavorDimensions "default"
+    productFlavors {
+
+        dev {
+            dimension "default"
+
             def Properties devProps = new Properties()
-            devProps.load(new FileInputStream(file(DEVELOPMENT_PROPS_FILE)))
             applicationIdSuffix devProps["APPLICATION_ID_SUFFIX"]
             versionNameSuffix devProps["VERSION_NAME_SUFFIX"]
+            devProps.load(new FileInputStream(file(DEVELOPMENT_PROPS_FILE)))
             buildConfigField("String", "API_BASE_URL", devProps["API_BASE_URL"])
             buildConfigField("String", "WEB_BASE_URL", devProps["WEB_BASE_URL"])
             buildConfigField("String", "API_TOKEN", devProps["API_TOKEN"]);
             resValue("string", "app_name", devProps["APP_NAME"])
             resValue("string", "google_maps_key", localProperties['apiKey'])
         }
-
-        release {
-            shrinkResources true
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.config
-            proguardFile 'proguard-rules.pro'
-
+        prod {
+            dimension "default"
             def Properties prodProps = new Properties()
             prodProps.load(new FileInputStream(file(PRODUCTION_PROPS_FILE)))
             buildConfigField("String", "API_BASE_URL", prodProps["API_BASE_URL"])
             buildConfigField("String", "WEB_BASE_URL", prodProps["WEB_BASE_URL"])
-            buildConfigField("String", "API_TOKEN", prodProps["API_TOKEN"])
+            buildConfigField("String", "API_TOKEN", prodProps["API_TOKEN"]);
             resValue("string", "app_name", prodProps["APP_NAME"])
             resValue("string", "google_maps_key", localProperties['apiKey'])
         }
+
     }
 
     compileOptions {

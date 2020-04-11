@@ -13,10 +13,13 @@
         android:layout_height="0dp"
         android:layout_marginStart="@dimen/spacing_normal"
         android:layout_marginTop="@dimen/spacing_huge"
+        android:background="#68000000"
+        android:padding="@dimen/spacing_normal"
         android:text="@string/app_name"
-        android:textColor="@color/color_orange"
+        android:textColor="@color/colorPrimary"
         android:textSize="@dimen/font_xxlarge"
         android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
