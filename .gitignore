@@ -12,3 +12,7 @@
 /captures
 .externalNativeBuild
 .cxx
+signin_keys
+properties/keystore.properties
+properties/prod.properties
+app/release
