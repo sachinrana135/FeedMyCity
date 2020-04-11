@@ -131,7 +131,7 @@ class CodeVerificationActivity : AppCompatActivity() {
                         override fun onSuccess(user: FirebaseUser?) {
                             progressBar.visibility = View.GONE
                             if (user != null){
-                                phoneNumber = user.phoneNumber?.replace("+91","")
+                                phoneNumber = user.phoneNumber
                                 codeVerificationViewModel.saveFirebaseUserId(user.uid)
                             }
                         }

@@ -34,6 +34,35 @@
           ]
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:241160037436:android:ba77416f36c6e11fd04f39",
+        "android_client_info": {
+          "package_name": "com.alfanse.feedmycity.dev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "241160037436-ecqa830v8jm4af7t771ie6m6g0vej3fc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCP4tCuLAoZSXCpxds9cdTqOhU3OKFywWE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "241160037436-ecqa830v8jm4af7t771ie6m6g0vej3fc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
     }
   ],
   "configuration_version": "1"
