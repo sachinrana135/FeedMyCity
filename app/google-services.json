@@ -1,42 +1,34 @@
 {
   "project_info": {
-    "project_number": "597379854840",
-    "firebase_url": "https://feedindia-95f49.firebaseio.com",
-    "project_id": "feedindia-95f49",
-    "storage_bucket": "feedindia-95f49.appspot.com"
+    "project_number": "241160037436",
+    "firebase_url": "https://feedmycity-9f59c.firebaseio.com",
+    "project_id": "feedmycity-9f59c",
+    "storage_bucket": "feedmycity-9f59c.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:597379854840:android:eceafbcbd1bd09a370660d",
+        "mobilesdk_app_id": "1:241160037436:android:74e09e195c8e27d1d04f39",
         "android_client_info": {
-          "package_name": "com.alfanse.feedindia"
+          "package_name": "com.alfanse.feedmycity"
         }
       },
       "oauth_client": [
         {
-          "client_id": "597379854840-f1ept3sr7np21rqjg7qmeg05tv0n7q4a.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.alfanse.feedindia",
-            "certificate_hash": "3b41c0dd69514f800fe38d9098579129d0e10c64"
-          }
-        },
-        {
-          "client_id": "597379854840-51bqcvmh3ikevkf3dhfe8v26475h7s45.apps.googleusercontent.com",
+          "client_id": "241160037436-ecqa830v8jm4af7t771ie6m6g0vej3fc.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDeNbB6W2R996EGIYMOaVsSPGSjfX29Oag"
+          "current_key": "AIzaSyCP4tCuLAoZSXCpxds9cdTqOhU3OKFywWE"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "597379854840-51bqcvmh3ikevkf3dhfe8v26475h7s45.apps.googleusercontent.com",
+              "client_id": "241160037436-ecqa830v8jm4af7t771ie6m6g0vej3fc.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
