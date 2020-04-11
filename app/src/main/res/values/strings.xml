@@ -1,5 +1,4 @@
 <resources>
-    <string name="app_name">FeedMyCity</string>
     <string name="join_as_screen_label">Join as</string>
     <string name="phone_verification_screen_label">Phone Verification</string>
     <string name="donor_details_screen_label">Donor Details</string>
@@ -22,7 +21,7 @@
     <string name="txt_visible">Visible</string>
     <string name="txt_invisible">Invisible</string>
     <string name="txt_no_data">No data available</string>
-    <string name="splash_screen_title">Feed India</string>
+    <string name="splash_screen_title">Feed My City</string>
     <string name="donor_type_label">Donor</string>
     <string name="ngo_or_group_label">NGO/Group</string>
     <string name="tv_volunteer_label">Volunteer</string>
@@ -71,7 +70,7 @@
     <string name="hint_add_comment">Add comment...</string>
     <string name="error_mandatory">Please enter input</string>
     <string name="txt_share_invite_link">Share Invite link</string>
-    <string name="txt_join_group">Hey, Join FeedIndia group to become helping hands for poor people. \n</string>
+    <string name="txt_join_group">Hey, Join FeedMyCity group to become helping hands for poor people. \n</string>
     <string name="txt_choose_one">Choose one</string>
     <string name="mobile_name_label">Mobile</string>
     <string name="what_is_needed_label">What is needed?</string>

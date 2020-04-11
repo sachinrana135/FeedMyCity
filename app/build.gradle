@@ -12,8 +12,20 @@ localProperties.load(new FileInputStream(rootProject.file("local.properties")))
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
+
+    signingConfigs {
+        config {
+            def Properties keyProps = new Properties()
+            keyProps.load(new FileInputStream(file(RELEASE_KEYSTORE_PROPS_FILE)))
+            keyAlias keyProps["RELEASE_KEY_ALIAS"]
+            keyPassword keyProps["RELEASE_KEY_PASSWORD"]
+            storeFile file(keyProps["RELEASE_STORE_FILE"])
+            storePassword keyProps["RELEASE_STORE_PASSWORD"]
+        }
+    }
+
     defaultConfig {
-        applicationId "com.alfanse.feedindia"
+        applicationId "com.alfanse.feedmycity"
         minSdkVersion 17
         targetSdkVersion 29
         versionCode 1
@@ -21,16 +33,34 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
-        buildConfigField "String", "API_TOKEN", '"be7a16fae793838c7ef167714ba36d2e"'
     }
     buildTypes {
         debug {
+            def Properties devProps = new Properties()
+            devProps.load(new FileInputStream(file(DEVELOPMENT_PROPS_FILE)))
+            applicationIdSuffix devProps["APPLICATION_ID_SUFFIX"]
+            versionNameSuffix devProps["VERSION_NAME_SUFFIX"]
+            buildConfigField("String", "API_BASE_URL", devProps["API_BASE_URL"])
+            buildConfigField("String", "WEB_BASE_URL", devProps["WEB_BASE_URL"])
+            buildConfigField("String", "API_TOKEN", devProps["API_TOKEN"]);
+            resValue("string", "app_name", devProps["APP_NAME"])
             resValue("string", "google_maps_key", localProperties['apiKey'])
         }
 
         release {
-            minifyEnabled false
+            shrinkResources true
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
+            proguardFile 'proguard-rules.pro'
+
+            def Properties prodProps = new Properties()
+            prodProps.load(new FileInputStream(file(PRODUCTION_PROPS_FILE)))
+            buildConfigField("String", "API_BASE_URL", prodProps["API_BASE_URL"])
+            buildConfigField("String", "WEB_BASE_URL", prodProps["WEB_BASE_URL"])
+            buildConfigField("String", "API_TOKEN", prodProps["API_TOKEN"])
+            resValue("string", "app_name", prodProps["APP_NAME"])
+            resValue("string", "google_maps_key", localProperties['apiKey'])
         }
     }
 

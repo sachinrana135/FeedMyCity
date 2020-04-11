@@ -27,7 +27,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvCodeVerification" />
     
-    <com.alfanse.feedindia.utils.OtpEditText
+    <com.alfanse.feedmycity.utils.OtpEditText
         android:id="@+id/etOtp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
