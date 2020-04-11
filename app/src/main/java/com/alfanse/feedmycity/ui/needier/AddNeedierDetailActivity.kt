@@ -2,6 +2,7 @@ package com.alfanse.feedmycity.ui.needier
 
 import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
@@ -49,13 +50,16 @@ class AddNeedierDetailActivity : AppCompatActivity() {
         initListener()
     }
 
+    override fun onResume() {
+        super.onResume()
+        if(!PermissionUtils.isLocationEnabled(this)){
+            PermissionUtils.showGPSNotEnabledDialog(this)
+        }
+    }
+
     private fun initListener(){
         etAddress.setOnClickListener {
-            if(!PermissionUtils.isLocationEnabled(this)){
-                PermissionUtils.showGPSNotEnabledDialog(this)
-                return@setOnClickListener
-            }
-            setUpLocationListener()
+            requestPermission()
         }
 
         btnSave.setOnClickListener {
@@ -87,6 +91,54 @@ class AddNeedierDetailActivity : AppCompatActivity() {
             val address = etAddress.text.toString().trim()
             needierDetailsViewModel.saveNeedierDetails(name, mobile, whatNeededInfo,
                 lat.toString(), lng.toString(), address)
+        }
+    }
+
+    private fun requestPermission(){
+        when {
+            PermissionUtils.isAccessFineLocationGranted(this) -> {
+                when {
+                    PermissionUtils.isLocationEnabled(this) -> {
+                        setUpLocationListener()
+                    }
+                    else -> {
+                        PermissionUtils.showGPSNotEnabledDialog(this)
+                    }
+                }
+            }
+            else -> {
+                PermissionUtils.requestAccessFineLocationPermission(
+                    this,
+                    LOCATION_PERMISSION_REQUEST_CODE
+                )
+            }
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {
+            LOCATION_PERMISSION_REQUEST_CODE -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    when {
+                        PermissionUtils.isLocationEnabled(this) -> {
+                            setUpLocationListener()
+                        }
+                        else -> {
+                            PermissionUtils.showGPSNotEnabledDialog(this)
+                        }
+                    }
+                } else {
+                    Snackbar.make(
+                        findViewById(android.R.id.content),
+                        getString(R.string.location_permission_not_granted),
+                        Snackbar.LENGTH_SHORT
+                    ).show()
+                }
+            }
         }
     }
 
@@ -170,5 +222,6 @@ class AddNeedierDetailActivity : AppCompatActivity() {
         private const val TAG = "NeedierDetailsActivity"
         private const val MAP_BUTTON_REQUEST_CODE = 1
         private const val INDIA_LOCALE_ZONE = "en_in"
+        private const val LOCATION_PERMISSION_REQUEST_CODE = 999
     }
 }

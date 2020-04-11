@@ -1,6 +1,7 @@
 package com.alfanse.feedmycity.ui.groupdetails
 
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.view.Gravity
@@ -80,6 +81,45 @@ class GroupHomeActivity : AppCompatActivity(),
         super.onResume()
         if (!PermissionUtils.isLocationEnabled(this)){
             PermissionUtils.showGPSNotEnabledDialog(this)
+        }
+        requestPermission()
+    }
+
+    private fun requestPermission(){
+        when {
+            PermissionUtils.isAccessFineLocationGranted(this) -> {
+                if (!PermissionUtils.isLocationEnabled(this)){
+                    PermissionUtils.showGPSNotEnabledDialog(this)
+                }
+            }
+            else -> {
+                PermissionUtils.requestAccessFineLocationPermission(
+                    this,
+                    LOCATION_PERMISSION_REQUEST_CODE
+                )
+            }
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {
+            LOCATION_PERMISSION_REQUEST_CODE -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    if (!PermissionUtils.isLocationEnabled(this)){
+                        PermissionUtils.showGPSNotEnabledDialog(this)
+                    }
+                } else {
+                    Snackbar.make(
+                        findViewById(android.R.id.content),
+                        getString(R.string.location_permission_not_granted),
+                        Snackbar.LENGTH_SHORT
+                    ).show()
+                }
+            }
         }
     }
 
@@ -261,11 +301,14 @@ class GroupHomeActivity : AppCompatActivity(),
 
     override fun onMapReady(googleMap: GoogleMap) {
         this.googleMap = googleMap
-        this.googleMap.isMyLocationEnabled = true
+        if(PermissionUtils.isAccessFineLocationGranted(mContext)){
+            this.googleMap.isMyLocationEnabled = true
+        }
     }
 
     companion object {
         private const val TAG = "GroupHomeActivity"
         private const val DISTANCE = 50
+        private const val LOCATION_PERMISSION_REQUEST_CODE = 999
     }
 }

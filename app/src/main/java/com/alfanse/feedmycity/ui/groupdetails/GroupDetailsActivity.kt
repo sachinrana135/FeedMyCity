@@ -167,7 +167,6 @@ class GroupDetailsActivity : AppCompatActivity() {
         }
     }
 
-
     private fun setUpLocationListener() {
         fusedLocationProviderClient = FusedLocationProviderClient(this)
         fusedLocationProviderClient?.lastLocation?.addOnSuccessListener {

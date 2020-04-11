@@ -12,7 +12,7 @@
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/donorCardView"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="@dimen/spacing_normal"
         app:cardElevation="2dp"
@@ -22,15 +22,16 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layoutDonorType"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:background="@drawable/donor_bg">
+            android:background="@drawable/donor_bg"
+            android:padding="@dimen/spacing_normal">
 
             <TextView
                 android:id="@+id/tvDonor"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
-                android:layout_marginStart="@dimen/spacing_huge"
+                android:layout_marginStart="@dimen/spacing_normal"
                 android:gravity="center_vertical"
                 android:text="@string/donor_type_label"
                 android:textColor="@android:color/white"
@@ -40,12 +41,13 @@
                 app:layout_constraintTop_toTopOf="@id/layoutDonorType"/>
 
             <ImageView
-                android:layout_width="100dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/spacing_normal"
+                android:layout_marginEnd="@dimen/spacing_small"
                 android:src="@drawable/donate"
                 app:layout_constraintEnd_toEndOf="@id/layoutDonorType"
-                app:layout_constraintTop_toTopOf="@id/layoutDonorType"/>
+                app:layout_constraintTop_toTopOf="@id/layoutDonorType"
+                app:layout_constraintBottom_toBottomOf="@+id/layoutDonorType"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
 
@@ -63,13 +65,14 @@
             android:id="@+id/layoutNgoOrGroupType"
             android:layout_width="match_parent"
             android:layout_height="100dp"
-            android:background="@android:color/white">
+            android:background="@android:color/white"
+            android:padding="@dimen/spacing_normal">
 
             <TextView
                 android:id="@+id/tvNgoOrGroup"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
-                android:layout_marginStart="@dimen/spacing_huge"
+                android:layout_marginStart="@dimen/spacing_normal"
                 android:gravity="center_vertical"
                 android:textColor="@android:color/black"
                 android:textSize="@dimen/font_xlarge"
@@ -79,12 +82,13 @@
                 app:layout_constraintTop_toTopOf="@id/layoutNgoOrGroupType"/>
 
             <ImageView
-                android:layout_width="100dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/caring"
                 app:layout_constraintEnd_toEndOf="@id/layoutNgoOrGroupType"
                 app:layout_constraintTop_toTopOf="@id/layoutNgoOrGroupType"
-                android:layout_marginEnd="@dimen/spacing_normal"/>
+                app:layout_constraintBottom_toBottomOf="@+id/layoutNgoOrGroupType"
+                android:layout_marginEnd="@dimen/spacing_small"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
 
@@ -92,7 +96,7 @@
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cardViewVolunteer"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/cardViewGroup"
         android:layout_marginTop="@dimen/spacing_huge"
         app:cardElevation="2dp"
@@ -101,16 +105,17 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layoutVolunteerType"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:background="@drawable/volunteer_bg">
+            android:background="@drawable/volunteer_bg"
+            android:padding="@dimen/spacing_normal">
 
             <TextView
                 android:id="@+id/tvVolunteer"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
-                android:layout_marginStart="@dimen/spacing_huge"
+                android:layout_marginStart="@dimen/spacing_normal"
                 android:gravity="center_vertical"
                 android:text="@string/tv_volunteer_label"
                 android:textColor="@android:color/white"
@@ -125,7 +130,8 @@
                 android:src="@drawable/volunteer"
                 app:layout_constraintEnd_toEndOf="@id/layoutVolunteerType"
                 app:layout_constraintTop_toTopOf="@id/layoutVolunteerType"
-                android:layout_marginEnd="@dimen/spacing_normal"/>
+                app:layout_constraintBottom_toBottomOf="@+id/layoutVolunteerType"
+                android:layout_marginEnd="@dimen/spacing_small"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
 </androidx.constraintlayout.widget.ConstraintLayout>
