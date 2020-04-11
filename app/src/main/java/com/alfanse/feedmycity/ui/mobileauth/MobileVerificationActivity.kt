@@ -246,7 +246,7 @@ class MobileVerificationActivity : AppCompatActivity() {
             if (!validatePhoneNumber()) {
                 return@setOnClickListener
             }
-            mobileVerificationViewModel.getUserByMobile(etPhone.text.toString())
+            mobileVerificationViewModel.getUserByMobile(getValidPhoneNumber()!!)
         }
 
         btnResend.setOnClickListener {

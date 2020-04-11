@@ -3,7 +3,6 @@ package com.alfanse.feedmycity.ui.volunteer
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -132,7 +131,8 @@ class VolunteerHomeActivity : AppCompatActivity(), OnMapReadyCallback {
             }
             Status.ERROR -> {
                 progressBar.visibility = View.GONE
-                Toast.makeText(applicationContext, it.message, Toast.LENGTH_LONG).show()
+                Snackbar.make(findViewById(android.R.id.content), it.message?:"",
+                    Snackbar.LENGTH_SHORT).show()
             }
             Status.EMPTY -> {
 
