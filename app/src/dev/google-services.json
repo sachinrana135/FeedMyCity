@@ -15,6 +15,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "241160037436-j62vlndsac4u5u9c3kub4id3jkeb42co.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.alfanse.feedmycity",
+            "certificate_hash": "d42151f2cbf354d3e9b6d727c94b9596e4998561"
+          }
+        },
+        {
+          "client_id": "241160037436-c0ag337h05s6bifq3gcodpf6tl3vskl4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.alfanse.feedmycity",
+            "certificate_hash": "df1161307377f0c2c92c8f648c2688e6e33b6f0b"
+          }
+        },
+        {
           "client_id": "241160037436-ecqa830v8jm4af7t771ie6m6g0vej3fc.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -43,6 +59,22 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "241160037436-4hq9sdreno63o782gi2t3g6pk3pitdt4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.alfanse.feedmycity.dev",
+            "certificate_hash": "df1161307377f0c2c92c8f648c2688e6e33b6f0b"
+          }
+        },
+        {
+          "client_id": "241160037436-pkqgb84svt9nioiglu33rt198j5qmppu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.alfanse.feedmycity.dev",
+            "certificate_hash": "d42151f2cbf354d3e9b6d727c94b9596e4998561"
+          }
+        },
         {
           "client_id": "241160037436-ecqa830v8jm4af7t771ie6m6g0vej3fc.apps.googleusercontent.com",
           "client_type": 3
