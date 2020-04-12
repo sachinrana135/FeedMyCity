@@ -11,7 +11,6 @@ FeedMyCity is the most required app for hunger crisis in your city during corona
 5.	Dagger – Dependency Injection
 6.	Shimmer – To show loading state
 7.	Android Jetpack Pagination
-8.	Android Jetpack Pagination
 
 
 ## Screenshots
