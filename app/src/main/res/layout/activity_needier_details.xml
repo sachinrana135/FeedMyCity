@@ -28,7 +28,7 @@
             android:layout_height="0dp"
             android:layout_marginTop="@dimen/spacing_normal"
             android:ems="10"
-            android:inputType="textPersonName"
+            android:inputType="textPersonName|textCapWords"
             app:layout_constraintTop_toBottomOf="@+id/tvName" />
 
         <TextView
@@ -68,7 +68,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_normal"
             android:ems="10"
-            android:inputType="textMultiLine"
+            android:inputType="textMultiLine|textCapWords"
             android:maxLength="100"
             android:hint="@string/hint_donation_item"
             app:layout_constraintStart_toStartOf="parent"
@@ -93,7 +93,7 @@
             android:ems="10"
             android:focusable="false"
             android:focusableInTouchMode="false"
-            android:inputType="textMultiLine"
+            android:inputType="textMultiLine|textCapWords"
             android:maxLength="100"
             android:hint="@string/hint_geo_location_address"
             app:layout_constraintStart_toStartOf="parent"

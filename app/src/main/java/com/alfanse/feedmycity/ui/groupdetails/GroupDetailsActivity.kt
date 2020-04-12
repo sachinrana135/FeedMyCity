@@ -3,7 +3,9 @@ package com.alfanse.feedmycity.ui.groupdetails
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.Location
 import android.os.Bundle
+import android.os.Looper
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -16,7 +18,7 @@ import com.alfanse.feedmycity.data.Status
 import com.alfanse.feedmycity.factory.ViewModelFactory
 import com.alfanse.feedmycity.ui.mobileauth.CodeVerificationActivity
 import com.alfanse.feedmycity.utils.PermissionUtils
-import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.*
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.snackbar.Snackbar
 import com.schibstedspain.leku.LATITUDE
@@ -34,6 +36,7 @@ class GroupDetailsActivity : AppCompatActivity() {
     private var groupLng = 0.0
     private var phone = ""
     private var fusedLocationProviderClient: FusedLocationProviderClient? = null
+    private var locationCallback: LocationCallback? = null
     private var currentLatLng: LatLng? = null
     private var geoLocationAddress = ""
     private var groupName = ""
@@ -53,6 +56,10 @@ class GroupDetailsActivity : AppCompatActivity() {
         initListener()
     }
 
+    override fun onResume() {
+        super.onResume()
+    }
+
     private fun readPhoneNum() {
         if (intent != null){
             phone = intent.getStringExtra(CodeVerificationActivity.MOBILE_NUM_KEY)!!
@@ -60,10 +67,8 @@ class GroupDetailsActivity : AppCompatActivity() {
     }
 
     private fun initListener(){
-        cbAllowLocationAccess.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked){
-                requestPermission()
-            }
+        etAddress.setOnClickListener {
+            requestPermission()
         }
 
         btnSave.setOnClickListener {
@@ -170,15 +175,46 @@ class GroupDetailsActivity : AppCompatActivity() {
     private fun setUpLocationListener() {
         fusedLocationProviderClient = FusedLocationProviderClient(this)
         fusedLocationProviderClient?.lastLocation?.addOnSuccessListener {
-            if (it != null){
-                currentLatLng = LatLng(it.latitude, it.longitude)
-                groupLat = it.latitude
-                groupLng = it.longitude
+            // If last location is null after turning on GPS, request location update using callback
+            if (it == null || it.accuracy > 100){
+                locationCallback = object : LocationCallback() {
+                    override fun onLocationResult(locationResult: LocationResult?) {
+                        stopLocationUpdates()
+                        if (locationResult != null && locationResult.locations.isNotEmpty()) {
+                            val newLocation = locationResult.locations[0]
+                            currentLatLng = LatLng(newLocation.latitude, newLocation.longitude)
+                            startMapPickerActivity(newLocation)
+                        } else {
+                            Snackbar.make(findViewById(android.R.id.content), "Please wait...your location is updating",
+                                Snackbar.LENGTH_SHORT).show()
+                        }
+                    }
+                }
 
-                // start map search screen to find address
-                startLocationPicker(currentLatLng!!)
+                fusedLocationProviderClient!!.requestLocationUpdates(getLocationRequest(),
+                    locationCallback, Looper.myLooper())
+            } else {
+                currentLatLng = LatLng(it.latitude, it.longitude)
+                startMapPickerActivity(it)
             }
         }
+    }
+
+    private fun startMapPickerActivity(it: Location) {
+        groupLat = it.latitude
+        groupLng = it.longitude
+
+        // start map search screen to find address
+        startLocationPicker(currentLatLng!!)
+    }
+
+
+    private fun getLocationRequest(): LocationRequest {
+        return LocationRequest().setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+    }
+
+    private fun stopLocationUpdates(){
+        fusedLocationProviderClient?.removeLocationUpdates(locationCallback)
     }
 
     private fun startLocationPicker(latLng: LatLng){
@@ -189,7 +225,6 @@ class GroupDetailsActivity : AppCompatActivity() {
             .withVoiceSearchHidden()
             .withUnnamedRoadHidden()
             .build(applicationContext)
-
         startActivityForResult(locationPickerIntent, MAP_BUTTON_REQUEST_CODE)
     }
 
@@ -203,6 +238,7 @@ class GroupDetailsActivity : AppCompatActivity() {
                     val address = data.getStringExtra(LOCATION_ADDRESS)
                     if (address != null){
                         geoLocationAddress = address
+                        etAddress.setText(geoLocationAddress)
                     }
                 }
             }
@@ -221,6 +257,7 @@ class GroupDetailsActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
+        stopLocationUpdates()
         super.onDestroy()
     }
 

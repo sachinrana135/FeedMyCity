@@ -1,7 +1,9 @@
 package com.alfanse.feedmycity.ui.volunteer
 
 import android.content.pm.PackageManager
+import android.location.Location
 import android.os.Bundle
+import android.os.Looper
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -14,6 +16,9 @@ import com.alfanse.feedmycity.data.models.NearByGroupsEntity
 import com.alfanse.feedmycity.factory.ViewModelFactory
 import com.alfanse.feedmycity.utils.PermissionUtils
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -34,6 +39,7 @@ class VolunteerHomeActivity : AppCompatActivity(), OnMapReadyCallback {
     private var fusedLocationProviderClient: FusedLocationProviderClient? = null
     private var lat: Double = 0.0
     private var lng: Double = 0.0
+    private var locationCallback: LocationCallback? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -106,12 +112,40 @@ class VolunteerHomeActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun setUpLocationListener() {
         fusedLocationProviderClient = FusedLocationProviderClient(this)
         fusedLocationProviderClient?.lastLocation?.addOnSuccessListener {
-            if (it != null){
+            // If last location is null after turning on GPS, request location update using callback
+            if (it == null || it.accuracy > 100){
+                locationCallback = object : LocationCallback() {
+                    override fun onLocationResult(locationResult: LocationResult?) {
+                        stopLocationUpdates()
+                        if (locationResult != null && locationResult.locations.isNotEmpty()) {
+                            val newLocation = locationResult.locations[0]
+                            lat = newLocation.latitude
+                            lng = newLocation.longitude
+                            getNearByGroups(lat, lng)
+                        } else {
+                            Snackbar.make(findViewById(android.R.id.content), "Please wait...your location is updating",
+                                Snackbar.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+
+                fusedLocationProviderClient!!.requestLocationUpdates(getLocationRequest(),
+                    locationCallback, Looper.myLooper())
+            } else {
                 lat = it.latitude
                 lng = it.longitude
                 getNearByGroups(lat, lng)
             }
         }
+    }
+
+
+    private fun getLocationRequest(): LocationRequest {
+        return LocationRequest().setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+    }
+
+    private fun stopLocationUpdates(){
+        fusedLocationProviderClient?.removeLocationUpdates(locationCallback)
     }
 
     private fun getNearByGroups(lat: Double, lng: Double){
@@ -135,7 +169,8 @@ class VolunteerHomeActivity : AppCompatActivity(), OnMapReadyCallback {
                     Snackbar.LENGTH_SHORT).show()
             }
             Status.EMPTY -> {
-
+                progressBar.visibility = View.GONE
+                Snackbar.make(findViewById(android.R.id.content), it.message.toString(), Snackbar.LENGTH_SHORT).show()
             }
         }
     }
@@ -171,6 +206,11 @@ class VolunteerHomeActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap) {
         this.googleMap = googleMap
         this.googleMap.isMyLocationEnabled = true
+    }
+
+    override fun onDestroy() {
+        stopLocationUpdates()
+        super.onDestroy()
     }
 
     companion object {

@@ -24,7 +24,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:ems="10"
-        android:inputType="textPersonName"
+        android:inputType="textPersonName|textCapWords"
         app:layout_constraintTop_toBottomOf="@+id/tvName"
         android:layout_marginTop="@dimen/spacing_normal" />
 
@@ -44,7 +44,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:ems="10"
-        android:inputType="textPersonName"
+        android:inputType="textPersonName|textCapWords"
         app:layout_constraintTop_toBottomOf="@+id/tvGroupLabel"
         android:layout_marginTop="@dimen/spacing_normal" />
 
@@ -64,8 +64,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:inputType="textMultiLine"
+        android:inputType="textMultiLine|textCapWords"
         android:maxLength="100"
+        android:hint="@string/hint_registered_address"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvRegisteredAddress"
         android:layout_marginTop="@dimen/spacing_normal" />
@@ -92,15 +93,30 @@
         app:layout_constraintTop_toBottomOf="@+id/tvGvtRegNumber"
         android:layout_marginTop="@dimen/spacing_normal" />
 
-    <CheckBox
-        android:id="@+id/cbAllowLocationAccess"
-        android:layout_width="wrap_content"
+    <TextView
+        android:id="@+id/tvAddress"
+        style="@style/BlackText"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_normal"
-        android:text="@string/allow_access_label"
+        android:text="@string/donor_address_hint"
         android:textSize="@dimen/font_normal"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etGvtRegNumber"/>
+        app:layout_constraintTop_toBottomOf="@+id/etGvtRegNumber" />
+
+    <EditText
+        android:id="@+id/etAddress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_normal"
+        android:ems="10"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:inputType="textMultiLine|textCapWords"
+        android:maxLength="100"
+        android:hint="@string/hint_geo_location_address"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvAddress" />
 
     <Button
         android:id="@+id/btnSave"
@@ -114,7 +130,7 @@
         android:textSize="@dimen/font_normal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cbAllowLocationAccess" />
+        app:layout_constraintTop_toBottomOf="@id/etAddress" />
 
     <ProgressBar
         android:id="@+id/progressBar"
