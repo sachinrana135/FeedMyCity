@@ -38,7 +38,7 @@ class MobileVerificationActivity : AppCompatActivity() {
 
     private var verificationInProgress = false
     private var storedVerificationId: String? = null
-    private lateinit var resendToken: PhoneAuthProvider.ForceResendingToken
+    private var resendToken: PhoneAuthProvider.ForceResendingToken? = null
     private lateinit var callbacks: PhoneAuthProvider.OnVerificationStateChangedCallbacks
     private lateinit var firebaseAuthHandler: FirebaseAuthHandler
     private lateinit var mobileVerificationViewModel: MobileVerificationViewModel
@@ -250,7 +250,13 @@ class MobileVerificationActivity : AppCompatActivity() {
         }
 
         btnResend.setOnClickListener {
-            resendVerificationCode(getValidPhoneNumber()!!, resendToken)
+            if (!validatePhoneNumber()) {
+                return@setOnClickListener
+            }
+
+            if(resendToken != null){
+                resendVerificationCode(getValidPhoneNumber()!!, resendToken)
+            }
         }
     }
 
