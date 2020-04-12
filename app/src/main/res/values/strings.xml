@@ -93,7 +93,7 @@
     <string name="hint_registered_address">Your Registered Address</string>
 
     <string name="intro_welcome_title">Welcome</string>
-    <string name="intro_welcome_desc">This app connects NGO/group to donor and help to deliver the food to Needy people. Your small donation can help a hungry to get food.</string>
+    <string name="intro_welcome_desc">This app connects NGO/group to donor and help delivering the food to Needy person. Your small donation can help a hungry to get food.</string>
 
     <string name="intro_group_title">Create a group</string>
     <string name="intro_group_desc">Create a group and add members that will pick food from donor and deliver it to needy people.</string>
