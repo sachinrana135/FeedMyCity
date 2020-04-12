@@ -151,7 +151,7 @@ class NeedierDetailActivity : AppCompatActivity() {
             Status.ERROR -> {
                 progressBar.visibility = View.GONE
                 Snackbar.make(
-                    findViewById(android.R.id.content), it.message!!,
+                    findViewById(android.R.id.content), it.message?:getString(R.string.txt_something_wrong),
                     Snackbar.LENGTH_SHORT
                 ).show()
             }
@@ -197,7 +197,7 @@ class NeedierDetailActivity : AppCompatActivity() {
             Status.ERROR -> {
                 progressBar.visibility = View.GONE
                 Snackbar.make(
-                    findViewById(android.R.id.content), it.message!!,
+                    findViewById(android.R.id.content), it.message?:getString(R.string.txt_something_wrong),
                     Snackbar.LENGTH_SHORT
                 ).show()
             }
@@ -223,7 +223,7 @@ class NeedierDetailActivity : AppCompatActivity() {
             }
             Status.ERROR -> {
                 Snackbar.make(
-                    findViewById(android.R.id.content), it.message!!,
+                    findViewById(android.R.id.content), it.message?:getString(R.string.txt_something_wrong),
                     Snackbar.LENGTH_SHORT
                 ).show()
             }

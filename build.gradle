@@ -97,8 +97,7 @@ buildscript {
 
                 "com.google.android.gms:play-services-auth:$play_services_auth",
                 "com.google.android.gms:play-services-auth-api-phone:$play_services_auth_api_phone",
-                "com.googlecode.libphonenumber:libphonenumber:8.2.0"
-                "com.google.android.gms:play-services-auth-api-phone:$play_services_auth_api_phone",
+                "com.googlecode.libphonenumber:libphonenumber:8.2.0",
 
                 "com.github.AppIntro:AppIntro:5.1.0"
 

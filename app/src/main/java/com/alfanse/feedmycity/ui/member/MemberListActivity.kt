@@ -120,7 +120,7 @@ class MemberListActivity : AppCompatActivity() {
                 rvMemberList.hideShimmer()
                 mainLayout.isRefreshing = false
                 Snackbar.make(
-                    findViewById(android.R.id.content), it.message!!,
+                    findViewById(android.R.id.content), it.message?:getString(R.string.txt_something_wrong),
                     Snackbar.LENGTH_SHORT
                 ).show()
             }

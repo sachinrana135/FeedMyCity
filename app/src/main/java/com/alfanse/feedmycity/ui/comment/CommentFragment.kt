@@ -94,7 +94,7 @@ class CommentFragment private constructor() : Fragment() {
             Status.ERROR -> {
                 rvCommentList.hideShimmer()
                 Snackbar.make(
-                    requireActivity().findViewById(android.R.id.content), it.message!!,
+                    requireActivity().findViewById(android.R.id.content), it.message?:getString(R.string.txt_something_wrong),
                     Snackbar.LENGTH_SHORT
                 ).show()
             }
@@ -118,7 +118,7 @@ class CommentFragment private constructor() : Fragment() {
             Status.ERROR -> {
                 saveCommentProgressBar.visibility = View.GONE
                 Snackbar.make(
-                    requireActivity().findViewById(android.R.id.content), it.message!!,
+                    requireActivity().findViewById(android.R.id.content), it.message?:getString(R.string.txt_something_wrong),
                     Snackbar.LENGTH_SHORT
                 ).show()
             }
