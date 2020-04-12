@@ -4,6 +4,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
@@ -78,11 +79,12 @@ class GroupHomeActivity : AppCompatActivity(),
 
     override fun onResume() {
         super.onResume()
-        if (!PermissionUtils.isLocationEnabled(this)){
-            PermissionUtils.showGPSNotEnabledDialog(this)
-        }
         requestPermission()
         getNearByUsers()
+    }
+
+    override fun onPause() {
+        super.onPause()
     }
 
     private fun requestPermission(){
