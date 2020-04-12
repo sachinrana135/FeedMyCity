@@ -46,15 +46,15 @@ class CommentListAdapter(
             oldItem: CommentEntity,
             newItem: CommentEntity
         ): Boolean {
-            return oldItem == newItem
+            return oldItem.userName == newItem.userName
+                    && oldItem.comment == newItem.comment
         }
 
         override fun areContentsTheSame(
             oldItem: CommentEntity,
             newItem: CommentEntity
         ): Boolean {
-            return oldItem.userName == newItem.userName
-                    && oldItem.comment == newItem.comment
+            return oldItem == newItem
         }
 
     }

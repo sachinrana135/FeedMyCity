@@ -55,7 +55,8 @@ class MemberListAdapter(
             oldItem: UserEntity,
             newItem: UserEntity
         ): Boolean {
-            return oldItem.userId == newItem.userId
+            return oldItem.name == newItem.name
+                    && oldItem.mobile == newItem.mobile
         }
 
         override fun areContentsTheSame(
