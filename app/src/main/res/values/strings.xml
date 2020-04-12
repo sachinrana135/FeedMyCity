@@ -91,4 +91,8 @@
     <string name="hint_geo_location_address">Your Geo-location address</string>
     <string name="hint_donor_status">Your visibility status to public</string>
     <string name="hint_registered_address">Your Registered Address</string>
+
+    <string name="intro_welcome_title">Welcome</string>
+    <string name="intro_welcome_desc">Welcome</string>
+
 </resources>

@@ -15,8 +15,8 @@ class IntroActivity : AppIntro() {
 
         val sliderPage = SliderPage()
         sliderPage.title = title
-        /*sliderPage.description = ""
-        sliderPage.imageDrawable = image
+        sliderPage.description = getString(R.string.google_app_id)
+       /* sliderPage.imageDrawable = image
         sliderPage.bgColor = backgroundColor*/
         addSlide(AppIntroFragment.newInstance(sliderPage))
     }
