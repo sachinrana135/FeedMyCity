@@ -204,7 +204,9 @@ class VolunteerHomeActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap) {
         this.googleMap = googleMap
-        this.googleMap.isMyLocationEnabled = true
+        if(PermissionUtils.isLocationEnabled(this)){
+            this.googleMap.isMyLocationEnabled = true
+        }
     }
 
     override fun onDestroy() {

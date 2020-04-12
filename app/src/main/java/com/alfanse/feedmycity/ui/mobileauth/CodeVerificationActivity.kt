@@ -122,11 +122,10 @@ class CodeVerificationActivity : AppCompatActivity() {
 
     private fun initListener(){
         btnVerify.setOnClickListener {
-            progressBar.visibility = View.VISIBLE
-
             if (storedVerificationId != null){
                 if (!etOtp.text.isNullOrBlank()){
-                    val credential = PhoneAuthProvider.getCredential(storedVerificationId!!, etOtp.text.toString())
+                    progressBar.visibility = View.VISIBLE
+                    val credential = PhoneAuthProvider.getCredential(storedVerificationId!!, etOtp.text.toString().trim())
                     val firebaseAuthHandler = FirebaseAuthHandler(this, auth, object: FirebaseAuthHandler.FirebaseAuthListener {
                         override fun onSuccess(user: FirebaseUser?) {
                             progressBar.visibility = View.GONE
