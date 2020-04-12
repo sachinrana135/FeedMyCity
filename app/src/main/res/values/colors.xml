@@ -8,4 +8,8 @@
     <color name="color_orange">#FF9900</color>
     <color name="color_green">#009E0F</color>
     <color name="card_white">#99ECEAED</color>
+    <color name="light_orange">#F99401</color>
+    <color name="light_blue">#00BCD4</color>
+    <color name="light_green">#4CAF50</color>
+    <color name="light_violet">#5C6BC0</color>
 </resources>

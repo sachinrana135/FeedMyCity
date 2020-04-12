@@ -8,6 +8,7 @@ import com.alfanse.feedmycity.data.models.UserEntity
 import com.alfanse.feedmycity.data.repository.FeedAppRepository
 import com.alfanse.feedmycity.data.storage.ApplicationStorage
 import com.alfanse.feedmycity.utils.APP_USER_ID_PREFS_KEY
+import com.alfanse.feedmycity.utils.BUNDLE_KEY_FIRST_LAUNCH
 import com.alfanse.feedmycity.utils.BUNDLE_KEY_GROUP_CODE
 import com.alfanse.feedmycity.utils.Utils
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -47,4 +48,6 @@ class SplashViewModel @Inject constructor(
     fun saveGroupCode(groupCode: String) {
         memoryStorage.putString(BUNDLE_KEY_GROUP_CODE, groupCode)
     }
+
+    fun isFirstLaunch() = storage.getBoolean(BUNDLE_KEY_FIRST_LAUNCH, true)
 }

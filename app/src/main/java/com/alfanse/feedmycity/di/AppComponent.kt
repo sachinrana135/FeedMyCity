@@ -6,6 +6,7 @@ import com.alfanse.feedmycity.ui.donor.DonorHomeActivity
 import com.alfanse.feedmycity.ui.donor.UpdateDonorActivity
 import com.alfanse.feedmycity.ui.groupdetails.GroupDetailsActivity
 import com.alfanse.feedmycity.ui.groupdetails.GroupHomeActivity
+import com.alfanse.feedmycity.ui.intro.IntroActivity
 import com.alfanse.feedmycity.ui.member.AddMemberActivity
 import com.alfanse.feedmycity.ui.member.MemberListActivity
 import com.alfanse.feedmycity.ui.mobileauth.CodeVerificationActivity
@@ -40,4 +41,5 @@ interface AppComponent {
     fun inject(addNeedierDetailActivity: AddNeedierDetailActivity)
     fun inject(addMemberActivity: AddMemberActivity)
     fun inject(volunteerHomeActivity: VolunteerHomeActivity)
+    fun inject(introActivity: IntroActivity)
 }

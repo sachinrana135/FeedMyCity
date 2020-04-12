@@ -9,6 +9,7 @@ const val API_TOKEN_PREFS_KEY = "apiTokenPrefsKey"
 const val BUNDLE_KEY_USER = "bundleKeyUser"
 const val BUNDLE_KEY_NEEDIER_ITEM = "bundleKeyNeedierItem"
 const val BUNDLE_KEY_GROUP_CODE = "bundleKeyGroupCode"
+const val BUNDLE_KEY_FIRST_LAUNCH = "bundleKeyFirstLaunch"
 
 object UserType{
     const val MEMBER = "MBR"

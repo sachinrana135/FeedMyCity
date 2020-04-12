@@ -10,6 +10,7 @@ import com.alfanse.feedmycity.ui.donor.DonorHomeViewModel
 import com.alfanse.feedmycity.ui.donor.UpdateDonorViewModel
 import com.alfanse.feedmycity.ui.groupdetails.GroupDetailsViewModel
 import com.alfanse.feedmycity.ui.groupdetails.GroupHomeViewModel
+import com.alfanse.feedmycity.ui.intro.IntroViewModel
 import com.alfanse.feedmycity.ui.member.AddMemberViewModel
 import com.alfanse.feedmycity.ui.member.MemberListViewModel
 import com.alfanse.feedmycity.ui.mobileauth.CodeVerificationViewModel
@@ -95,6 +96,8 @@ class ViewModelFactory @Inject constructor(
                     NeedierDetailViewModel(feedAppRepository)
                 isAssignableFrom(VolunteerViewModel::class.java) ->
                     VolunteerViewModel(feedAppRepository)
+                isAssignableFrom(IntroViewModel::class.java) ->
+                    IntroViewModel(sharedPreferences)
                 else ->
                     error("Invalid View Model class")
             }

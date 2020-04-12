@@ -25,7 +25,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.intro.IntroActivity"></activity>
+        <activity
+            android:name=".ui.intro.IntroActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" >
+        </activity>
         <activity android:name=".ui.volunteer.VolunteerHomeActivity" />
         <activity android:name=".ui.member.MemberListActivity" />
         <activity android:name=".ui.profile.GroupProfileActivity" />
