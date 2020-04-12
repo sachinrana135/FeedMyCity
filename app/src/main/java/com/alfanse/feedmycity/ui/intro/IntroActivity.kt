@@ -31,28 +31,28 @@ class IntroActivity : AppIntro() {
         val sliderPage = SliderPage()
         sliderPage.title = getString(R.string.intro_welcome_title)
         sliderPage.description = getString(R.string.intro_welcome_desc)
-        sliderPage.imageDrawable = R.drawable.helping_hand
+        sliderPage.imageDrawable = R.drawable.welcome
         sliderPage.bgColor = Color.parseColor("#00BCD4")
         addSlide(AppIntroFragment.newInstance(sliderPage))
 
         val sliderPage1 = SliderPage()
         sliderPage1.title = getString(R.string.intro_group_title)
         sliderPage1.description = getString(R.string.intro_group_desc)
-        sliderPage1.imageDrawable = R.drawable.caring
+        sliderPage1.imageDrawable = R.drawable.group_white
         sliderPage1.bgColor = Color.parseColor("#F99401")
         addSlide(AppIntroFragment.newInstance(sliderPage1))
 
         val sliderPage2 = SliderPage()
         sliderPage2.title = getString(R.string.intro_donor_title)
         sliderPage2.description = getString(R.string.intro_donor_desc)
-        sliderPage2.imageDrawable = R.drawable.donate
+        sliderPage2.imageDrawable = R.drawable.donor_white
         sliderPage2.bgColor = Color.parseColor("#4CAF50")
         addSlide(AppIntroFragment.newInstance(sliderPage2))
 
         val sliderPage3 = SliderPage()
         sliderPage3.title = getString(R.string.intro_volunteer_title)
         sliderPage3.description = getString(R.string.intro_volunteer_desc)
-        sliderPage3.imageDrawable = R.drawable.volunteer
+        sliderPage3.imageDrawable = R.drawable.volunteer_white
         sliderPage3.bgColor = Color.parseColor("#5C6BC0")
         addSlide(AppIntroFragment.newInstance(sliderPage3))
 
