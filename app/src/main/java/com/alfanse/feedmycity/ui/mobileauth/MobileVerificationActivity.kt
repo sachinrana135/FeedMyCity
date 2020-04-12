@@ -263,13 +263,11 @@ class MobileVerificationActivity : AppCompatActivity() {
     private fun startPhoneNumberVerification(phoneNumber: String) {
         PhoneAuthProvider.getInstance().verifyPhoneNumber(
             phoneNumber,
-            60,
+            300,
             TimeUnit.SECONDS,
             this,
             callbacks
         )
-
-//        progressBar.visibility = View.VISIBLE
     }
 
     private fun resendVerificationCode(
