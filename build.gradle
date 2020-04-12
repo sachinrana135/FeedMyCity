@@ -98,6 +98,10 @@ buildscript {
                 "com.google.android.gms:play-services-auth:$play_services_auth",
                 "com.google.android.gms:play-services-auth-api-phone:$play_services_auth_api_phone",
                 "com.googlecode.libphonenumber:libphonenumber:8.2.0"
+                "com.google.android.gms:play-services-auth-api-phone:$play_services_auth_api_phone",
+
+                "com.github.AppIntro:AppIntro:5.1.0"
+
         ]
         librariesKapt = [
                 "com.google.dagger:dagger-android-processor:$dagger_version",
@@ -115,7 +119,7 @@ buildscript {
                 "org.mockito:mockito-core:$mockito_version",
 
                 //  Architecture Components testing libraries
-                "androidx.arch.core:core-testing:2.1.0"
+                "androidx.arch.core:core-testing:2.1.0",
         ]
 
         androidTestLibraries = [
@@ -145,7 +149,7 @@ allprojects {
     repositories {
         google()
         jcenter()
-
+        maven { url 'https://jitpack.io' }
     }
 }
 
