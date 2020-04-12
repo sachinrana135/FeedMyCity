@@ -248,7 +248,7 @@ class GroupHomeActivity : AppCompatActivity(),
             }
             Status.ERROR -> {
                 progressBar.visibility = View.GONE
-                Snackbar.make(findViewById(android.R.id.content), it.message?:"",
+                Snackbar.make(findViewById(android.R.id.content), it.message?:getString(R.string.txt_something_wrong),
                     Snackbar.LENGTH_SHORT).show()
             }
             Status.EMPTY -> {

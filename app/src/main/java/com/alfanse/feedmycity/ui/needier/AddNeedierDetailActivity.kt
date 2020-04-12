@@ -10,7 +10,6 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.alfanse.feedmycity.FeedMyCityApplication
 import com.alfanse.feedmycity.R
@@ -19,7 +18,6 @@ import com.alfanse.feedmycity.data.Status
 import com.alfanse.feedmycity.factory.ViewModelFactory
 import com.alfanse.feedmycity.utils.PermissionUtils
 import com.firebase.ui.auth.ui.phone.PhoneNumberVerificationHandler
-import com.firebase.ui.auth.util.data.PhoneNumberUtils
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
@@ -28,7 +26,6 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.snackbar.Snackbar
 import com.google.i18n.phonenumbers.NumberParseException
 import com.google.i18n.phonenumbers.PhoneNumberUtil
-import com.google.i18n.phonenumbers.Phonenumber
 import com.schibstedspain.leku.LATITUDE
 import com.schibstedspain.leku.LOCATION_ADDRESS
 import com.schibstedspain.leku.LONGITUDE
@@ -191,7 +188,7 @@ class AddNeedierDetailActivity : AppCompatActivity() {
             Status.ERROR -> {
                 progressBar.visibility = View.GONE
                 Snackbar.make(
-                    findViewById(android.R.id.content), it.message ?: "",
+                    findViewById(android.R.id.content), it.message?:getString(R.string.txt_something_wrong),
                     Snackbar.LENGTH_SHORT
                 ).show()
             }

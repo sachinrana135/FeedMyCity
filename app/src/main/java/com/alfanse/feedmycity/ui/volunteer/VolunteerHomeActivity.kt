@@ -1,7 +1,6 @@
 package com.alfanse.feedmycity.ui.volunteer
 
 import android.content.pm.PackageManager
-import android.location.Location
 import android.os.Bundle
 import android.os.Looper
 import android.view.View
@@ -165,12 +164,12 @@ class VolunteerHomeActivity : AppCompatActivity(), OnMapReadyCallback {
             }
             Status.ERROR -> {
                 progressBar.visibility = View.GONE
-                Snackbar.make(findViewById(android.R.id.content), it.message?:"",
+                Snackbar.make(findViewById(android.R.id.content), it.message?:getString(R.string.txt_something_wrong),
                     Snackbar.LENGTH_SHORT).show()
             }
             Status.EMPTY -> {
                 progressBar.visibility = View.GONE
-                Snackbar.make(findViewById(android.R.id.content), it.message.toString(), Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(findViewById(android.R.id.content), it.message?:getString(R.string.txt_something_wrong), Snackbar.LENGTH_SHORT).show()
             }
         }
     }
