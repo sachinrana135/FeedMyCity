@@ -96,7 +96,8 @@ buildscript {
                 "androidx.legacy:legacy-support-v4:1.0.0",
 
                 "com.google.android.gms:play-services-auth:$play_services_auth",
-                "com.google.android.gms:play-services-auth-api-phone:$play_services_auth_api_phone"
+                "com.google.android.gms:play-services-auth-api-phone:$play_services_auth_api_phone",
+                "com.googlecode.libphonenumber:libphonenumber:8.2.0"
         ]
         librariesKapt = [
                 "com.google.dagger:dagger-android-processor:$dagger_version",

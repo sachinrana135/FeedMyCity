@@ -10,6 +10,7 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.alfanse.feedmycity.FeedMyCityApplication
 import com.alfanse.feedmycity.R
@@ -17,17 +18,23 @@ import com.alfanse.feedmycity.data.Resource
 import com.alfanse.feedmycity.data.Status
 import com.alfanse.feedmycity.factory.ViewModelFactory
 import com.alfanse.feedmycity.utils.PermissionUtils
+import com.firebase.ui.auth.ui.phone.PhoneNumberVerificationHandler
+import com.firebase.ui.auth.util.data.PhoneNumberUtils
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.snackbar.Snackbar
+import com.google.i18n.phonenumbers.NumberParseException
+import com.google.i18n.phonenumbers.PhoneNumberUtil
+import com.google.i18n.phonenumbers.Phonenumber
 import com.schibstedspain.leku.LATITUDE
 import com.schibstedspain.leku.LOCATION_ADDRESS
 import com.schibstedspain.leku.LONGITUDE
 import com.schibstedspain.leku.LocationPickerActivity
 import kotlinx.android.synthetic.main.activity_needier_details.*
+import java.util.*
 import javax.inject.Inject
 
 class AddNeedierDetailActivity : AppCompatActivity() {
@@ -39,6 +46,7 @@ class AddNeedierDetailActivity : AppCompatActivity() {
     private var fusedLocationProviderClient: FusedLocationProviderClient? = null
     private var currentLatLng: LatLng? = null
     private var locationCallback: LocationCallback? = null
+    private lateinit var phoneNumberVerificationHandler: PhoneNumberVerificationHandler
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,20 +57,20 @@ class AddNeedierDetailActivity : AppCompatActivity() {
         title = getString(R.string.needier_details_screen_label)
 
         (application as FeedMyCityApplication).appComponent.inject(this)
-        needierDetailsViewModel = ViewModelProviders.of(this, viewModelFactory).
-            get(NeedierDetailsViewModel::class.java)
+        needierDetailsViewModel =
+            ViewModelProviders.of(this, viewModelFactory).get(NeedierDetailsViewModel::class.java)
         needierDetailsViewModel.saveNeedierLiveData.observe(this, observer)
         initListener()
     }
 
     override fun onResume() {
         super.onResume()
-        if(!PermissionUtils.isLocationEnabled(this)){
+        if (!PermissionUtils.isLocationEnabled(this)) {
             PermissionUtils.showGPSNotEnabledDialog(this)
         }
     }
 
-    private fun initListener(){
+    private fun initListener() {
         etAddress.setOnClickListener {
             requestPermission()
         }
@@ -74,8 +82,8 @@ class AddNeedierDetailActivity : AppCompatActivity() {
                     return@setOnClickListener
                 }
 
-                etMobile.text.toString().trim().isEmpty() -> {
-                    etMobile.error = "Enter Phone"
+                !validatePhone() -> {
+                    etMobile.error = "Enter Valid Number"
                     return@setOnClickListener
                 }
 
@@ -85,8 +93,10 @@ class AddNeedierDetailActivity : AppCompatActivity() {
                 }
 
                 etAddress.text.toString().trim().isEmpty() -> {
-                    Snackbar.make(findViewById(android.R.id.content), "Please give address",
-                        Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(
+                        findViewById(android.R.id.content), "Please give address",
+                        Snackbar.LENGTH_SHORT
+                    ).show()
                     return@setOnClickListener
                 }
             }
@@ -94,12 +104,31 @@ class AddNeedierDetailActivity : AppCompatActivity() {
             val mobile = etMobile.text.toString().trim()
             val whatNeededInfo = etWhatNeeded.text.toString().trim()
             val address = etAddress.text.toString().trim()
-            needierDetailsViewModel.saveNeedierDetails(name, mobile, whatNeededInfo,
-                lat.toString(), lng.toString(), address)
+            needierDetailsViewModel.saveNeedierDetails(
+                name, mobile, whatNeededInfo,
+                lat.toString(), lng.toString(), address
+            )
         }
     }
 
-    private fun requestPermission(){
+    private fun validatePhone(): Boolean {
+        val phone = etMobile.text.toString().trim()
+        if (phone.isEmpty()) return false
+        return parsePhoneNumber(phone, Locale.getDefault().country)
+    }
+
+    private fun parsePhoneNumber(phone: String, defaultRegion: String): Boolean {
+        val phoneUtil = PhoneNumberUtil.getInstance();
+        return try {
+            val number = phoneUtil.parse(phone, defaultRegion);
+            return phoneUtil.isValidNumber(number)
+        } catch (e: NumberParseException) {
+            System.err.println("NumberParseException was thrown: $e");
+            false
+        }
+    }
+
+    private fun requestPermission() {
         when {
             PermissionUtils.isAccessFineLocationGranted(this) -> {
                 when {
@@ -123,7 +152,8 @@ class AddNeedierDetailActivity : AppCompatActivity() {
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
-        grantResults: IntArray) {
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
             LOCATION_PERMISSION_REQUEST_CODE -> {
@@ -160,8 +190,10 @@ class AddNeedierDetailActivity : AppCompatActivity() {
             }
             Status.ERROR -> {
                 progressBar.visibility = View.GONE
-                Snackbar.make(findViewById(android.R.id.content), it.message?:"",
-                    Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(
+                    findViewById(android.R.id.content), it.message ?: "",
+                    Snackbar.LENGTH_SHORT
+                ).show()
             }
             Status.EMPTY -> {
 
@@ -173,7 +205,7 @@ class AddNeedierDetailActivity : AppCompatActivity() {
         fusedLocationProviderClient = FusedLocationProviderClient(this)
         fusedLocationProviderClient?.lastLocation?.addOnSuccessListener {
             // If last location is null after turning on GPS, request location update using callback
-            if (it == null || it.accuracy > 100){
+            if (it == null || it.accuracy > 100) {
                 locationCallback = object : LocationCallback() {
                     override fun onLocationResult(locationResult: LocationResult?) {
                         stopLocationUpdates()
@@ -182,14 +214,19 @@ class AddNeedierDetailActivity : AppCompatActivity() {
                             currentLatLng = LatLng(newLocation.latitude, newLocation.longitude)
                             startMapPickerActivity(newLocation)
                         } else {
-                            Snackbar.make(findViewById(android.R.id.content), "Please wait...your location is updating",
-                                Snackbar.LENGTH_SHORT).show()
+                            Snackbar.make(
+                                findViewById(android.R.id.content),
+                                "Please wait...your location is updating",
+                                Snackbar.LENGTH_SHORT
+                            ).show()
                         }
                     }
                 }
 
-                fusedLocationProviderClient!!.requestLocationUpdates(getLocationRequest(),
-                    locationCallback, Looper.myLooper())
+                fusedLocationProviderClient!!.requestLocationUpdates(
+                    getLocationRequest(),
+                    locationCallback, Looper.myLooper()
+                )
             } else {
                 currentLatLng = LatLng(it.latitude, it.longitude)
                 startMapPickerActivity(it)
@@ -210,11 +247,11 @@ class AddNeedierDetailActivity : AppCompatActivity() {
         return LocationRequest().setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
     }
 
-    private fun stopLocationUpdates(){
+    private fun stopLocationUpdates() {
         fusedLocationProviderClient?.removeLocationUpdates(locationCallback)
     }
 
-    private fun startLocationPicker(latLng: LatLng){
+    private fun startLocationPicker(latLng: LatLng) {
         val locationPickerIntent = LocationPickerActivity.Builder()
             .withLocation(latLng.latitude, latLng.longitude)
             .withSearchZone(INDIA_LOCALE_ZONE)
@@ -228,13 +265,13 @@ class AddNeedierDetailActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode != Activity.RESULT_CANCELED){
-            if (requestCode == 1){
-                if (data != null){
+        if (resultCode != Activity.RESULT_CANCELED) {
+            if (requestCode == 1) {
+                if (data != null) {
                     lat = data.getDoubleExtra(LATITUDE, 0.0)
                     lng = data.getDoubleExtra(LONGITUDE, 0.0)
                     val address = data.getStringExtra(LOCATION_ADDRESS)
-                    if (address != null){
+                    if (address != null) {
                         setAddressToView(address)
                     }
                 }
@@ -253,7 +290,7 @@ class AddNeedierDetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun setAddressToView(address: String){
+    private fun setAddressToView(address: String) {
         etAddress.setText(address)
     }
 
@@ -261,6 +298,7 @@ class AddNeedierDetailActivity : AppCompatActivity() {
         stopLocationUpdates()
         super.onDestroy()
     }
+
     companion object {
         private const val TAG = "NeedierDetailsActivity"
         private const val MAP_BUTTON_REQUEST_CODE = 1
