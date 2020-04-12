@@ -67,7 +67,7 @@ class GroupHomeActivity : AppCompatActivity(),
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
         setUpNavigationDrawer()
-        getNearByUsers()
+
         if (User.lat != null){
             lat = User.lat!!.toDouble()
         }
@@ -82,6 +82,7 @@ class GroupHomeActivity : AppCompatActivity(),
             PermissionUtils.showGPSNotEnabledDialog(this)
         }
         requestPermission()
+        getNearByUsers()
     }
 
     private fun requestPermission(){
