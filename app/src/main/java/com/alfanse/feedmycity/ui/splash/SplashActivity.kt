@@ -17,6 +17,7 @@ import com.alfanse.feedmycity.data.models.UserEntity
 import com.alfanse.feedmycity.factory.ViewModelFactory
 import com.alfanse.feedmycity.ui.donor.DonorHomeActivity
 import com.alfanse.feedmycity.ui.groupdetails.GroupHomeActivity
+import com.alfanse.feedmycity.ui.intro.IntroActivity
 import com.alfanse.feedmycity.ui.mobileauth.MobileVerificationActivity
 import com.alfanse.feedmycity.ui.usertypes.UserTypesActivity
 import com.alfanse.feedmycity.utils.UserType
@@ -124,8 +125,13 @@ class SplashActivity : AppCompatActivity() {
 
     private fun launchUserTypeScreen(clazz: Class<out AppCompatActivity>) {
         val handler = Handler()
-        handler.postDelayed(Runnable {
-            startActivity(Intent(mContext, clazz))
+        handler.postDelayed({
+            if(splashViewModel.isFirstLaunch()) {
+                startActivity(Intent(mContext, IntroActivity::class.java))
+            }
+            else {
+                startActivity(Intent(mContext, clazz))
+            }
             finish()
         }, 3000)
     }

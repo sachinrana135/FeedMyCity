@@ -91,4 +91,18 @@
     <string name="hint_geo_location_address">Your Geo-location address</string>
     <string name="hint_donor_status">Your visibility status to public</string>
     <string name="hint_registered_address">Your Registered Address</string>
+
+    <string name="intro_welcome_title">Welcome</string>
+    <string name="intro_welcome_desc">This app connects NGO/group to donor and help to deliver the food to Needy people. Your small donation can help a hungry to get food.</string>
+
+    <string name="intro_group_title">Create a group</string>
+    <string name="intro_group_desc">Create a group and add members that will pick food from donor and deliver it to needy people.</string>
+
+    <string name="intro_donor_title">Join as a donor</string>
+    <string name="intro_donor_desc">You can donate food/grocery and any eatables. Person from NGO/Group will pick that from your doorstep.</string>
+
+    <string name="intro_volunteer_title">Join as volunteer</string>
+    <string name="intro_volunteer_desc">Call your nearby group and inform about needy person near to you.</string>
+
+
 </resources>
