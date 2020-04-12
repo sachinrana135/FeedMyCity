@@ -18,10 +18,7 @@ import com.alfanse.feedmycity.data.Status
 import com.alfanse.feedmycity.factory.ViewModelFactory
 import com.alfanse.feedmycity.ui.mobileauth.CodeVerificationActivity
 import com.alfanse.feedmycity.utils.PermissionUtils
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationCallback
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationResult
+import com.google.android.gms.location.*
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.snackbar.Snackbar
 import com.schibstedspain.leku.LATITUDE
@@ -54,7 +51,7 @@ class DonorDetailsActivity : AppCompatActivity() {
             get(DonorDetailsViewModel::class.java)
         initListener()
         donorDetailViewModel.saveDonorLiveData.observe(this, observer)
-        readPhoneNum()
+        //readPhoneNum()
     }
 
     private fun readPhoneNum() {
@@ -186,13 +183,15 @@ class DonorDetailsActivity : AppCompatActivity() {
     }
 
     private fun setUpLocationListener() {
+        progressBar.visibility = View.VISIBLE
         fusedLocationProviderClient = FusedLocationProviderClient(this)
         fusedLocationProviderClient?.lastLocation?.addOnSuccessListener {
             // If last location is null after turning on GPS, request location update using callback
             if (it == null || it.accuracy > 100){
                 locationCallback = object : LocationCallback() {
                     override fun onLocationResult(locationResult: LocationResult?) {
-                        stopLocationUpdates()
+                        progressBar.visibility = View.GONE
+                        //stopLocationUpdates()
                         if (locationResult != null && locationResult.locations.isNotEmpty()) {
                             val newLocation = locationResult.locations[0]
                             currentLatLng = LatLng(newLocation.latitude, newLocation.longitude)
@@ -202,11 +201,23 @@ class DonorDetailsActivity : AppCompatActivity() {
                                 Snackbar.LENGTH_SHORT).show()
                         }
                     }
+
+                    override fun onLocationAvailability(locationAvailability: LocationAvailability?) {
+                        progressBar.visibility = View.GONE
+                        super.onLocationAvailability(locationAvailability)
+                        if (locationAvailability != null) {
+                            if (!locationAvailability.isLocationAvailable){
+                                fusedLocationProviderClient!!.requestLocationUpdates(getLocationRequest(),
+                                    locationCallback, Looper.myLooper())
+                            }
+                        }
+                    }
                 }
 
                 fusedLocationProviderClient!!.requestLocationUpdates(getLocationRequest(),
                     locationCallback, Looper.myLooper())
             } else {
+                progressBar.visibility = View.GONE
                 currentLatLng = LatLng(it.latitude, it.longitude)
                 startMapPickerActivity(it)
             }
@@ -221,13 +232,25 @@ class DonorDetailsActivity : AppCompatActivity() {
         startLocationPicker(currentLatLng!!)
     }
 
+    override fun onPause() {
+        stopLocationUpdates()
+        super.onPause()
+    }
+
+    override fun onStop() {
+        stopLocationUpdates()
+        super.onStop()
+    }
 
     private fun getLocationRequest(): LocationRequest {
         return LocationRequest().setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+            .setFastestInterval(1000).setInterval(1000)
     }
 
     private fun stopLocationUpdates(){
-        fusedLocationProviderClient?.removeLocationUpdates(locationCallback)
+        if(locationCallback != null){
+            fusedLocationProviderClient?.removeLocationUpdates(locationCallback)
+        }
     }
 
     private fun startLocationPicker(latLng: LatLng){

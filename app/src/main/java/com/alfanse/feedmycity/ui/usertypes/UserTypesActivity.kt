@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.alfanse.feedmycity.R
+import com.alfanse.feedmycity.ui.donor.DonorDetailsActivity
 import com.alfanse.feedmycity.ui.groupdetails.GroupDetailsActivity
 import com.alfanse.feedmycity.ui.mobileauth.MobileVerificationActivity
 import com.alfanse.feedmycity.ui.volunteer.VolunteerHomeActivity
@@ -39,7 +40,7 @@ class UserTypesActivity : AppCompatActivity() {
     }
 
     private fun navigateToMobileVerification(userType: String){
-        var intent = Intent(mContext, MobileVerificationActivity::class.java)
+        var intent = Intent(mContext, /*MobileVerificationActivity*/DonorDetailsActivity::class.java)
         intent.putExtra(MobileVerificationActivity.USER_TYPE_KEY, userType)
         startActivity(intent)
     }
