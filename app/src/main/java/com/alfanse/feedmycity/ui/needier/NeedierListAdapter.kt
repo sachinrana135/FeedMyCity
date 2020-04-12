@@ -60,16 +60,16 @@ class NeedierListAdapter(
             newItem: NeedieritemEntity
         ): Boolean {
             return oldItem.needierItemId == newItem.needierItemId
+                    && oldItem.mobile == newItem.mobile
+                    && oldItem.address == newItem.address
+                    && oldItem.name == newItem.name
         }
 
         override fun areContentsTheSame(
             oldItem: NeedieritemEntity,
             newItem: NeedieritemEntity
         ): Boolean {
-            return oldItem.needierItemId == newItem.needierItemId
-                    && oldItem.mobile == newItem.mobile
-                    && oldItem.address == newItem.address
-                    && oldItem.name == newItem.name
+            return oldItem == newItem
         }
 
     }

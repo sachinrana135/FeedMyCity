@@ -8,7 +8,6 @@ import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -152,7 +151,7 @@ class GroupHomeActivity : AppCompatActivity(),
             val i = Intent(Intent.ACTION_SEND)
             i.type = "text/plain"
             //i.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.txt_join_group))
-            i.putExtra(Intent.EXTRA_TEXT, getString(R.string.txt_join_group) + " s" + shortLink.toString())
+            i.putExtra(Intent.EXTRA_TEXT, getString(R.string.txt_join_group) + " " + shortLink.toString())
             startActivity(Intent.createChooser(i, getString(R.string.txt_share_invite_link)))
         }.addOnFailureListener {
             Snackbar.make(
@@ -248,7 +247,8 @@ class GroupHomeActivity : AppCompatActivity(),
             }
             Status.ERROR -> {
                 progressBar.visibility = View.GONE
-                Toast.makeText(applicationContext, it.message, Toast.LENGTH_LONG).show()
+                Snackbar.make(findViewById(android.R.id.content), it.message?:"",
+                    Snackbar.LENGTH_SHORT).show()
             }
             Status.EMPTY -> {
 
