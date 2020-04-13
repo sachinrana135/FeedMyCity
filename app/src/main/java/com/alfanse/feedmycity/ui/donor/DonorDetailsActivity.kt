@@ -1,11 +1,18 @@
 package com.alfanse.feedmycity.ui.donor
 
 import android.app.Activity
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
+import android.content.IntentSender.SendIntentException
 import android.content.pm.PackageManager
 import android.location.Location
+import android.location.LocationManager
 import android.os.Bundle
+import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -18,6 +25,8 @@ import com.alfanse.feedmycity.data.Status
 import com.alfanse.feedmycity.factory.ViewModelFactory
 import com.alfanse.feedmycity.ui.mobileauth.CodeVerificationActivity
 import com.alfanse.feedmycity.utils.PermissionUtils
+import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.snackbar.Snackbar
@@ -38,7 +47,28 @@ class DonorDetailsActivity : AppCompatActivity() {
     private var fusedLocationProviderClient: FusedLocationProviderClient? = null
     private var currentLatLng: LatLng? = null
     private var locationCallback: LocationCallback? = null
+    private var settingsClient: SettingsClient? = null
+    private var locationSettingsRequest: LocationSettingsRequest? = null
+    private lateinit var locationRequest: LocationRequest
+    private var showAddressSelection = false
+    private var gpsActionsDoneOnce = false
 
+    private val locationProviderBroadcastReceiver = object: BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            when (intent?.action) {
+                LocationManager.PROVIDERS_CHANGED_ACTION -> {
+                    if (!gpsActionsDoneOnce) {
+                        gpsActionsDoneOnce = true;
+                        Handler().postDelayed({
+                            gpsActionsDoneOnce = false
+                        }, 500)
+                    } else {
+                        requestPermission()
+                    }
+                }
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,20 +77,34 @@ class DonorDetailsActivity : AppCompatActivity() {
         supportActionBar?.setHomeButtonEnabled(true);
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         (application as FeedMyCityApplication).appComponent.inject(this)
-        donorDetailViewModel = ViewModelProviders.of(this, viewModelFactory).
-            get(DonorDetailsViewModel::class.java)
+        donorDetailViewModel =
+            ViewModelProviders.of(this, viewModelFactory).get(DonorDetailsViewModel::class.java)
         initListener()
         donorDetailViewModel.saveDonorLiveData.observe(this, observer)
-        //readPhoneNum()
+        readPhoneNum()
+
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
+        settingsClient = LocationServices.getSettingsClient(this)
+        createLocationCallback()
+        createLocationRequest()
+        buildLocationSettingsRequest()
+        registerReceiver(locationProviderBroadcastReceiver,  IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION))
     }
 
     private fun readPhoneNum() {
-        if (intent != null){
+        if (intent != null) {
             phone = intent.getStringExtra(CodeVerificationActivity.MOBILE_NUM_KEY)!!
         }
     }
 
-    private fun initListener(){
+    override fun onResume() {
+        super.onResume()
+        if (showAddressSelection){
+            requestPermission()
+        }
+    }
+
+    private fun initListener() {
         var status = 1
         rbActive.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) status = 1
@@ -69,7 +113,8 @@ class DonorDetailsActivity : AppCompatActivity() {
             if (isChecked) status = 0
         }
         etDonorAddress.setOnClickListener {
-            requestPermission()
+            showAddressSelection = true
+            setUpLocationListener()
         }
 
         btnSave.setOnClickListener {
@@ -85,18 +130,22 @@ class DonorDetailsActivity : AppCompatActivity() {
                 }
 
                 etDonorAddress.text.toString().trim().isEmpty() -> {
-                    Snackbar.make(findViewById(android.R.id.content), "Please give you location",
-                        Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(
+                        findViewById(android.R.id.content), "Please give you location",
+                        Snackbar.LENGTH_SHORT
+                    ).show()
                     return@setOnClickListener
                 }
             }
 
-            donorDetailViewModel.saveDonorDetails(etName.text.toString(),
+            donorDetailViewModel.saveDonorDetails(
+                etName.text.toString(),
                 etDonationInfo.text.toString(), status.toString(),
                 donorLat.toString(),
                 donorLng.toString(),
                 phone,
-                etDonorAddress.text.toString())
+                etDonorAddress.text.toString()
+            )
         }
     }
 
@@ -113,8 +162,11 @@ class DonorDetailsActivity : AppCompatActivity() {
             }
             Status.ERROR -> {
                 progressBar.visibility = View.GONE
-                Snackbar.make(findViewById(android.R.id.content), it.message?:getString(R.string.txt_something_wrong),
-                    Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(
+                    findViewById(android.R.id.content),
+                    it.message ?: getString(R.string.txt_something_wrong),
+                    Snackbar.LENGTH_SHORT
+                ).show()
             }
             Status.EMPTY -> {
 
@@ -133,17 +185,10 @@ class DonorDetailsActivity : AppCompatActivity() {
         }
     }
 
-    private fun requestPermission(){
+    private fun requestPermission() {
         when {
             PermissionUtils.isAccessFineLocationGranted(this) -> {
-                when {
-                    PermissionUtils.isLocationEnabled(this) -> {
-                        setUpLocationListener()
-                    }
-                    else -> {
-                        PermissionUtils.showGPSNotEnabledDialog(this)
-                    }
-                }
+                setUpLocationListener()
             }
             else -> {
                 PermissionUtils.requestAccessFineLocationPermission(
@@ -163,14 +208,7 @@ class DonorDetailsActivity : AppCompatActivity() {
         when (requestCode) {
             LOCATION_PERMISSION_REQUEST_CODE -> {
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    when {
-                        PermissionUtils.isLocationEnabled(this) -> {
-                            setUpLocationListener()
-                        }
-                        else -> {
-                            PermissionUtils.showGPSNotEnabledDialog(this)
-                        }
-                    }
+                    setUpLocationListener()
                 } else {
                     Snackbar.make(
                         findViewById(android.R.id.content),
@@ -183,77 +221,81 @@ class DonorDetailsActivity : AppCompatActivity() {
     }
 
     private fun setUpLocationListener() {
-        progressBar.visibility = View.VISIBLE
-        fusedLocationProviderClient = FusedLocationProviderClient(this)
-        fusedLocationProviderClient?.lastLocation?.addOnSuccessListener {
-            // If last location is null after turning on GPS, request location update using callback
-            if (it == null || it.accuracy > 100){
-                locationCallback = object : LocationCallback() {
-                    override fun onLocationResult(locationResult: LocationResult?) {
-                        progressBar.visibility = View.GONE
-                        //stopLocationUpdates()
-                        if (locationResult != null && locationResult.locations.isNotEmpty()) {
-                            val newLocation = locationResult.locations[0]
-                            currentLatLng = LatLng(newLocation.latitude, newLocation.longitude)
-                            startMapPickerActivity(newLocation)
-                        } else {
-                            Snackbar.make(findViewById(android.R.id.content), "Please wait...your location is updating",
-                                Snackbar.LENGTH_SHORT).show()
+        // Begin by checking if the device has the necessary location settings.
+        settingsClient!!.checkLocationSettings(locationSettingsRequest)
+            .addOnSuccessListener(this) {
+                Log.i(TAG, "All location settings are satisfied.")
+
+                fusedLocationProviderClient?.requestLocationUpdates(
+                    locationRequest,
+                    locationCallback, Looper.myLooper()
+                )
+            }.addOnFailureListener(this) { e ->
+                when ((e as ApiException).statusCode) {
+                    LocationSettingsStatusCodes.RESOLUTION_REQUIRED -> {
+                        // Location settings are not satisfied. Attempting to upgrade location settings
+                        try { // Show the dialog by calling startResolutionForResult(), and check the
+                            // result in onActivityResult().
+                            val rae = e as ResolvableApiException
+                            rae.startResolutionForResult(this@DonorDetailsActivity, REQUEST_CHECK_SETTINGS
+                            )
+                        } catch (sie: SendIntentException) {
+                            Log.i(TAG, "PendingIntent unable to execute request.")
                         }
                     }
-
-                    override fun onLocationAvailability(locationAvailability: LocationAvailability?) {
-                        progressBar.visibility = View.GONE
-                        super.onLocationAvailability(locationAvailability)
-                        if (locationAvailability != null) {
-                            if (!locationAvailability.isLocationAvailable){
-                                fusedLocationProviderClient!!.requestLocationUpdates(getLocationRequest(),
-                                    locationCallback, Looper.myLooper())
-                            }
-                        }
+                    LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE -> {
+                        val errorMessage = "Location settings are inadequate, and cannot be fixed here. Fix in Settings."
+                        Snackbar.make(findViewById(android.R.id.content), errorMessage, Snackbar.LENGTH_SHORT).show()
                     }
                 }
+            }
+    }
 
-                fusedLocationProviderClient!!.requestLocationUpdates(getLocationRequest(),
-                    locationCallback, Looper.myLooper())
-            } else {
-                progressBar.visibility = View.GONE
-                currentLatLng = LatLng(it.latitude, it.longitude)
-                startMapPickerActivity(it)
+    private fun createLocationCallback() {
+        locationCallback = object : LocationCallback() {
+            override fun onLocationResult(locationResult: LocationResult) {
+                super.onLocationResult(locationResult)
+                currentLatLng = LatLng(
+                    locationResult.lastLocation.latitude,
+                    locationResult.lastLocation.longitude
+                )
+                startMapPickerActivity(locationResult.lastLocation)
             }
         }
     }
 
     private fun startMapPickerActivity(it: Location) {
+        stopLocationUpdates()
         donorLat = it.latitude
         donorLng = it.longitude
 
         // start map search screen to find address
-        startLocationPicker(currentLatLng!!)
+        if (showAddressSelection){
+            showAddressSelection = false
+            startLocationPicker(currentLatLng!!)
+        }
     }
 
-    override fun onPause() {
-        stopLocationUpdates()
-        super.onPause()
+    private fun createLocationRequest() {
+        locationRequest = LocationRequest()
+        locationRequest.interval = 2000
+        locationRequest.fastestInterval = 2000
+        locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
     }
 
-    override fun onStop() {
-        stopLocationUpdates()
-        super.onStop()
+    private fun buildLocationSettingsRequest() {
+        val builder = LocationSettingsRequest.Builder()
+        builder.addLocationRequest(locationRequest)
+        locationSettingsRequest = builder.build()
     }
 
-    private fun getLocationRequest(): LocationRequest {
-        return LocationRequest().setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-            .setFastestInterval(1000).setInterval(1000)
-    }
-
-    private fun stopLocationUpdates(){
-        if(locationCallback != null){
+    private fun stopLocationUpdates() {
+        if (locationCallback != null) {
             fusedLocationProviderClient?.removeLocationUpdates(locationCallback)
         }
     }
 
-    private fun startLocationPicker(latLng: LatLng){
+    private fun startLocationPicker(latLng: LatLng) {
         val locationPickerIntent = LocationPickerActivity.Builder()
             .withLocation(latLng.latitude, latLng.longitude)
             .withSearchZone(INDIA_LOCALE_ZONE)
@@ -267,35 +309,47 @@ class DonorDetailsActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode != Activity.RESULT_CANCELED){
-            if (requestCode == 1){
-                if (data != null){
-                    donorLat = data.getDoubleExtra(LATITUDE, 0.0)
-                    donorLng = data.getDoubleExtra(LONGITUDE, 0.0)
-                    val address = data.getStringExtra(LOCATION_ADDRESS)
-                    if (address != null){
-                        setAddressToView(address)
+        when(requestCode){
+            1 -> {
+                if (resultCode != Activity.RESULT_CANCELED){
+                    if (data != null) {
+                        donorLat = data.getDoubleExtra(LATITUDE, 0.0)
+                        donorLng = data.getDoubleExtra(LONGITUDE, 0.0)
+                        val address = data.getStringExtra(LOCATION_ADDRESS)
+                        if (address != null) {
+                            setAddressToView(address)
+                        }
+                    }
+                }
+            }
+
+            REQUEST_CHECK_SETTINGS -> {
+                when(resultCode) {
+                    Activity.RESULT_OK -> {// Nothing to do. startLocationupdates() gets called in onResume again. //
+                        }
+                    Activity.RESULT_CANCELED ->{
+                        Log.i(TAG, "User chose not to make required location settings changes.")
                     }
                 }
             }
         }
     }
 
-    private fun setAddressToView(address: String){
+    private fun setAddressToView(address: String) {
         etDonorAddress.setText(address)
     }
 
     override fun onDestroy() {
         stopLocationUpdates()
+        unregisterReceiver(locationProviderBroadcastReceiver)
         super.onDestroy()
     }
 
     companion object {
         private const val TAG = "DonorDetailsActivity"
         private const val MAP_BUTTON_REQUEST_CODE = 1
-        private const val DEFAULT_LAT = 28.6429
-        private const val DEFAULT_LNG = 77.2191
         private const val INDIA_LOCALE_ZONE = "en_in"
         private const val LOCATION_PERMISSION_REQUEST_CODE = 999
+        private const val REQUEST_CHECK_SETTINGS = 0x1
     }
 }

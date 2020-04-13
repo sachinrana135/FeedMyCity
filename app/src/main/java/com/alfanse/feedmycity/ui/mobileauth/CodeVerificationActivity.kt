@@ -7,15 +7,21 @@ import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.alfanse.feedmycity.FeedMyCityApplication
 import com.alfanse.feedmycity.R
+import com.alfanse.feedmycity.data.Resource
+import com.alfanse.feedmycity.data.Status
+import com.alfanse.feedmycity.data.models.UserEntity
 import com.alfanse.feedmycity.factory.ViewModelFactory
 import com.alfanse.feedmycity.receiver.SmsBroadcastReceiver
 import com.alfanse.feedmycity.ui.donor.DonorDetailsActivity
+import com.alfanse.feedmycity.ui.donor.DonorHomeActivity
 import com.alfanse.feedmycity.ui.groupdetails.GroupDetailsActivity
+import com.alfanse.feedmycity.ui.groupdetails.GroupHomeActivity
 import com.alfanse.feedmycity.ui.member.AddMemberActivity
 import com.alfanse.feedmycity.utils.FirebaseAuthHandler
 import com.alfanse.feedmycity.utils.UserType
@@ -158,8 +164,48 @@ class CodeVerificationActivity : AppCompatActivity() {
             if(phoneNumber == null){
                 phoneNumber = ""
             }
-            if(it) navigateToUserTypeDetailsScreen(phoneNumber!!)
+            if(it) {
+                codeVerificationViewModel.getUserByMobile(phoneNumber!!)
+            }
         })
+
+        codeVerificationViewModel.userLiveData.observe(
+            this,
+            Observer<Resource<UserEntity>> { resource ->
+                when (resource.status) {
+                    Status.LOADING -> {
+                        progressBar.visibility = View.VISIBLE
+                    }
+                    Status.SUCCESS -> {
+                        progressBar.visibility = View.GONE
+                        when (resource.data?.userType) {
+                            UserType.DONOR -> {
+                                Toast.makeText(applicationContext, "This donor is already registered with this mobile number",
+                                    Toast.LENGTH_LONG).show()
+                                val intent = Intent(mContext, DonorHomeActivity::class.java)
+                                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                startActivity(intent)
+                                finish()
+                            }
+                            UserType.MEMBER -> {
+                                //navigate to member screen
+                                Toast.makeText(applicationContext, "This member is already registered with this mobile number",
+                                    Toast.LENGTH_LONG).show()
+                                val intent = Intent(mContext, GroupHomeActivity::class.java)
+                                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                startActivity(intent)
+                                finish()
+                            }
+                        }
+                    }
+                    Status.ERROR -> {
+                        navigateToUserTypeDetailsScreen(phoneNumber)
+                    }
+                    Status.EMPTY -> {
+                        navigateToUserTypeDetailsScreen(phoneNumber)
+                    }
+                }
+            })
     }
 
     private fun navigateToUserTypeDetailsScreen(phone: String?) {

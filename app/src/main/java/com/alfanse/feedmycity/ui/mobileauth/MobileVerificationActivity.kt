@@ -12,14 +12,9 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.alfanse.feedmycity.FeedMyCityApplication
 import com.alfanse.feedmycity.R
-import com.alfanse.feedmycity.data.Resource
-import com.alfanse.feedmycity.data.Status
-import com.alfanse.feedmycity.data.models.UserEntity
 import com.alfanse.feedmycity.factory.ViewModelFactory
 import com.alfanse.feedmycity.ui.donor.DonorDetailsActivity
-import com.alfanse.feedmycity.ui.donor.DonorHomeActivity
 import com.alfanse.feedmycity.ui.groupdetails.GroupDetailsActivity
-import com.alfanse.feedmycity.ui.groupdetails.GroupHomeActivity
 import com.alfanse.feedmycity.utils.FirebaseAuthHandler
 import com.alfanse.feedmycity.utils.UserType
 import com.firebase.ui.auth.util.ExtraConstants
@@ -84,10 +79,12 @@ class MobileVerificationActivity : AppCompatActivity() {
 
                         override fun onError(msg: String?) {
                             //Show error msg
+                            btnVerifyNumber.isEnabled = true
                         }
 
                         override fun invalidCode(error: String) {
                             //No usage in this case
+                            btnVerifyNumber.isEnabled = true
                         }
                     })
                 firebaseAuthHandler.signInWithPhoneAuthCredential(credential)
@@ -105,8 +102,7 @@ class MobileVerificationActivity : AppCompatActivity() {
                     Log.d(TAG, "Project Quota exceeded")
                 }
 
-                //btnVerifyNumber.isEnabled = false
-                //btnResend.isEnabled = true
+                btnVerifyNumber.isEnabled = true
             }
 
             override fun onCodeSent(
@@ -149,40 +145,6 @@ class MobileVerificationActivity : AppCompatActivity() {
             }
             if (it) navigateToUserTypeDetailsScreen(phoneNumber!!)
         })
-
-        mobileVerificationViewModel.userLiveData.observe(
-            this,
-            Observer<Resource<UserEntity>> { resource ->
-                when (resource.status) {
-                    Status.LOADING -> {
-                        progressBar.visibility = View.VISIBLE
-                    }
-                    Status.SUCCESS -> {
-                        progressBar.visibility = View.GONE
-                        when (resource.data?.userType) {
-                            UserType.DONOR -> {
-                                val intent = Intent(mContext, DonorHomeActivity::class.java)
-                                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                                startActivity(intent)
-                                finish()
-                            }
-                            UserType.MEMBER -> {
-                                //navigate to member screen
-                                val intent = Intent(mContext, GroupHomeActivity::class.java)
-                                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                                startActivity(intent)
-                                finish()
-                            }
-                        }
-                    }
-                    Status.ERROR -> {
-                        verifyPhoneAndAuthenticate()
-                    }
-                    Status.EMPTY -> {
-                        verifyPhoneAndAuthenticate()
-                    }
-                }
-            })
     }
 
     private fun verifyPhoneAndAuthenticate(){
@@ -246,7 +208,7 @@ class MobileVerificationActivity : AppCompatActivity() {
             if (!validatePhoneNumber()) {
                 return@setOnClickListener
             }
-            mobileVerificationViewModel.getUserByMobile(getValidPhoneNumber()!!)
+            verifyPhoneAndAuthenticate()
         }
 
         btnResend.setOnClickListener {
@@ -261,9 +223,11 @@ class MobileVerificationActivity : AppCompatActivity() {
     }
 
     private fun startPhoneNumberVerification(phoneNumber: String) {
+        btnVerifyNumber.isEnabled = false
+        progressBar.visibility = View.VISIBLE
         PhoneAuthProvider.getInstance().verifyPhoneNumber(
             phoneNumber,
-            300,
+            120,
             TimeUnit.SECONDS,
             this,
             callbacks

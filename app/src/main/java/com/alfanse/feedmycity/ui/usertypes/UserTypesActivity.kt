@@ -40,7 +40,7 @@ class UserTypesActivity : AppCompatActivity() {
     }
 
     private fun navigateToMobileVerification(userType: String){
-        var intent = Intent(mContext, /*MobileVerificationActivity*/DonorDetailsActivity::class.java)
+        var intent = Intent(mContext, MobileVerificationActivity::class.java)
         intent.putExtra(MobileVerificationActivity.USER_TYPE_KEY, userType)
         startActivity(intent)
     }

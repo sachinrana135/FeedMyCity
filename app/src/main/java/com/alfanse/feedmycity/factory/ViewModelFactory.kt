@@ -35,7 +35,10 @@ class ViewModelFactory @Inject constructor(
         return with(modelClass) {
             when {
                 isAssignableFrom(CodeVerificationViewModel::class.java) ->
-                    CodeVerificationViewModel(memoryStorage)
+                    CodeVerificationViewModel(memoryStorage,
+                        feedAppRepository,
+                        utils,
+                        sharedPreferences)
                 isAssignableFrom(DonorDetailsViewModel::class.java) ->
                     DonorDetailsViewModel(
                         feedAppRepository,
@@ -61,10 +64,7 @@ class ViewModelFactory @Inject constructor(
                     )
                 isAssignableFrom(MobileVerificationViewModel::class.java) ->
                     MobileVerificationViewModel(
-                        memoryStorage,
-                        feedAppRepository,
-                        utils,
-                        sharedPreferences
+                        memoryStorage
                     )
                 isAssignableFrom(UpdateDonorViewModel::class.java) ->
                     UpdateDonorViewModel(feedAppRepository)
