@@ -38,6 +38,7 @@ class AddMemberViewModel
             repository.saveMember(request)?.let { response ->
                 response.userId?.let { userId->
                     memoryStorage.clearValue(FIREBASE_USER_ID_PREFS_KEY)
+                    memoryStorage.clearValue(BUNDLE_KEY_GROUP_CODE)
                     repository.getUserById(userId).let { user ->
                         storage.putString(APP_USER_ID_PREFS_KEY, user.userId)
                         utils.setLoggedUser(user)

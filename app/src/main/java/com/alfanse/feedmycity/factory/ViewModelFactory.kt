@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.alfanse.feedmycity.data.repository.FeedAppRepository
 import com.alfanse.feedmycity.data.storage.ApplicationStorage
+import com.alfanse.feedmycity.ui.app_maintenance.AppUpgradeViewModel
 import com.alfanse.feedmycity.ui.comment.CommentViewModel
 import com.alfanse.feedmycity.ui.donor.DonorDetailsViewModel
 import com.alfanse.feedmycity.ui.donor.DonorHomeViewModel
@@ -98,6 +99,8 @@ class ViewModelFactory @Inject constructor(
                     VolunteerViewModel(feedAppRepository)
                 isAssignableFrom(IntroViewModel::class.java) ->
                     IntroViewModel(sharedPreferences)
+                isAssignableFrom(AppUpgradeViewModel::class.java) ->
+                    AppUpgradeViewModel(sharedPreferences, utils)
                 else ->
                     error("Invalid View Model class")
             }

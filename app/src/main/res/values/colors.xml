@@ -12,4 +12,6 @@
     <color name="light_blue">#00BCD4</color>
     <color name="light_green">#4CAF50</color>
     <color name="light_violet">#5C6BC0</color>
+
+    <color name="noInternetBackground">#F7F7F7</color>
 </resources>

@@ -1,5 +1,6 @@
 package com.alfanse.feedmycity.di
 
+import com.alfanse.feedmycity.ui.app_upgrade.AppUpgradeActivity
 import com.alfanse.feedmycity.ui.comment.CommentFragment
 import com.alfanse.feedmycity.ui.donor.DonorDetailsActivity
 import com.alfanse.feedmycity.ui.donor.DonorHomeActivity
@@ -42,4 +43,5 @@ interface AppComponent {
     fun inject(addMemberActivity: AddMemberActivity)
     fun inject(volunteerHomeActivity: VolunteerHomeActivity)
     fun inject(introActivity: IntroActivity)
+    fun inject(appUpgradeActivity: AppUpgradeActivity)
 }

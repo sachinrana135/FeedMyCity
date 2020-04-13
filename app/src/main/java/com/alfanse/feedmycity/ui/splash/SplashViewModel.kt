@@ -4,13 +4,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alfanse.feedmycity.data.Resource
+import com.alfanse.feedmycity.data.models.ConfigEntity
 import com.alfanse.feedmycity.data.models.UserEntity
 import com.alfanse.feedmycity.data.repository.FeedAppRepository
 import com.alfanse.feedmycity.data.storage.ApplicationStorage
-import com.alfanse.feedmycity.utils.APP_USER_ID_PREFS_KEY
-import com.alfanse.feedmycity.utils.BUNDLE_KEY_FIRST_LAUNCH
-import com.alfanse.feedmycity.utils.BUNDLE_KEY_GROUP_CODE
-import com.alfanse.feedmycity.utils.Utils
+import com.alfanse.feedmycity.utils.*
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -24,6 +22,7 @@ class SplashViewModel @Inject constructor(
 ) : ViewModel() {
 
     val userLiveData = MutableLiveData<Resource<UserEntity>>()
+    val configLiveData = MutableLiveData<Resource<ConfigEntity>>()
 
     private val userLiveDataHandler = CoroutineExceptionHandler { _, throwable ->
         userLiveData.value = Resource.error(throwable.message, null)
@@ -43,6 +42,17 @@ class SplashViewModel @Inject constructor(
         }
     }
 
+    fun getConfig() {
+        configLiveData.value = Resource.loading(null)
+
+        viewModelScope.launch(userLiveDataHandler) {
+
+            repository.getConfig().let { configuration ->
+                configLiveData.value = Resource.success(configuration)
+            }
+        }
+    }
+
     fun getLoggedUser() = storage.getString(APP_USER_ID_PREFS_KEY, null)
 
     fun saveGroupCode(groupCode: String) {
@@ -50,4 +60,16 @@ class SplashViewModel @Inject constructor(
     }
 
     fun isFirstLaunch() = storage.getBoolean(BUNDLE_KEY_FIRST_LAUNCH, true)
+
+    fun isNetworkConnected() = utils.isNetworkConnected()
+
+    fun shouldShowUpgrade(): Boolean {
+        var shouldShowUpgrade = true
+        val versionCode = utils.getAppVersionCode()
+        if (storage.getBoolean(APP_UPGRADE_PREFS_KEY + versionCode, false)) {
+            shouldShowUpgrade = false
+        }
+        return shouldShowUpgrade
+    }
+
 }
