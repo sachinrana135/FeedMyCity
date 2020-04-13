@@ -1,9 +1,11 @@
 package com.alfanse.feedmycity.ui.groupdetails
 
-import android.content.Intent
+import android.content.*
 import android.content.pm.PackageManager
+import android.location.LocationManager
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.Gravity
 import android.view.MenuItem
@@ -28,6 +30,9 @@ import com.alfanse.feedmycity.utils.FIREBASE_DYNAMIC_URL
 import com.alfanse.feedmycity.utils.PermissionUtils
 import com.alfanse.feedmycity.utils.User
 import com.alfanse.feedmycity.utils.UserType
+import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.common.api.ResolvableApiException
+import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -55,6 +60,27 @@ class GroupHomeActivity : AppCompatActivity(),
     private var lat = 0.0
     private var lng = 0.0
     private val mContext = this
+    private var settingsClient: SettingsClient? = null
+    private var locationSettingsRequest: LocationSettingsRequest? = null
+    private lateinit var locationRequest: LocationRequest
+    private var gpsActionsDoneOnce = false
+
+    private val locationProviderBroadcastReceiver = object: BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            when (intent?.action) {
+                LocationManager.PROVIDERS_CHANGED_ACTION -> {
+                    if (!gpsActionsDoneOnce) {
+                        gpsActionsDoneOnce = true;
+                        Handler().postDelayed({
+                            gpsActionsDoneOnce = false
+                        }, 500)
+                    } else {
+                        requestPermission()
+                    }
+                }
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,12 +95,17 @@ class GroupHomeActivity : AppCompatActivity(),
         mapFragment.getMapAsync(this)
         setUpNavigationDrawer()
 
+        settingsClient = LocationServices.getSettingsClient(this)
+        locationRequest = LocationRequest()
+        buildLocationSettingsRequest()
+
         if (User.lat != null){
             lat = User.lat!!.toDouble()
         }
         if (User.lng != null){
             lng = User.lng!!.toDouble()
         }
+        registerReceiver(locationProviderBroadcastReceiver,  IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION))
     }
 
     override fun onResume() {
@@ -83,16 +114,15 @@ class GroupHomeActivity : AppCompatActivity(),
         getNearByUsers()
     }
 
-    override fun onPause() {
-        super.onPause()
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterReceiver(locationProviderBroadcastReceiver)
     }
 
     private fun requestPermission(){
         when {
             PermissionUtils.isAccessFineLocationGranted(this) -> {
-                if (!PermissionUtils.isLocationEnabled(this)){
-                    PermissionUtils.showGPSNotEnabledDialog(this)
-                }
+                checkLocationSettings()
             }
             else -> {
                 PermissionUtils.requestAccessFineLocationPermission(
@@ -111,9 +141,7 @@ class GroupHomeActivity : AppCompatActivity(),
         when (requestCode) {
             LOCATION_PERMISSION_REQUEST_CODE -> {
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    if (!PermissionUtils.isLocationEnabled(this)){
-                        PermissionUtils.showGPSNotEnabledDialog(this)
-                    }
+                    checkLocationSettings()
                 } else {
                     Snackbar.make(
                         findViewById(android.R.id.content),
@@ -123,6 +151,38 @@ class GroupHomeActivity : AppCompatActivity(),
                 }
             }
         }
+    }
+
+    private fun checkLocationSettings() {
+        // Begin by checking if the device has the necessary location settings.
+        settingsClient!!.checkLocationSettings(locationSettingsRequest)
+            .addOnSuccessListener(this) {
+                Log.i(TAG, "All location settings are satisfied.")
+                // Do nothing here
+            }.addOnFailureListener(this) { e ->
+                when ((e as ApiException).statusCode) {
+                    LocationSettingsStatusCodes.RESOLUTION_REQUIRED -> {
+                        // Location settings are not satisfied. Attempting to upgrade location settings
+                        try { // Show the dialog by calling startResolutionForResult(), and check the
+                            // result in onActivityResult().
+                            val rae = e as ResolvableApiException
+                            rae.startResolutionForResult(this@GroupHomeActivity, REQUEST_CHECK_SETTINGS)
+                        } catch (sie: IntentSender.SendIntentException) {
+                            Log.i(TAG, "PendingIntent unable to execute request.")
+                        }
+                    }
+                    LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE -> {
+                        val errorMessage = "Location settings are inadequate, and cannot be fixed here. Fix in Settings."
+                        Snackbar.make(findViewById(android.R.id.content), errorMessage, Snackbar.LENGTH_SHORT).show()
+                    }
+                }
+            }
+    }
+
+    private fun buildLocationSettingsRequest() {
+        val builder = LocationSettingsRequest.Builder()
+        builder.addLocationRequest(locationRequest)
+        locationSettingsRequest = builder.build()
     }
 
     private fun getNearByUsers() {
@@ -313,5 +373,6 @@ class GroupHomeActivity : AppCompatActivity(),
         private const val TAG = "GroupHomeActivity"
         private const val DISTANCE = 50
         private const val LOCATION_PERMISSION_REQUEST_CODE = 999
+        private const val REQUEST_CHECK_SETTINGS = 0x1
     }
 }

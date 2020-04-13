@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.alfanse.feedmycity.R
+import com.alfanse.feedmycity.ui.donor.DonorDetailsActivity
 import com.alfanse.feedmycity.ui.groupdetails.GroupDetailsActivity
 import com.alfanse.feedmycity.ui.mobileauth.MobileVerificationActivity
 import com.alfanse.feedmycity.ui.volunteer.VolunteerHomeActivity

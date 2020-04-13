@@ -18,7 +18,9 @@
     <string name="txt_another_try">Give it another try</string>
     <string name="txt_reload">Reload</string>
     <string name="txt_welcome">Welcome</string>
-    <string name="txt_donor_greeting">Thanks for you contribution helping poor people.</string>
+    <string name="txt_donor_greeting">Thanks for you contribution helping poor people.Meanwhile you can locate your nearest members.
+        For this:</string>
+    <string name="txt_click_here">Click Here</string>
     <string name="txt_your_donation">Your donation</string>
     <string name="txt_your_visibility">Your Visibility</string>
     <string name="txt_visible">Visible</string>
@@ -88,7 +90,7 @@
     <string name="donor_label">Donor</string>
     <string name="member_label">Member</string>
     <string name="needier_label">Needier</string>
-    <string name="volunteer_screen_label">Volunteer</string>
+    <string name="volunteer_screen_label">Locate NGO/Groups</string>
     <string name="volunteer_text_info">If you know someone needy around your region,
         you can call NGO/Local Groups marked on map. God bless your kind work.</string>
 
