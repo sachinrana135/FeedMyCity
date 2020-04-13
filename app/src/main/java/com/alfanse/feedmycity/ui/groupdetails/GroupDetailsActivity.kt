@@ -134,7 +134,7 @@ class GroupDetailsActivity : AppCompatActivity() {
             groupDetailsViewModel.saveGroupDetails(
                 name, registeredAddress, groupName,
                 groupLat.toString(), groupLng.toString(),
-                etAddress.text.toString(), /*phone*/"8800602291", etGvtRegNumber.text.toString().trim()
+                etAddress.text.toString(), phone, etGvtRegNumber.text.toString().trim()
             )
         }
     }
