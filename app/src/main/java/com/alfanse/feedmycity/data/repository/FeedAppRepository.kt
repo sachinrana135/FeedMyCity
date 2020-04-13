@@ -60,4 +60,7 @@ class FeedAppRepository
         remote.getNearByGroups(lat, lng, distance)
 
     suspend fun saveMember(request: SaveMemberRequest) = remote.saveMember(request)
+
+    suspend fun getConfig() = remote.getConfig()
+
 }

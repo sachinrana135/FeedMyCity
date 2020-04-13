@@ -2,6 +2,7 @@ package com.alfanse.feedmycity.utils
 
 import android.content.Context
 import android.content.pm.PackageManager
+import android.net.ConnectivityManager
 import android.provider.Settings
 import com.alfanse.feedmycity.BuildConfig
 import com.alfanse.feedmycity.data.models.UserEntity
@@ -14,7 +15,7 @@ class Utils
 @Inject constructor(context: Context, val storage: ApplicationStorage) {
     private val mContext = context
 
-    public fun getDeviceId(): String {
+     fun getDeviceId(): String {
         var deviceId = ""
         deviceId = try {
             Settings.Secure.getString(mContext.contentResolver, Settings.Secure.ANDROID_ID)
@@ -24,7 +25,7 @@ class Utils
         return deviceId
     }
 
-    public fun getAppVersionName(): String {
+     fun getAppVersionName(): String {
         var versionName = ""
         try {
             versionName = BuildConfig.VERSION_NAME
@@ -34,7 +35,7 @@ class Utils
         return versionName
     }
 
-    public fun getApiToken(): String {
+     fun getApiToken(): String {
         var versionName = ""
         try {
             versionName = BuildConfig.API_TOKEN
@@ -44,7 +45,7 @@ class Utils
         return versionName
     }
 
-    public fun getAppVersionCode(): Int {
+     fun getAppVersionCode(): Int {
         var versionCode = 0
         try {
             versionCode = BuildConfig.VERSION_CODE
@@ -87,7 +88,7 @@ class Utils
         }
     }
 
-    fun logoutUser(){
+    fun logoutUser() {
         storage.clearValue(APP_USER_ID_PREFS_KEY)
         User.apply {
             userId = null
@@ -101,4 +102,22 @@ class Utils
             donorVisibility = null
         }
     }
+
+    /**
+     * isNetworkConnected  function is used ot check whether the internet service is connected in the
+     * device and return true/false
+     *
+     * @return true/false on the basis of the state of the network connectivity.
+     */
+    fun isNetworkConnected(): Boolean? {
+        val cm = mContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+        return if (cm != null) {
+            val activeNetwork = cm.activeNetworkInfo
+            activeNetwork != null && activeNetwork.isConnectedOrConnecting
+        } else {
+            false
+        }
+    }
+
 }

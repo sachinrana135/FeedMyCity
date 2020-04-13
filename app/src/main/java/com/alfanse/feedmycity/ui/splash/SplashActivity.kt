@@ -1,9 +1,9 @@
 package com.alfanse.feedmycity.ui.splash
 
+import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.os.Handler
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -13,13 +13,19 @@ import com.alfanse.feedmycity.FeedMyCityApplication
 import com.alfanse.feedmycity.R
 import com.alfanse.feedmycity.data.Resource
 import com.alfanse.feedmycity.data.Status
+import com.alfanse.feedmycity.data.models.ConfigEntity
 import com.alfanse.feedmycity.data.models.UserEntity
 import com.alfanse.feedmycity.factory.ViewModelFactory
+import com.alfanse.feedmycity.ui.app_maintenance.ApiMaintenanceActivity
+import com.alfanse.feedmycity.ui.app_upgrade.AppUpgradeActivity
 import com.alfanse.feedmycity.ui.donor.DonorHomeActivity
 import com.alfanse.feedmycity.ui.groupdetails.GroupHomeActivity
+import com.alfanse.feedmycity.ui.internet_check.NoInternetConnectionActivity
 import com.alfanse.feedmycity.ui.intro.IntroActivity
 import com.alfanse.feedmycity.ui.mobileauth.MobileVerificationActivity
 import com.alfanse.feedmycity.ui.usertypes.UserTypesActivity
+import com.alfanse.feedmycity.utils.BUNDLE_KEY_FORCE_UPGRADE
+import com.alfanse.feedmycity.utils.BUNDLE_KEY_SKIP_CLICKED
 import com.alfanse.feedmycity.utils.UserType
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.dynamiclinks.ktx.dynamicLinks
@@ -34,6 +40,7 @@ class SplashActivity : AppCompatActivity() {
     @Inject
     internal lateinit var viewModelFactory: ViewModelFactory
     private lateinit var splashViewModel: SplashViewModel
+    private var config:ConfigEntity? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,7 +48,25 @@ class SplashActivity : AppCompatActivity() {
         (application as FeedMyCityApplication).appComponent.inject(this)
         splashViewModel =
             ViewModelProviders.of(this, viewModelFactory).get(SplashViewModel::class.java)
-        defaultNavigation()
+        splashViewModel.userLiveData.observe(this, observer)
+        splashViewModel.configLiveData.observe(this, configObserver)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        checkInternetConnectivity()
+    }
+
+    private fun checkInternetConnectivity() {
+        val isNetworkConnected = splashViewModel.isNetworkConnected()
+        if (!isNetworkConnected!!) {
+            val intent = Intent(this, NoInternetConnectionActivity::class.java)
+            startActivity(intent)
+        } else {
+            if(config == null) {
+                splashViewModel.getConfig()
+            }
+        }
     }
 
     private fun detectDynamicLink() {
@@ -63,7 +88,7 @@ class SplashActivity : AppCompatActivity() {
                     }
 
                 } else {
-                    launchUserTypeScreen(UserTypesActivity::class.java)
+                    defaultNavigation()
                 }
 
             }
@@ -77,11 +102,9 @@ class SplashActivity : AppCompatActivity() {
             if (loggedUserId != null) {
                 splashViewModel.getUserById(loggedUserId)
             } else {
-                detectDynamicLink()
+                launchUserTypeScreen()
             }
         }
-
-        splashViewModel.userLiveData.observe(this, observer)
     }
 
     private var observer = Observer<Resource<UserEntity>> { resource ->
@@ -105,14 +128,15 @@ class SplashActivity : AppCompatActivity() {
                         finish()
                     }
                     else -> {
-                        launchUserTypeScreen(UserTypesActivity::class.java)
+                        launchUserTypeScreen()
                     }
                 }
             }
             Status.ERROR -> {
                 progressBar.visibility = View.GONE
                 Snackbar.make(
-                    findViewById(android.R.id.content), resource.message!!,
+                    findViewById(android.R.id.content),
+                    resource.message ?: getString(R.string.txt_something_wrong),
                     Snackbar.LENGTH_SHORT
                 ).show()
             }
@@ -122,17 +146,72 @@ class SplashActivity : AppCompatActivity() {
         }
     }
 
+    private var configObserver = Observer<Resource<ConfigEntity>> { resource ->
+        when (resource.status) {
+            Status.LOADING -> {
+                progressBar.visibility = View.VISIBLE
+            }
+            Status.SUCCESS -> {
+                progressBar.visibility = View.GONE
+                config = resource.data
+                //check if api is on maintenance
+                if (!resource.data?.apiStatus!!) {
+                    val intent = Intent(this, ApiMaintenanceActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                    return@Observer
+                }
 
-    private fun launchUserTypeScreen(clazz: Class<out AppCompatActivity>) {
-        val handler = Handler()
-        handler.postDelayed({
-            if(splashViewModel.isFirstLaunch()) {
-                startActivity(Intent(mContext, IntroActivity::class.java))
+                if (resource.data?.isUpdateAvailable!! && splashViewModel.shouldShowUpgrade()) {
+                    val intent = Intent(this, AppUpgradeActivity::class.java)
+                    intent.putExtra(BUNDLE_KEY_FORCE_UPGRADE, resource.data.isForceUpdate)
+                    startActivityForResult(intent, APP_UPGRADE_REQUEST_CODE)
+                } else {
+                    detectDynamicLink()
+                }
+
             }
-            else {
-                startActivity(Intent(mContext, clazz))
+            Status.ERROR -> {
+                progressBar.visibility = View.GONE
+                Snackbar.make(
+                    findViewById(android.R.id.content),
+                    resource.message ?: getString(R.string.txt_something_wrong),
+                    Snackbar.LENGTH_SHORT
+                ).show()
             }
-            finish()
-        }, 3000)
+            Status.EMPTY -> {
+
+            }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when (requestCode) {
+            APP_UPGRADE_REQUEST_CODE -> {
+                if (resultCode == Activity.RESULT_OK) {
+                    if (data?.extras != null) {
+                        val isSkipClicked = data.getBooleanExtra(BUNDLE_KEY_SKIP_CLICKED, false)
+                        if (isSkipClicked) {
+                            detectDynamicLink()
+                        }
+                    }
+                }
+            }
+
+        }
+    }
+
+    private fun launchUserTypeScreen() {
+        if (splashViewModel.isFirstLaunch()) {
+            startActivity(Intent(mContext, IntroActivity::class.java))
+        } else {
+            startActivity(Intent(mContext, UserTypesActivity::class.java))
+        }
+    }
+
+    companion object {
+        private const val TAG = "SplashActivity"
+        private const val APP_UPGRADE_REQUEST_CODE = 999
     }
 }

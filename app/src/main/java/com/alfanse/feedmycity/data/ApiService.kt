@@ -59,4 +59,7 @@ interface ApiService {
 
     @POST("saveMember")
     suspend fun saveMember(@Body request: SaveMemberRequest) : SaveMemberResponse
+
+    @GET("getStartUpConfig")
+    suspend fun getConfig(): ConfigEntity
 }
