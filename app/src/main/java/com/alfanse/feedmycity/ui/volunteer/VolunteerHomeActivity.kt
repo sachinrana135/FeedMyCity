@@ -3,6 +3,7 @@ package com.alfanse.feedmycity.ui.volunteer
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Looper
+import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -43,6 +44,8 @@ class VolunteerHomeActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_volunteer)
+        supportActionBar?.setHomeButtonEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
         title = getString(R.string.volunteer_screen_label)
         (application as FeedMyCityApplication).appComponent.inject(this)
         volunteerViewModel = ViewModelProviders.of(this, viewModelFactory).
@@ -169,7 +172,7 @@ class VolunteerHomeActivity : AppCompatActivity(), OnMapReadyCallback {
             }
             Status.EMPTY -> {
                 progressBar.visibility = View.GONE
-                Snackbar.make(findViewById(android.R.id.content), it.message?:getString(R.string.txt_something_wrong), Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(findViewById(android.R.id.content), getString(R.string.txt_no_group_found), Snackbar.LENGTH_SHORT).show()
             }
         }
     }
@@ -212,6 +215,17 @@ class VolunteerHomeActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onDestroy() {
         stopLocationUpdates()
         super.onDestroy()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Handle item selection
+        return when (item.itemId) {
+            android.R.id.home -> {
+                onBackPressed()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     companion object {
