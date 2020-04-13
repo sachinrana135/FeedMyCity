@@ -30,6 +30,8 @@ FeedMyCity is the most required app for hunger crisis in your city during corona
 
 ## API Reference
 
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/38d06d5796cbfc6afa47)
+
 ## Contributers
 
 * **Sachin Rana** - [Sachin Rana](https://github.com/sachinrana135)
