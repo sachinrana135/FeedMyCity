@@ -111,7 +111,7 @@ class AddNeedierDetailActivity : AppCompatActivity() {
                     return@setOnClickListener
                 }
 
-                !validatePhone() -> {
+                etMobile.text.toString().trim().isEmpty() -> {
                     etMobile.error = "Enter Valid Number"
                     return@setOnClickListener
                 }
@@ -143,7 +143,7 @@ class AddNeedierDetailActivity : AppCompatActivity() {
     private fun validatePhone(): Boolean {
         val phone = etMobile.text.toString().trim()
         if (phone.isEmpty()) return false
-        return parsePhoneNumber(phone, Locale.getDefault().country)
+        return return true
     }
 
     private fun parsePhoneNumber(phone: String, defaultRegion: String): Boolean {
