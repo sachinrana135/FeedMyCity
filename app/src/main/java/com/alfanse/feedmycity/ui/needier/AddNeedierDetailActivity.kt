@@ -143,7 +143,7 @@ class AddNeedierDetailActivity : AppCompatActivity() {
     private fun validatePhone(): Boolean {
         val phone = etMobile.text.toString().trim()
         if (phone.isEmpty()) return false
-        return return true
+        return parsePhoneNumber(phone, Locale.getDefault().country)
     }
 
     private fun parsePhoneNumber(phone: String, defaultRegion: String): Boolean {
