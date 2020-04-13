@@ -73,9 +73,8 @@ class GroupHomeActivity : AppCompatActivity(),
                         gpsActionsDoneOnce = true;
                         Handler().postDelayed({
                             gpsActionsDoneOnce = false
+                            requestPermission()
                         }, 500)
-                    } else {
-                        requestPermission()
                     }
                 }
             }
@@ -96,7 +95,7 @@ class GroupHomeActivity : AppCompatActivity(),
         setUpNavigationDrawer()
 
         settingsClient = LocationServices.getSettingsClient(this)
-        locationRequest = LocationRequest()
+        locationRequest = LocationRequest().setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
         buildLocationSettingsRequest()
 
         if (User.lat != null){
@@ -110,7 +109,6 @@ class GroupHomeActivity : AppCompatActivity(),
 
     override fun onResume() {
         super.onResume()
-        requestPermission()
         getNearByUsers()
     }
 
@@ -305,24 +303,29 @@ class GroupHomeActivity : AppCompatActivity(),
             Status.SUCCESS -> {
                 progressBar.visibility = View.GONE
                 if(it.data != null){
+                    moveAndAnimateCamera()
                     addMarkersToMap(it.data)
                 }
             }
             Status.ERROR -> {
                 progressBar.visibility = View.GONE
-                Snackbar.make(findViewById(android.R.id.content), it.message?:getString(R.string.txt_something_wrong),
+                moveAndAnimateCamera()
+                Snackbar.make(findViewById(android.R.id.content), getString(R.string.txt_something_wrong),
                     Snackbar.LENGTH_SHORT).show()
             }
             Status.EMPTY -> {
-
+                moveAndAnimateCamera()
             }
         }
     }
 
-    private fun addMarkersToMap(users: List<NearByUsersEntity>){
+    private fun moveAndAnimateCamera(){
         val latlng = LatLng(lat!!, lng!!)
         moveCamera(latlng)
         animateCamera(latlng)
+    }
+
+    private fun addMarkersToMap(users: List<NearByUsersEntity>){
         for (user in users){
             when(user.user_type){
                 UserType.DONOR -> getMarkerOptions(user, R.drawable.map_marker_green)

@@ -1,8 +1,12 @@
 package com.alfanse.feedmycity.ui.volunteer
 
+import android.content.*
 import android.content.pm.PackageManager
+import android.location.LocationManager
 import android.os.Bundle
+import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -15,10 +19,9 @@ import com.alfanse.feedmycity.data.Status
 import com.alfanse.feedmycity.data.models.NearByGroupsEntity
 import com.alfanse.feedmycity.factory.ViewModelFactory
 import com.alfanse.feedmycity.utils.PermissionUtils
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationCallback
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationResult
+import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.common.api.ResolvableApiException
+import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -40,6 +43,26 @@ class VolunteerHomeActivity : AppCompatActivity(), OnMapReadyCallback {
     private var lat: Double = 0.0
     private var lng: Double = 0.0
     private var locationCallback: LocationCallback? = null
+    private var settingsClient: SettingsClient? = null
+    private var locationSettingsRequest: LocationSettingsRequest? = null
+    private lateinit var locationRequest: LocationRequest
+    private var gpsActionsDoneOnce = false
+
+    private val locationProviderBroadcastReceiver = object: BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            when (intent?.action) {
+                LocationManager.PROVIDERS_CHANGED_ACTION -> {
+                    if (!gpsActionsDoneOnce) {
+                        gpsActionsDoneOnce = true;
+                        Handler().postDelayed({
+                            gpsActionsDoneOnce = false
+                            requestPermission()
+                        }, 500)
+                    }
+                }
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,6 +77,17 @@ class VolunteerHomeActivity : AppCompatActivity(), OnMapReadyCallback {
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
+        settingsClient = LocationServices.getSettingsClient(this)
+        createLocationCallback()
+        locationRequest = LocationRequest().apply {
+            fastestInterval = 2000
+            interval = 2000
+            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        }
+        buildLocationSettingsRequest()
+        registerReceiver(locationProviderBroadcastReceiver,  IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION))
     }
 
     override fun onStart() {
@@ -61,17 +95,10 @@ class VolunteerHomeActivity : AppCompatActivity(), OnMapReadyCallback {
         requestPermission()
     }
 
-    private fun requestPermission(){
+    private fun requestPermission() {
         when {
             PermissionUtils.isAccessFineLocationGranted(this) -> {
-                when {
-                    PermissionUtils.isLocationEnabled(this) -> {
-                        setUpLocationListener()
-                    }
-                    else -> {
-                        PermissionUtils.showGPSNotEnabledDialog(this)
-                    }
-                }
+                setUpLocationListener()
             }
             else -> {
                 PermissionUtils.requestAccessFineLocationPermission(
@@ -91,14 +118,7 @@ class VolunteerHomeActivity : AppCompatActivity(), OnMapReadyCallback {
         when (requestCode) {
             LOCATION_PERMISSION_REQUEST_CODE -> {
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    when {
-                        PermissionUtils.isLocationEnabled(this) -> {
-                            setUpLocationListener()
-                        }
-                        else -> {
-                            PermissionUtils.showGPSNotEnabledDialog(this)
-                        }
-                    }
+                    setUpLocationListener()
                 } else {
                     Snackbar.make(
                         findViewById(android.R.id.content),
@@ -110,44 +130,53 @@ class VolunteerHomeActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
-
     private fun setUpLocationListener() {
-        fusedLocationProviderClient = FusedLocationProviderClient(this)
-        fusedLocationProviderClient?.lastLocation?.addOnSuccessListener {
-            // If last location is null after turning on GPS, request location update using callback
-            if (it == null || it.accuracy > 100){
-                locationCallback = object : LocationCallback() {
-                    override fun onLocationResult(locationResult: LocationResult?) {
-                        stopLocationUpdates()
-                        if (locationResult != null && locationResult.locations.isNotEmpty()) {
-                            val newLocation = locationResult.locations[0]
-                            lat = newLocation.latitude
-                            lng = newLocation.longitude
-                            getNearByGroups(lat, lng)
-                        } else {
-                            Snackbar.make(findViewById(android.R.id.content), "Please wait...your location is updating",
-                                Snackbar.LENGTH_SHORT).show()
+        // Begin by checking if the device has the necessary location settings.
+        settingsClient!!.checkLocationSettings(locationSettingsRequest)
+            .addOnSuccessListener(this) {
+                Log.i(TAG, "All location settings are satisfied.")
+
+                fusedLocationProviderClient?.requestLocationUpdates(
+                    locationRequest,
+                    locationCallback, Looper.myLooper()
+                )
+            }.addOnFailureListener(this) { e ->
+                when ((e as ApiException).statusCode) {
+                    LocationSettingsStatusCodes.RESOLUTION_REQUIRED -> {
+                        // Location settings are not satisfied. Attempting to upgrade location settings
+                        try { // Show the dialog by calling startResolutionForResult(), and check the
+                            // result in onActivityResult().
+                            val rae = e as ResolvableApiException
+                            rae.startResolutionForResult(this@VolunteerHomeActivity, REQUEST_CHECK_SETTINGS
+                            )
+                        } catch (sie: IntentSender.SendIntentException) {
+                            Log.i(TAG, "PendingIntent unable to execute request.")
                         }
                     }
+                    LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE -> {
+                        val errorMessage = "Location settings are inadequate, and cannot be fixed here. Fix in Settings."
+                        Snackbar.make(findViewById(android.R.id.content), errorMessage, Snackbar.LENGTH_SHORT).show()
+                    }
                 }
+            }
+    }
 
-                fusedLocationProviderClient!!.requestLocationUpdates(getLocationRequest(),
-                    locationCallback, Looper.myLooper())
-            } else {
-                lat = it.latitude
-                lng = it.longitude
-                getNearByGroups(lat, lng)
+    private fun createLocationCallback() {
+        locationCallback = object : LocationCallback() {
+            override fun onLocationResult(locationResult: LocationResult) {
+                super.onLocationResult(locationResult)
+                lat = locationResult.lastLocation.latitude
+                lng = locationResult.lastLocation.longitude
+                getNearByGroups(locationResult.lastLocation.latitude,
+                    locationResult.lastLocation.longitude)
             }
         }
     }
 
-
-    private fun getLocationRequest(): LocationRequest {
-        return LocationRequest().setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-    }
-
-    private fun stopLocationUpdates(){
-        fusedLocationProviderClient?.removeLocationUpdates(locationCallback)
+    private fun buildLocationSettingsRequest() {
+        val builder = LocationSettingsRequest.Builder()
+        builder.addLocationRequest(locationRequest)
+        locationSettingsRequest = builder.build()
     }
 
     private fun getNearByGroups(lat: Double, lng: Double){
@@ -212,8 +241,16 @@ class VolunteerHomeActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
+    private fun stopLocationUpdates() {
+        if (locationCallback != null){
+            fusedLocationProviderClient?.removeLocationUpdates(locationCallback)
+        }
+    }
+
+
     override fun onDestroy() {
         stopLocationUpdates()
+        unregisterReceiver(locationProviderBroadcastReceiver)
         super.onDestroy()
     }
 
@@ -232,5 +269,6 @@ class VolunteerHomeActivity : AppCompatActivity(), OnMapReadyCallback {
         private const val TAG = "VolunteerActivity"
         private const val LOCATION_PERMISSION_REQUEST_CODE = 999
         private const val DISTANCE = 50
+        private const val REQUEST_CHECK_SETTINGS = 0x1
     }
 }

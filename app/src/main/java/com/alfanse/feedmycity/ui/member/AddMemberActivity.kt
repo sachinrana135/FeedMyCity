@@ -58,9 +58,8 @@ class AddMemberActivity : AppCompatActivity() {
                         gpsActionsDoneOnce = true;
                         Handler().postDelayed({
                             gpsActionsDoneOnce = false
+                            requestPermission()
                         }, 500)
-                    } else {
-                        requestPermission()
                     }
                 }
             }
@@ -88,9 +87,6 @@ class AddMemberActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        if (showAddressSelection){
-            requestPermission()
-        }
     }
 
     private fun readIntent() {
@@ -102,7 +98,7 @@ class AddMemberActivity : AppCompatActivity() {
     private fun initListener() {
         etAddress.setOnClickListener {
             showAddressSelection = true
-            setUpLocationListener()
+            requestPermission()
         }
 
         btnSave.setOnClickListener {
