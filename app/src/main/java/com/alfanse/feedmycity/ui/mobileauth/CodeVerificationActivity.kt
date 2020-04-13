@@ -180,7 +180,7 @@ class CodeVerificationActivity : AppCompatActivity() {
                         progressBar.visibility = View.GONE
                         when (resource.data?.userType) {
                             UserType.DONOR -> {
-                                Toast.makeText(applicationContext, "This donor is already registered with this mobile number",
+                                Toast.makeText(applicationContext, "You are already registered with this mobile number.",
                                     Toast.LENGTH_LONG).show()
                                 val intent = Intent(mContext, DonorHomeActivity::class.java)
                                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -189,7 +189,7 @@ class CodeVerificationActivity : AppCompatActivity() {
                             }
                             UserType.MEMBER -> {
                                 //navigate to member screen
-                                Toast.makeText(applicationContext, "This member is already registered with this mobile number",
+                                Toast.makeText(applicationContext, "You are already registered with this mobile number.",
                                     Toast.LENGTH_LONG).show()
                                 val intent = Intent(mContext, GroupHomeActivity::class.java)
                                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK

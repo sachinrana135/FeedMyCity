@@ -26,7 +26,9 @@ class VolunteerViewModel
         viewModelScope.launch(handler){
             repository.getNearByGroups(
                 lat, lng, distance).let { response ->
-                if (response.isNotEmpty()){
+                if (response.isEmpty()){
+                    nearByGroupsLiveData.value = Resource.empty()
+                }else{
                     nearByGroupsLiveData.value = Resource.success(response)
                 }
             }

@@ -24,7 +24,7 @@
         app:layout_constraintStart_toStartOf="parent"
         android:text="@string/volunteer_text_info"
         android:padding="@dimen/spacing_large"
-        android:textSize="@dimen/font_large"
+        android:textSize="@dimen/font_small"
         android:background="@android:color/white"
         android:textColor="@android:color/black"
         android:gravity="center"/>

@@ -51,7 +51,7 @@ class DonorHomeActivity : AppCompatActivity() {
         }
 
         val plainText = getString(R.string.txt_donor_greeting)
-        val greetingsContent = plainText + getString(R.string.txt_click_here)
+        val greetingsContent = plainText +" "+ getString(R.string.txt_click_here)
         val spannableContent = SpannableString(greetingsContent)
         spannableContent.setSpan(ForegroundColorSpan(Color.BLUE), plainText.length,
             greetingsContent.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
@@ -63,7 +63,7 @@ class DonorHomeActivity : AppCompatActivity() {
                 startActivity(intent)
             }
         }, plainText.length, greetingsContent.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-        txt_greeting.movementMethod = LinkMovementMethod.getInstance();
+        txt_greeting.movementMethod = LinkMovementMethod.getInstance()
         txt_greeting.setText(spannableContent, TextView.BufferType.SPANNABLE)
     }
 

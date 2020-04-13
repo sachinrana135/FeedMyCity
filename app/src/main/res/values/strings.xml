@@ -5,6 +5,7 @@
     <string name="update_donor_screen_label">Update Details</string>
 
     <string name="txt_something_wrong">Something went wrong</string>
+    <string name="txt_no_group_found">No near by group found!</string>
     <string name="txt_enable_phone_prmsn">Please enable phone permission in setting.</string>
     <string name="txt_save_success">Data Saved Successfully</string>
     <string name="txt_home">Home</string>
@@ -18,9 +19,9 @@
     <string name="txt_another_try">Give it another try</string>
     <string name="txt_reload">Reload</string>
     <string name="txt_welcome">Welcome</string>
-    <string name="txt_donor_greeting">Thanks for you contribution helping poor people.Meanwhile you can locate your nearest members.
-        For this:</string>
-    <string name="txt_click_here">Click Here</string>
+    <string name="txt_donor_greeting">Thanks for you contribution towards helping needy people.
+        \n\n Now, near by NGO/foundation/group will contact you and pick the donated items form your location. You can also see and contact your near by groups.</string>
+    <string name="txt_click_here">Locate Groups</string>
     <string name="txt_your_donation">Your donation</string>
     <string name="txt_your_visibility">Your Visibility</string>
     <string name="txt_visible">Visible</string>

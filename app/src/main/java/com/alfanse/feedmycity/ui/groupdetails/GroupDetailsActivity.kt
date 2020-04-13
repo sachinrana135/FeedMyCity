@@ -126,7 +126,7 @@ class GroupDetailsActivity : AppCompatActivity() {
                     etRegisteredAddress.error = "Enter address"
                     return@setOnClickListener
                 }
-                geoLocationAddress == "" -> {
+                etAddress.text.toString().trim().isEmpty()-> {
                     Snackbar.make(
                         findViewById(android.R.id.content), "Please give your location",
                         Snackbar.LENGTH_SHORT
@@ -138,7 +138,7 @@ class GroupDetailsActivity : AppCompatActivity() {
             groupDetailsViewModel.saveGroupDetails(
                 name, registeredAddress, groupName,
                 groupLat.toString(), groupLng.toString(),
-                geoLocationAddress, phone, etGvtRegNumber.text.toString().trim()
+                etAddress.text.toString(), phone, etGvtRegNumber.text.toString().trim()
             )
         }
     }
