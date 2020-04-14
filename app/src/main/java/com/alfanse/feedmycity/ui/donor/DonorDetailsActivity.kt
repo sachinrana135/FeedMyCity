@@ -7,7 +7,6 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.IntentSender.SendIntentException
 import android.content.pm.PackageManager
-import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
 import android.os.Handler
@@ -53,7 +52,7 @@ class DonorDetailsActivity : AppCompatActivity() {
     private var showAddressSelection = false
     private var gpsActionsDoneOnce = false
 
-    private val locationProviderBroadcastReceiver = object: BroadcastReceiver() {
+    private val locationProviderBroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             when (intent?.action) {
                 LocationManager.PROVIDERS_CHANGED_ACTION -> {
@@ -87,7 +86,10 @@ class DonorDetailsActivity : AppCompatActivity() {
         createLocationCallback()
         createLocationRequest()
         buildLocationSettingsRequest()
-        registerReceiver(locationProviderBroadcastReceiver,  IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION))
+        registerReceiver(
+            locationProviderBroadcastReceiver,
+            IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION)
+        )
     }
 
     private fun readPhoneNum() {
@@ -98,6 +100,9 @@ class DonorDetailsActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        if (currentLatLng == null) {
+            requestPermission()
+        }
     }
 
     private fun initListener() {
@@ -110,7 +115,11 @@ class DonorDetailsActivity : AppCompatActivity() {
         }
         etDonorAddress.setOnClickListener {
             showAddressSelection = true
-            requestPermission()
+            if (currentLatLng != null) {
+                startMapPickerActivity()
+            } else {
+                requestPermission()
+            }
         }
 
         btnSave.setOnClickListener {
@@ -233,15 +242,21 @@ class DonorDetailsActivity : AppCompatActivity() {
                         try { // Show the dialog by calling startResolutionForResult(), and check the
                             // result in onActivityResult().
                             val rae = e as ResolvableApiException
-                            rae.startResolutionForResult(this@DonorDetailsActivity, REQUEST_CHECK_SETTINGS
+                            rae.startResolutionForResult(
+                                this@DonorDetailsActivity, REQUEST_CHECK_SETTINGS
                             )
                         } catch (sie: SendIntentException) {
                             Log.i(TAG, "PendingIntent unable to execute request.")
                         }
                     }
                     LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE -> {
-                        val errorMessage = "Location settings are inadequate, and cannot be fixed here. Fix in Settings."
-                        Snackbar.make(findViewById(android.R.id.content), errorMessage, Snackbar.LENGTH_SHORT).show()
+                        val errorMessage =
+                            "Location settings are inadequate, and cannot be fixed here. Fix in Settings."
+                        Snackbar.make(
+                            findViewById(android.R.id.content),
+                            errorMessage,
+                            Snackbar.LENGTH_SHORT
+                        ).show()
                     }
                 }
             }
@@ -255,28 +270,29 @@ class DonorDetailsActivity : AppCompatActivity() {
                     locationResult.lastLocation.latitude,
                     locationResult.lastLocation.longitude
                 )
-                startMapPickerActivity(locationResult.lastLocation)
+                startMapPickerActivity()
             }
         }
     }
 
-    private fun startMapPickerActivity(it: Location) {
+    private fun startMapPickerActivity() {
         stopLocationUpdates()
-        donorLat = it.latitude
-        donorLng = it.longitude
+        donorLat = currentLatLng!!.latitude
+        donorLng = currentLatLng!!.longitude
 
         // start map search screen to find address
-        if (showAddressSelection){
+        if (showAddressSelection) {
             showAddressSelection = false
             startLocationPicker(currentLatLng!!)
         }
     }
 
     private fun createLocationRequest() {
-        locationRequest = LocationRequest()
-        locationRequest.interval = 2000
-        locationRequest.fastestInterval = 2000
-        locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        locationRequest = LocationRequest().apply {
+            interval = 5000
+            fastestInterval = 5000
+            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        }
     }
 
     private fun buildLocationSettingsRequest() {
@@ -305,9 +321,9 @@ class DonorDetailsActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        when(requestCode){
+        when (requestCode) {
             1 -> {
-                if (resultCode != Activity.RESULT_CANCELED){
+                if (resultCode != Activity.RESULT_CANCELED) {
                     if (data != null) {
                         donorLat = data.getDoubleExtra(LATITUDE, 0.0)
                         donorLng = data.getDoubleExtra(LONGITUDE, 0.0)
@@ -320,10 +336,10 @@ class DonorDetailsActivity : AppCompatActivity() {
             }
 
             REQUEST_CHECK_SETTINGS -> {
-                when(resultCode) {
+                when (resultCode) {
                     Activity.RESULT_OK -> {// Nothing to do. startLocationupdates() gets called in onResume again. //
-                        }
-                    Activity.RESULT_CANCELED ->{
+                    }
+                    Activity.RESULT_CANCELED -> {
                         Log.i(TAG, "User chose not to make required location settings changes.")
                     }
                 }

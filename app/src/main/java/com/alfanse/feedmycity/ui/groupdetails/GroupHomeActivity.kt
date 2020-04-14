@@ -303,7 +303,6 @@ class GroupHomeActivity : AppCompatActivity(),
             Status.SUCCESS -> {
                 progressBar.visibility = View.GONE
                 if(it.data != null){
-                    moveAndAnimateCamera()
                     addMarkersToMap(it.data)
                 }
             }
@@ -326,6 +325,7 @@ class GroupHomeActivity : AppCompatActivity(),
     }
 
     private fun addMarkersToMap(users: List<NearByUsersEntity>){
+        moveAndAnimateCamera()
         for (user in users){
             when(user.user_type){
                 UserType.DONOR -> getMarkerOptions(user, R.drawable.map_marker_green)

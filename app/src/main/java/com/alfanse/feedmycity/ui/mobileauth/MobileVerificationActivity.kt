@@ -238,6 +238,7 @@ class MobileVerificationActivity : AppCompatActivity() {
         phoneNumber: String,
         token: PhoneAuthProvider.ForceResendingToken?
     ) {
+        progressBar.visibility = View.VISIBLE
         PhoneAuthProvider.getInstance().verifyPhoneNumber(
             phoneNumber, // Phone number to verify
             120, // Timeout duration
