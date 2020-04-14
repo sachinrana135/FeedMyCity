@@ -82,8 +82,6 @@ class VolunteerHomeActivity : AppCompatActivity(), OnMapReadyCallback {
         settingsClient = LocationServices.getSettingsClient(this)
         createLocationCallback()
         locationRequest = LocationRequest().apply {
-            fastestInterval = 2000
-            interval = 2000
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         }
         buildLocationSettingsRequest()
@@ -195,21 +193,27 @@ class VolunteerHomeActivity : AppCompatActivity(), OnMapReadyCallback {
                 }
             }
             Status.ERROR -> {
+                moveAnimateCamera()
                 progressBar.visibility = View.GONE
                 Snackbar.make(findViewById(android.R.id.content), it.message?:getString(R.string.txt_something_wrong),
                     Snackbar.LENGTH_SHORT).show()
             }
             Status.EMPTY -> {
+                moveAnimateCamera()
                 progressBar.visibility = View.GONE
                 Snackbar.make(findViewById(android.R.id.content), getString(R.string.txt_no_group_found), Snackbar.LENGTH_SHORT).show()
             }
         }
     }
 
-    private fun addMarkersToMap(users: List<NearByGroupsEntity>){
+    private fun moveAnimateCamera(){
         val latlng = LatLng(lat, lng)
         moveCamera(latlng)
         animateCamera(latlng)
+    }
+
+    private fun addMarkersToMap(users: List<NearByGroupsEntity>){
+        moveAnimateCamera()
         for (user in users){
             googleMap.addMarker(
                 MarkerOptions().position(LatLng(user.lat.toDouble(), user.lng.toDouble()))
