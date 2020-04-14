@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/spacing_normal"
+    tools:context=".ui.needier.NeedierDetailActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/data_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/tvUserName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            app:layout_constraintBaseline_toBaselineOf="@id/callAction"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="parent">
+
+        </TextView>
+
+        <ImageView
+            android:id="@+id/callAction"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="@dimen/spacing_normal"
+            app:layout_constraintBaseline_toBaselineOf="@id/tvUserName"
+            app:layout_constraintStart_toEndOf="@id/tvUserName"
+            app:srcCompat="@drawable/ic_call_blue" />
+
+        <TextView
+            android:id="@+id/status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:textStyle="bold"
+            app:layout_constraintBaseline_toBaselineOf="@id/callAction"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="parent">
+
+        </TextView>
+
+        <TextView
+            android:id="@+id/tv_items_need"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_normal"
+            android:textColor="@color/colorPrimary"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvUserName">
+
+        </TextView>
+
+        <TextView
+            android:id="@+id/tv_address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_normal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_items_need">
+
+        </TextView>
+
+        <Spinner
+            android:id="@+id/status_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/gradient_spinner"
+            android:layout_marginTop="@dimen/spacing_normal"
+            app:layout_constraintEnd_toStartOf="@+id/btnUpdate"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_address" />
+
+        <Button
+            android:id="@+id/btnUpdate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_normal"
+            android:background="@drawable/volunteer_bg"
+            android:text="@string/update_button_label"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/font_normal"
+            android:layout_marginRight="@dimen/spacing_normal"
+            app:layout_constraintEnd_toStartOf="@id/updateStatusProgressBar"
+            app:layout_constraintTop_toBottomOf="@id/tv_address" />
+
+        <ProgressBar
+            android:id="@+id/updateStatusProgressBar"
+            android:visibility="gone"
+            android:layout_marginTop="@dimen/spacing_normal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_address"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <FrameLayout
+        android:id="@+id/commentContainer"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/spacing_normal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/data_container">
+
+
+    </FrameLayout>
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

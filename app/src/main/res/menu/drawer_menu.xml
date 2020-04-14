@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item android:id="@+id/nav_profile"
+            android:title="@string/profile_label"
+            android:icon="@drawable/ic_person_black_24dp"/>
+        <item android:id="@+id/nav_add_needy"
+            android:title="@string/add_needy_label"
+            android:icon="@drawable/ic_add_circle_black_24dp"/>
+        <item android:id="@+id/nav_needy_list"
+            android:title="@string/needy_list_label"
+            android:icon="@drawable/ic_list_black_24dp"/>
+        <item android:id="@+id/nav_member_list"
+            android:title="@string/member_list_label"
+            android:icon="@drawable/ic_list_black_24dp"/>
+        <item android:id="@+id/nav_invite_member"
+            android:title="@string/invite_member"
+            android:icon="@drawable/ic_insert_invitation_black_24dp"/>
+        <item android:id="@+id/nav_sign_out"
+            android:title="@string/sign_out"
+            android:icon="@drawable/ic_exit_to_app_black_24dp"/>
+    </group>
+</menu>

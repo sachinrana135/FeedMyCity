@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.mobileauth.CodeVerificationActivity"
+    android:padding="@dimen/spacing_large">
+
+    <TextView
+        android:id="@+id/tvCodeVerification"
+        style="@style/BlackText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/code_verfication_label"
+        android:textSize="@dimen/font_normal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvVerificationInfo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_normal"
+        android:text="@string/verification_info_label"
+        android:textSize="@dimen/font_normal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvCodeVerification" />
+    
+    <com.alfanse.feedmycity.utils.OtpEditText
+        android:id="@+id/etOtp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/tvVerificationInfo"
+        android:layout_marginTop="@dimen/spacing_huge"
+        android:digits="1234567890"
+        android:inputType="number"
+        android:maxLength="6"
+        android:textIsSelectable="false"
+        android:textSize="@dimen/font_large"
+        android:textColor="@android:color/black"/>
+
+    <Button
+        android:id="@+id/btnVerify"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/spacing_normal"
+        android:background="@drawable/volunteer_bg"
+        android:text="@string/verify_button_label"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/font_normal"
+        app:layout_constraintTop_toBottomOf="@id/etOtp"
+        tools:layout_editor_absoluteX="24dp"
+        android:textAllCaps="false"/>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:visibility="gone"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,7 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorPrimary">#FF9900</color>
+    <color name="colorPrimaryDark">#9C5D00</color>
     <color name="colorAccent">#D81B60</color>
     <color name="colorAnchorLink">#2196F3</color>
+
+    <color name="color_orange">#FF9900</color>
+    <color name="color_green">#009E0F</color>
+    <color name="card_white">#99ECEAED</color>
+    <color name="light_orange">#F99401</color>
+    <color name="light_blue">#00BCD4</color>
+    <color name="light_green">#4CAF50</color>
+    <color name="light_violet">#5C6BC0</color>
+
+    <color name="noInternetBackground">#F7F7F7</color>
 </resources>

@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.drawerlayout.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.groupdetails.GroupHomeActivity"
+    android:id="@+id/layoutDrawer">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <fragment
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layoutMarkerInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:padding="@dimen/spacing_normal"
+            android:background="@android:color/white">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layoutFirst"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="@+id/layoutMarkerInfo"
+                app:layout_constraintTop_toTopOf="@+id/layoutMarkerInfo"
+                android:layout_marginLeft="@dimen/spacing_small"
+                android:layout_marginTop="@dimen/spacing_small">
+
+                <ImageView
+                    android:id="@+id/greenMarkerView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/map_marker_green"
+                    app:layout_constraintTop_toTopOf="@+id/layoutFirst"
+                    app:layout_constraintStart_toStartOf="@+id/layoutFirst"
+                    app:layout_constraintStart_toEndOf="@+id/layoutFirst"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/donor_label"
+                    android:textSize="@dimen/font_normal"
+                    app:layout_constraintBottom_toBottomOf="@+id/layoutFirst"
+                    app:layout_constraintTop_toTopOf="@+id/layoutFirst"
+                    app:layout_constraintLeft_toRightOf="@+id/greenMarkerView"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layoutSecond"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toRightOf="@+id/layoutFirst"
+                app:layout_constraintTop_toTopOf="@+id/layoutMarkerInfo"
+                android:layout_marginLeft="@dimen/spacing_normal"
+                android:layout_marginTop="@dimen/spacing_small">
+
+                <ImageView
+                    android:id="@+id/orangeMarkerView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/map_marker_orange"
+                    app:layout_constraintTop_toTopOf="@+id/layoutSecond"
+                    app:layout_constraintStart_toStartOf="@+id/layoutSecond"
+                    app:layout_constraintStart_toEndOf="@+id/layoutSecond"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/member_label"
+                    android:textSize="@dimen/font_normal"
+                    app:layout_constraintBottom_toBottomOf="@+id/layoutSecond"
+                    app:layout_constraintTop_toTopOf="@+id/layoutSecond"
+                    app:layout_constraintLeft_toRightOf="@+id/orangeMarkerView"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layoutThird"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toRightOf="@+id/layoutSecond"
+                app:layout_constraintTop_toTopOf="@+id/layoutMarkerInfo"
+                android:layout_marginLeft="@dimen/spacing_normal"
+                android:layout_marginTop="@dimen/spacing_small">
+
+                <ImageView
+                    android:id="@+id/redMarkerView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/map_marker_red"
+                    app:layout_constraintTop_toTopOf="@+id/layoutThird"
+                    app:layout_constraintStart_toStartOf="@+id/layoutThird"
+                    app:layout_constraintStart_toEndOf="@+id/layoutThird"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/needier_label"
+                    android:textSize="@dimen/font_normal"
+                    app:layout_constraintBottom_toBottomOf="@+id/layoutThird"
+                    app:layout_constraintTop_toTopOf="@+id/layoutThird"
+                    app:layout_constraintLeft_toRightOf="@+id/redMarkerView"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:visibility="gone"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/viewDrawer"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        app:headerLayout="@layout/nav_header"
+        app:menu="@menu/drawer_menu"/>
+</androidx.drawerlayout.widget.DrawerLayout>
