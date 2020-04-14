@@ -3,7 +3,6 @@ package com.alfanse.feedmycity.ui.needier
 import android.app.Activity
 import android.content.*
 import android.content.pm.PackageManager
-import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
 import android.os.Handler
@@ -92,12 +91,19 @@ class AddNeedierDetailActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        if (currentLatLng == null){
+            requestPermission()
+        }
     }
 
     private fun initListener() {
         etAddress.setOnClickListener {
             showAddressSelection = true
-            requestPermission()
+            if (currentLatLng != null){
+                startMapPickerActivity()
+            } else {
+                requestPermission()
+            }
         }
 
         btnSave.setOnClickListener {
@@ -233,15 +239,15 @@ class AddNeedierDetailActivity : AppCompatActivity() {
                     locationResult.lastLocation.latitude,
                     locationResult.lastLocation.longitude
                 )
-                startMapPickerActivity(locationResult.lastLocation)
+                startMapPickerActivity()
             }
         }
     }
 
-    private fun startMapPickerActivity(it: Location) {
+    private fun startMapPickerActivity() {
         stopLocationUpdates()
-        lat = it.latitude
-        lng = it.longitude
+        lat = currentLatLng!!.latitude
+        lng = currentLatLng!!.longitude
 
         // start map search screen to find address
         if (showAddressSelection) {
@@ -251,10 +257,11 @@ class AddNeedierDetailActivity : AppCompatActivity() {
     }
 
     private fun createLocationRequest() {
-        locationRequest = LocationRequest()
-        locationRequest.interval = 2000
-        locationRequest.fastestInterval = 2000
-        locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        locationRequest = LocationRequest().apply {
+            interval = 5000
+            fastestInterval = 5000
+            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        }
     }
 
     private fun buildLocationSettingsRequest() {
