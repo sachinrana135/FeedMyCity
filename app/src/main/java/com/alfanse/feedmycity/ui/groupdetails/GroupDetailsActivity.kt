@@ -59,9 +59,8 @@ class GroupDetailsActivity : AppCompatActivity() {
                         gpsActionsDoneOnce = true;
                         Handler().postDelayed({
                             gpsActionsDoneOnce = false
+                            requestPermission()
                         }, 500)
-                    } else {
-                        requestPermission()
                     }
                 }
             }
@@ -87,14 +86,11 @@ class GroupDetailsActivity : AppCompatActivity() {
         createLocationCallback()
         createLocationRequest()
         buildLocationSettingsRequest()
-        registerReceiver(locationProviderBroadcastReceiver,  IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION))
+        registerReceiver(locationProviderBroadcastReceiver, IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION))
     }
 
     override fun onResume() {
         super.onResume()
-        if (showAddressSelection){
-            requestPermission()
-        }
     }
 
     private fun readPhoneNum() {
@@ -106,7 +102,7 @@ class GroupDetailsActivity : AppCompatActivity() {
     private fun initListener() {
         etAddress.setOnClickListener {
             showAddressSelection = true
-            setUpLocationListener()
+            requestPermission()
         }
 
         btnSave.setOnClickListener {

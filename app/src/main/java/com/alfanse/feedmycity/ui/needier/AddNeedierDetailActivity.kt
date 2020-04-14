@@ -58,9 +58,8 @@ class AddNeedierDetailActivity : AppCompatActivity() {
                         gpsActionsDoneOnce = true;
                         Handler().postDelayed({
                             gpsActionsDoneOnce = false
+                            requestPermission()
                         }, 500)
-                    } else {
-                        requestPermission()
                     }
                 }
             }
@@ -93,15 +92,12 @@ class AddNeedierDetailActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        if (showAddressSelection) {
-            requestPermission()
-        }
     }
 
     private fun initListener() {
         etAddress.setOnClickListener {
             showAddressSelection = true
-            setUpLocationListener()
+            requestPermission()
         }
 
         btnSave.setOnClickListener {
@@ -111,7 +107,7 @@ class AddNeedierDetailActivity : AppCompatActivity() {
                     return@setOnClickListener
                 }
 
-                !validatePhone() -> {
+                etMobile.text.toString().trim().isEmpty() -> {
                     etMobile.error = "Enter Valid Number"
                     return@setOnClickListener
                 }

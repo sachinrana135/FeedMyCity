@@ -61,9 +61,8 @@ class DonorDetailsActivity : AppCompatActivity() {
                         gpsActionsDoneOnce = true;
                         Handler().postDelayed({
                             gpsActionsDoneOnce = false
+                            requestPermission()
                         }, 500)
-                    } else {
-                        requestPermission()
                     }
                 }
             }
@@ -99,9 +98,6 @@ class DonorDetailsActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        if (showAddressSelection){
-            requestPermission()
-        }
     }
 
     private fun initListener() {
@@ -114,7 +110,7 @@ class DonorDetailsActivity : AppCompatActivity() {
         }
         etDonorAddress.setOnClickListener {
             showAddressSelection = true
-            setUpLocationListener()
+            requestPermission()
         }
 
         btnSave.setOnClickListener {
