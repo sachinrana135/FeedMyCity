@@ -3,7 +3,6 @@ package com.alfanse.feedmycity.ui.groupdetails
 import android.app.Activity
 import android.content.*
 import android.content.pm.PackageManager
-import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
 import android.os.Handler
@@ -43,7 +42,6 @@ class GroupDetailsActivity : AppCompatActivity() {
     private var fusedLocationProviderClient: FusedLocationProviderClient? = null
     private var locationCallback: LocationCallback? = null
     private var currentLatLng: LatLng? = null
-    private var geoLocationAddress = ""
     private var groupName = ""
     private var settingsClient: SettingsClient? = null
     private var locationSettingsRequest: LocationSettingsRequest? = null
@@ -91,6 +89,9 @@ class GroupDetailsActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        if (currentLatLng == null){
+            requestPermission()
+        }
     }
 
     private fun readPhoneNum() {
@@ -102,7 +103,11 @@ class GroupDetailsActivity : AppCompatActivity() {
     private fun initListener() {
         etAddress.setOnClickListener {
             showAddressSelection = true
-            requestPermission()
+            if (currentLatLng != null){
+                startMapPickerActivity()
+            } else {
+                requestPermission()
+            }
         }
 
         btnSave.setOnClickListener {
@@ -242,15 +247,15 @@ class GroupDetailsActivity : AppCompatActivity() {
                     locationResult.lastLocation.latitude,
                     locationResult.lastLocation.longitude
                 )
-                startMapPickerActivity(locationResult.lastLocation)
+                startMapPickerActivity()
             }
         }
     }
 
-    private fun startMapPickerActivity(it: Location) {
+    private fun startMapPickerActivity() {
         stopLocationUpdates()
-        groupLat = it.latitude
-        groupLng = it.longitude
+        groupLat = currentLatLng!!.latitude
+        groupLng = currentLatLng!!.longitude
 
         // start map search screen to find address
         if (showAddressSelection) {
@@ -260,10 +265,11 @@ class GroupDetailsActivity : AppCompatActivity() {
     }
 
     private fun createLocationRequest() {
-        locationRequest = LocationRequest()
-        locationRequest.interval = 2000
-        locationRequest.fastestInterval = 2000
-        locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        locationRequest = LocationRequest().apply {
+            interval = 5000
+            fastestInterval = 5000
+            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        }
     }
 
     private fun buildLocationSettingsRequest() {
